@@ -12,9 +12,15 @@ $routes->post('/login', 'Auth::doLogin');
 $routes->get('/logout', 'Auth::logout');
 
 // Dashboard
+
+// Tambahin ini biar akses /dashboard langsung ke admin
+$routes->get('dashboard', 'Dashboard::admin');
+
+// Group dashboard tetap bisa dipakai juga
 $routes->group('dashboard', function($routes) {
     $routes->get('piket', 'Dashboard::piket'); // views/pages/piket/piket.php ✅
     $routes->get('bp', 'Dashboard::bp');       // views/pages/bp/bp.php ✅
+    $routes->get('admin', 'Dashboard::admin');       // views/pages/bp/bp.php ✅
 });
 
 // Surat Izin (Piket)
@@ -41,3 +47,4 @@ $routes->group('admin', ['filter' => 'authAdmin'], function($routes) {
     $routes->post('users/update/(:num)', 'Admin::updateUser/$1');
     $routes->get('users/delete/(:num)', 'Admin::deleteUser/$1');
 });
+

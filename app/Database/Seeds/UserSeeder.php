@@ -18,6 +18,11 @@ class UserSeeder extends Seeder
                 'username' => 'bp1',
                 'password' => password_hash('bp123', PASSWORD_DEFAULT),
                 'role'     => 'bp'
+            ],
+            [
+                'username' => 'admin1',
+                'password' => password_hash('admin1', PASSWORD_DEFAULT),
+                'role'     => 'admin'
             ]
         ];
 
