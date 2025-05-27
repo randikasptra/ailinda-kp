@@ -1,6 +1,7 @@
 <?= $this->extend('layout/dashboard') ?>
 <?= $this->section('content') ?>
 
+
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
     <div class="bg-white rounded-xl shadow p-4 border-l-4 border-[#A4DE02]">
         <h2 class="text-lg font-semibold text-gray-700">Surat Izin Hari Ini</h2>
