@@ -5,6 +5,16 @@
     <meta charset="UTF-8">
     <title><?= $title ?? 'Dashboard' ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        import {
+            createIcons,
+            icons
+        } from "https://unpkg.com/lucide@latest/dist/lucide.js";
+        window.addEventListener("DOMContentLoaded", () => createIcons({
+            icons
+        }));
+    </script>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
