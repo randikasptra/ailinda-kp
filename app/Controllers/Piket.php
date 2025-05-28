@@ -2,16 +2,31 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
+use App\Models\SiswaModel;
+use CodeIgniter\Controller;
 
 class Piket extends BaseController
 {
     public function formIzin()
     {
+        $siswaModel = new SiswaModel();
+        $keyword = $this->request->getGet('keyword');
+
+        $siswa = [];
+        if ($keyword) {
+            $siswa = $siswaModel
+                ->like('nisn', $keyword)
+                ->orLike('nama', $keyword)
+                ->findAll();
+        }
+
         return view('pages/piket/surat_izin', [
-            'title' => 'Form Surat Izin'
+            'title' => 'Form Surat Izin',
+            'siswa' => $siswa,
+            'keyword' => $keyword,
         ]);
     }
+
 
     public function simpanIzin()
     {
