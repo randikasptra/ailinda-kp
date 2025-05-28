@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\SiswaModel;
+use App\Models\SuratIzinModel;
+
 
 class Piket extends BaseController
 {
@@ -38,6 +40,19 @@ class Piket extends BaseController
     }
 
 
+
+
+    public function cetak($id)
+    {
+        $model = new SuratIzinModel();
+        $izin = $model->find($id);
+
+        if (!$izin) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Data surat izin tidak ditemukan.");
+        }
+
+        return view('pages/piket/izin_cetak', ['izin' => $izin]);
+    }
 
     public function simpanIzin()
     {
