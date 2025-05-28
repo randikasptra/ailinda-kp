@@ -39,6 +39,51 @@ class SiswaSeeder extends Seeder
                 'kelas'   => 'XI IPS 2',
                 'jurusan' => 'IPS',
                 'poin'    => 15
+            ],
+            // 🔁 Data duplikat nama (1)
+            [
+                'nisn'    => '0038217555',
+                'nama'    => 'Ahmad Fauzi',
+                'kelas'   => 'XII IPS 3',
+                'jurusan' => 'IPS',
+                'poin'    => 7
+            ],
+            // 🔁 Data duplikat nama (2)
+            [
+                'nisn'    => '0038217999',
+                'nama'    => 'Rafi Pratama',
+                'kelas'   => 'XI IPA 2',
+                'jurusan' => 'IPA',
+                'poin'    => 12
+            ],
+            // ✅ Data unik lainnya
+            [
+                'nisn'    => '0038217666',
+                'nama'    => 'Nisa Khairunnisa',
+                'kelas'   => 'XII Bahasa 1',
+                'jurusan' => 'BAHASA',
+                'poin'    => 0
+            ],
+            [
+                'nisn'    => '0038217777',
+                'nama'    => 'M. Rizky Alfarizi',
+                'kelas'   => 'X IPA 3',
+                'jurusan' => 'IPA',
+                'poin'    => 2
+            ],
+            [
+                'nisn'    => '0038217888',
+                'nama'    => 'Siti Maesaroh',
+                'kelas'   => 'XI Bahasa 2',
+                'jurusan' => 'BAHASA',
+                'poin'    => 4
+            ],
+            [
+                'nisn'    => '0038217333',
+                'nama'    => 'Ahmad Fauzi',
+                'kelas'   => 'X TKJ 2',
+                'jurusan' => 'IPA',
+                'poin'    => 20
             ]
         ];
 

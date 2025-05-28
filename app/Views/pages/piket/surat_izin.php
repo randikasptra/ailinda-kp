@@ -21,14 +21,24 @@
     <h2 class="text-2xl font-bold text-[#1E5631] mb-4">Form Input Surat Izin</h2>
 
     <!-- FORM INPUT SURAT IZIN -->
-    <form action="<?= base_url('/piket/surat-izin') ?>" method="post" class="space-y-4">
+    <form action="<?= base_url('/piket/surat_izin') ?>" method="post" class="space-y-4">
         <?= csrf_field() ?>
 
-        <div>
-            <label class="block text-sm font-semibold text-gray-600 mb-1">Nama Siswa</label>
-            <input type="text" name="nama" value="<?= esc($siswa['nama'] ?? '') ?>" <?= isset($siswa) ? 'readonly' : '' ?>
-                class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-100" />
-        </div>
+        <?php if (count($siswaList) > 1): ?>
+            <div class="mb-4">
+                <label class="block text-sm font-semibold text-gray-600 mb-1">Pilih Siswa</label>
+                <select onchange="location.href='<?= base_url('piket/surat_izin?keyword=' . urlencode($keyword)) ?>&nisn=' + this.value"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white">
+                    <option value="">-- Pilih salah satu --</option>
+                    <?php foreach ($siswaList as $s): ?>
+                        <option value="<?= $s['nisn'] ?>" <?= ($siswa['nisn'] ?? '') === $s['nisn'] ? 'selected' : '' ?>>
+                            <?= esc($s['nama']) ?> (<?= esc($s['nisn']) ?> - <?= esc($s['kelas']) ?>)
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        <?php endif; ?>
+
 
         <div class="grid grid-cols-2 gap-4">
             <div>

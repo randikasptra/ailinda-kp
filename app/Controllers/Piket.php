@@ -10,23 +10,34 @@ class Piket extends BaseController
     {
         $siswaModel = new SiswaModel();
         $keyword = $this->request->getGet('keyword');
+        $selectedNISN = $this->request->getGet('nisn');
 
-        $siswa = null; // default null
+        $siswaList = [];
+        $selectedSiswa = null;
+
         if ($keyword) {
-            $siswa = $siswaModel
-                ->groupStart()
-                    ->like('nisn', $keyword)
-                    ->orLike('nama', $keyword)
-                ->groupEnd()
-                ->first(); // ambil hanya 1 siswa (pertama ditemukan)
+            $siswaList = $siswaModel
+                ->like('nisn', $keyword)
+                ->orLike('nama', $keyword)
+                ->findAll();
+
+            if (count($siswaList) === 1) {
+                $selectedSiswa = $siswaList[0];
+            } elseif ($selectedNISN) {
+                // ambil data spesifik dari dropdown
+                $selectedSiswa = $siswaModel->where('nisn', $selectedNISN)->first();
+            }
         }
 
         return view('pages/piket/surat_izin', [
             'title' => 'Form Surat Izin',
-            'siswa' => $siswa,
+            'siswaList' => $siswaList,
+            'siswa' => $selectedSiswa,
             'keyword' => $keyword,
         ]);
     }
+
+
 
     public function simpanIzin()
     {
