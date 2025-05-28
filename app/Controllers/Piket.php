@@ -42,33 +42,37 @@ class Piket extends BaseController
 
 
 
-    public function cetak($id)
+    public function cetakIzin($id)
     {
         $model = new SuratIzinModel();
         $izin = $model->find($id);
 
         if (!$izin) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Data surat izin tidak ditemukan.");
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Data tidak ditemukan');
         }
 
-        return view('pages/piket/izin_cetak', ['izin' => $izin]);
+        return view('pages/piket/izin_cetak', [
+            'izin' => $izin,
+            'title' => 'Cetak Surat Izin'
+        ]);
     }
+
 
     public function simpanIzin()
     {
+        $model = new SuratIzinModel();
+
         $data = [
             'nama'           => $this->request->getPost('nama'),
-            'kelas'          => $this->request->getPost('kelas'),
             'nisn'           => $this->request->getPost('nisn'),
+            'kelas'          => $this->request->getPost('kelas'),
             'alasan'         => $this->request->getPost('alasan'),
             'waktu_keluar'   => $this->request->getPost('waktu_keluar'),
             'waktu_kembali'  => $this->request->getPost('waktu_kembali'),
         ];
 
-        // Simpan ke database nanti di sini (kalau udah ada model izin)
-        // $this->izinModel->insert($data);
+        $insertedId = $model->insert($data);
 
-        session()->setFlashdata('success', 'Surat izin berhasil disimpan.');
-        return redirect()->to('/piket/surat_izin');
+        return redirect()->to('/piket/surat_izin/cetak/' . $insertedId);
     }
 }

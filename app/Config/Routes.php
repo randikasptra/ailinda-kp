@@ -28,7 +28,8 @@ $routes->group('piket', function ($routes) {
     $routes->get('surat_izin', 'Piket::formIzin');        // views/pages/piket/surat_izin.php ❗️pastikan nama file benar
     $routes->post('surat_izin', 'Piket::simpanIzin');
     $routes->get('konfirmasi-kembali', 'Piket::konfirmasiKembali'); // views/pages/piket/konfirmasi_kembali.php ❗️
-    $routes->get('piket/surat-izin/cetak/(:num)', 'Piket\SuratIzin::cetak/$1');
+
+    $routes->get('piket/surat_izin/cetak/(:num)', 'Piket\SuratIzin::cetak/$1');
     $routes->post('catat-pelanggaran', 'Piket::catatPelanggaran');   // views/pages/piket/catat_pelanggaran.php ❗️
 });
 
