@@ -1,5 +1,14 @@
+<?php if (session()->getFlashdata('success')): ?>
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <?= session()->getFlashdata('success') ?>
+    </div>
+<?php endif; ?>
+
+
 <?= $this->extend('layout/dashboard') ?>
 <?= $this->section('content') ?>
+
+
 
 <div class="bg-white p-6 rounded-xl shadow-md max-w-2xl mx-auto border-t-4 border-[#A4DE02]">
     <h2 class="text-2xl font-bold text-[#1E5631] mb-4">Form Input Surat Izin</h2>

@@ -25,8 +25,8 @@ $routes->group('dashboard', function($routes) {
 
 // Surat Izin (Piket)
 $routes->group('piket', function($routes) {
-    $routes->get('surat-izin', 'Piket::formIzin');        // views/pages/piket/surat_izin.php ❗️pastikan nama file benar
-    $routes->post('surat-izin', 'Piket::simpanIzin');
+    $routes->get('surat_izin', 'Piket::formIzin');        // views/pages/piket/surat_izin.php ❗️pastikan nama file benar
+    $routes->post('surat_izin', 'Piket::simpanIzin');
     $routes->get('konfirmasi-kembali', 'Piket::konfirmasiKembali'); // views/pages/piket/konfirmasi_kembali.php ❗️
     $routes->post('catat-pelanggaran', 'Piket::catatPelanggaran');   // views/pages/piket/catat_pelanggaran.php ❗️
 });

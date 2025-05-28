@@ -7,7 +7,7 @@
             <a href="/dashboard/piket" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
                 <i data-lucide="home" class="w-4 h-4"></i> Dashboard Piket
             </a>
-            <a href="/piket/surat-izin" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
+            <a href="/piket/surat_izin" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
                 <i data-lucide="file-plus" class="w-4 h-4"></i> Input Surat Izin
             </a>
             <a href="/piket/konfirmasi-kembali" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
