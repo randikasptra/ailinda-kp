@@ -3,43 +3,33 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Surat Izin Siswa</title>
+    <title><?= $title ?></title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            padding: 30px;
+            margin: 40px;
         }
 
         h2 {
             text-align: center;
         }
 
-        .izin-detail {
+        table {
+            width: 100%;
+            border-collapse: collapse;
             margin-top: 30px;
         }
 
-        .izin-detail table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .izin-detail td {
+        td {
             padding: 8px;
-            vertical-align: top;
         }
 
-        .izin-detail td.label {
-            width: 200px;
-            font-weight: bold;
-        }
-
-        .footer {
-            margin-top: 50px;
-            text-align: right;
+        .print-btn {
+            display: none;
         }
 
         @media print {
-            .no-print {
+            .print-btn {
                 display: none;
             }
         }
@@ -50,48 +40,45 @@
 
     <h2>Surat Izin Siswa</h2>
 
-    <div class="izin-detail">
-        <table>
-            <tr>
-                <td class="label">Nama</td>
-                <td>: <?= esc($izin['nama']) ?></td>
-            </tr>
-            <tr>
-                <td class="label">NISN</td>
-                <td>: <?= esc($izin['nisn']) ?></td>
-            </tr>
-            <tr>
-                <td class="label">Kelas</td>
-                <td>: <?= esc($izin['kelas']) ?></td>
-            </tr>
-            <tr>
-                <td class="label">Alasan Izin</td>
-                <td>: <?= esc($izin['alasan']) ?></td>
-            </tr>
-            <tr>
-                <td class="label">Waktu Keluar</td>
-                <td>: <?= esc($izin['waktu_keluar']) ?></td>
-            </tr>
-            <tr>
-                <td class="label">Waktu Kembali</td>
-                <td>: <?= esc($izin['waktu_kembali']) ?></td>
-            </tr>
-            <tr>
-                <td class="label">Tanggal</td>
-                <td>: <?= date('d-m-Y', strtotime($izin['created_at'])) ?></td>
-            </tr>
-        </table>
-    </div>
+    <table>
+        <tr>
+            <td><strong>Nama</strong></td>
+            <td>: <?= esc($izin['nama']) ?></td>
+        </tr>
+        <tr>
+            <td><strong>NISN</strong></td>
+            <td>: <?= esc($izin['nisn']) ?></td>
+        </tr>
+        <tr>
+            <td><strong>Kelas</strong></td>
+            <td>: <?= esc($izin['kelas']) ?></td>
+        </tr>
+        <tr>
+            <td><strong>Alasan</strong></td>
+            <td>: <?= esc($izin['alasan']) ?></td>
+        </tr>
+        <tr>
+            <td><strong>Jam Keluar</strong></td>
+            <td>: <?= esc($izin['waktu_keluar']) ?></td>
+        </tr>
+        <tr>
+            <td><strong>Jam Kembali</strong></td>
+            <td>: <?= esc($izin['waktu_kembali']) ?></td>
+        </tr>
+        <tr>
+            <td><strong>Tanggal</strong></td>
+            <td>: <?= date('d M Y', strtotime($izin['created_at'])) ?></td>
+        </tr>
+    </table>
 
-    <div class="footer">
-        <p>Tanda tangan Guru Piket</p>
-        <br><br><br>
-        <p>________________________</p>
-    </div>
+    <br><br>
+    <p>Mengetahui,</p>
+    <br><br>
+    <p>...............................</p>
+    <p>Guru Piket</p>
 
-    <div class="no-print" style="margin-top: 20px;">
-        <button onclick="window.print()" style="padding: 10px 20px; background-color: #1E5631; color: white; border: none; border-radius: 5px;">Cetak</button>
-    </div>
+    <br><br>
+    <button onclick="window.print()" class="print-btn">Cetak</button>
 
 </body>
 

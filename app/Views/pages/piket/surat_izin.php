@@ -21,6 +21,8 @@
     <h2 class="text-2xl font-bold text-[#1E5631] mb-4">Form Input Surat Izin</h2>
 
     <!-- FORM INPUT SURAT IZIN -->
+    <!-- <form action="<?= base_url('/piket/simpan_izin') ?>" method="post" class="space-y-4"> -->
+
     <form action="<?= base_url('/piket/surat_izin') ?>" method="post" class="space-y-4">
         <?= csrf_field() ?>
 
@@ -39,18 +41,23 @@
             </div>
         <?php endif; ?>
 
-
         <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-semibold text-gray-600 mb-1">Nama</label>
+                <input type="text" name="nama" value="<?= esc($siswa['nama'] ?? '') ?>" readonly
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-100" />
+            </div>
             <div>
                 <label class="block text-sm font-semibold text-gray-600 mb-1">NISN</label>
                 <input type="text" name="nisn" value="<?= esc($siswa['nisn'] ?? '') ?>" <?= isset($siswa) ? 'readonly' : '' ?>
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-100" />
             </div>
-            <div>
-                <label class="block text-sm font-semibold text-gray-600 mb-1">Kelas</label>
-                <input type="text" name="kelas" value="<?= esc($siswa['kelas'] ?? '') ?>" readonly
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-100" />
-            </div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold text-gray-600 mb-1">Kelas</label>
+            <input type="text" name="kelas" value="<?= esc($siswa['kelas'] ?? '') ?>" readonly
+                class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-100" />
         </div>
 
         <div>
@@ -83,6 +90,7 @@
                 class="bg-[#1E5631] text-white px-6 py-2 rounded-lg hover:bg-[#145128] transition">Kirim Izin</button>
         </div>
     </form>
+
 </div>
 
 <?= $this->endSection() ?>

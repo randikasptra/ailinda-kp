@@ -73,6 +73,7 @@ class Piket extends BaseController
 
         $insertedId = $model->insert($data);
 
-        return redirect()->to('/piket/surat_izin/cetak/' . $insertedId);
+        return redirect()->to('/piket/izin_cetak/' . $insertedId);
+
     }
 }
