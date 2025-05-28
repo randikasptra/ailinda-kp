@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Models\SiswaModel;
-use CodeIgniter\Controller;
 
 class Piket extends BaseController
 {
@@ -12,12 +11,14 @@ class Piket extends BaseController
         $siswaModel = new SiswaModel();
         $keyword = $this->request->getGet('keyword');
 
-        $siswa = [];
+        $siswa = null; // default null
         if ($keyword) {
             $siswa = $siswaModel
-                ->like('nisn', $keyword)
-                ->orLike('nama', $keyword)
-                ->findAll();
+                ->groupStart()
+                    ->like('nisn', $keyword)
+                    ->orLike('nama', $keyword)
+                ->groupEnd()
+                ->first(); // ambil hanya 1 siswa (pertama ditemukan)
         }
 
         return view('pages/piket/surat_izin', [
@@ -27,25 +28,21 @@ class Piket extends BaseController
         ]);
     }
 
-
     public function simpanIzin()
     {
-        // Ambil data dari form
         $data = [
             'nama'           => $this->request->getPost('nama'),
             'kelas'          => $this->request->getPost('kelas'),
+            'nisn'           => $this->request->getPost('nisn'),
             'alasan'         => $this->request->getPost('alasan'),
+            'waktu_keluar'   => $this->request->getPost('waktu_keluar'),
             'waktu_kembali'  => $this->request->getPost('waktu_kembali'),
         ];
 
-        // TODO: Simpan ke database (sementara tampilkan aja dulu)
-        // Contoh simpan ke database (jika ada model):
+        // Simpan ke database nanti di sini (kalau udah ada model izin)
         // $this->izinModel->insert($data);
 
-        // Buat flashdata
         session()->setFlashdata('success', 'Surat izin berhasil disimpan.');
-
-        // Redirect balik ke form
         return redirect()->to('/piket/surat_izin');
     }
 }

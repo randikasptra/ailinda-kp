@@ -8,6 +8,9 @@ class SiswaSeeder extends Seeder
 {
     public function run()
     {
+        // Bersihin isi tabel dulu (reset data)
+        $this->db->table('siswa')->truncate();
+
         $data = [
             [
                 'nisn'    => '0038217465',
@@ -27,12 +30,18 @@ class SiswaSeeder extends Seeder
                 'nisn'    => '0038217467',
                 'nama'    => 'Rafi Pratama',
                 'kelas'   => 'X TKJ 1',
-                'jurusan' => 'TKJ',
+                'jurusan' => 'IPA',
+                'poin'    => 15
+            ],
+            [
+                'nisn'    => '0038217123',
+                'nama'    => 'Ahmad Putra',
+                'kelas'   => 'XI IPS 2',
+                'jurusan' => 'IPS',
                 'poin'    => 15
             ]
         ];
 
-        // Insert ke tabel siswa
         $this->db->table('siswa')->insertBatch($data);
     }
 }

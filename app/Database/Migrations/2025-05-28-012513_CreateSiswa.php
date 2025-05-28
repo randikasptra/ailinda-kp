@@ -9,12 +9,15 @@ class CreateSiswa extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id'       => ['type' => 'INT', 'auto_increment' => true],
-            'nisn'     => ['type' => 'VARCHAR', 'constraint' => 20, 'unique' => true],
-            'nama'     => ['type' => 'VARCHAR', 'constraint' => 100],
-            'kelas'    => ['type' => 'VARCHAR', 'constraint' => 10],
-            'jurusan'  => ['type' => 'VARCHAR', 'constraint' => 50],
-            'poin'     => ['type' => 'INT', 'default' => 0], // 🆕 Tambahkan kolom ini
+            'id'         => ['type' => 'INT', 'auto_increment' => true],
+            'nisn'       => ['type' => 'VARCHAR', 'constraint' => 20, 'unique' => true],
+            'nama'       => ['type' => 'VARCHAR', 'constraint' => 100],
+            'kelas'      => ['type' => 'VARCHAR', 'constraint' => 10],
+            'jurusan'    => [
+                'type'       => 'ENUM',
+                'constraint' => ['IPA', 'IPS', 'BAHASA'], // ✅ ENUM jurusan
+            ],
+            'poin'       => ['type' => 'INT', 'default' => 0],
             'created_at' => ['type' => 'DATETIME', 'null' => true],
             'updated_at' => ['type' => 'DATETIME', 'null' => true],
         ]);
