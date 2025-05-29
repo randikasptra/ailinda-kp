@@ -7,7 +7,8 @@
     </div>
 <?php endif; ?>
 
-<div class="bg-white p-6 rounded-xl shadow-md max-w-3xl mx-auto border-t-4 border-[#A4DE02]">
+<div class="ml-64 p-6">
+    <div class="bg-white p-6 rounded-xl shadow-md max-w-3xl mx-auto border-t-4 border-[#A4DE02]">
     <h2 class="text-2xl font-bold text-[#1E5631] mb-4">Pencarian Siswa</h2>
 
     <!-- PENCARIAN SISWA -->
@@ -91,6 +92,7 @@
         </div>
     </form>
 
+</div>
 </div>
 
 <?= $this->endSection() ?>
