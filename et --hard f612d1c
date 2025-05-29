@@ -1,0 +1,23 @@
+* [33mf612d1c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;32mfitur-cetak[m[33m)[m fix-code-done
+* [33me0326c9[m add/model-cetakIzin
+* [33mcafb5b6[m add/model-SuratIzinModel
+* [33m7c03bb5[m fix/all-code(aman)
+* [33md1370d6[m rev/model-siswa
+* [33m29cce3f[m add/model-SiswaModel
+* [33ma6be365[m add/migration-createSiswa
+* [33m9f90ed8[m add/pages-surat-izin
+* [33mcaf520f[m add/admin-route
+* [33mcb7597a[m add/pagesdashboard-admin
+* [33m5bfdba8[m add/pages-admin
+* [33mcc363e6[m add/lucide-icons
+* [33ma0dd623[m add/patrilas-navbar
+* [33m80baba1[m add/patrilas-sidenav
+* [33m17bb6c8[m add/folder-bp
+* [33m55b6d5a[m add/folder-piket
+* [33m3e50a05[m rev/view-login
+* [33ma34518a[m add/seeds-userseeder
+* [33m12efdff[m add/controller-dashboard
+* [33mff00db5[m add/auth
+* [33m6f5d7e8[m add/model-user
+* [33m7db9bd0[m add/file-ci
+* [33m5ee1745[m first commit
