@@ -10,7 +10,7 @@
             <a href="/piket/surat_izin" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
                 <i data-lucide="file-plus" class="w-4 h-4"></i> Input Surat Izin
             </a>
-            <a href="/piket/konfirmasi-kembali" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
+            <a href="/piket/konfirmasi_kembali" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
                 <i data-lucide="check-circle" class="w-4 h-4"></i> Konfirmasi Kembali
             </a>
             <a href="/piket/catat-pelanggaran" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">

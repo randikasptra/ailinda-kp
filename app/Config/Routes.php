@@ -18,17 +18,17 @@ $routes->get('dashboard', 'Dashboard::admin');
 
 // Group dashboard tetap bisa dipakai juga
 $routes->group('dashboard', function ($routes) {
-    $routes->get('piket', 'Dashboard::piket'); // views/pages/piket/piket.php ✅
-    $routes->get('bp', 'Dashboard::bp');       // views/pages/bp/bp.php ✅
-    $routes->get('admin', 'Dashboard::admin');       // views/pages/bp/bp.php ✅
+    $routes->get('piket', 'Dashboard::piket'); 
+    $routes->get('bp', 'Dashboard::bp');       
+    $routes->get('admin', 'Dashboard::admin'); 
 });
 // Surat Izin (Piket)
 $routes->group('piket', function ($routes) {
-    $routes->get('surat_izin', 'Piket::formIzin');         // TAMPIL FORM
-    $routes->post('surat_izin', 'Piket::simpanIzin');      // SIMPAN DATA
-    $routes->get('izin_cetak/(:num)', 'Piket::cetakIzin/$1'); // CETAK SURAT
-    $routes->get('konfirmasi-kembali', 'Piket::konfirmasiKembali'); // NANTI
-    $routes->post('catat-pelanggaran', 'Piket::catatPelanggaran');   // NANTI
+    $routes->get('surat_izin', 'Piket::formIzin');        
+    $routes->post('surat_izin', 'Piket::simpanIzin');     
+    $routes->get('izin_cetak/(:num)', 'Piket::cetakIzin/$1');
+    $routes->get('konfirmasi_kembali', 'Piket::konfirmasiKembali'); 
+    $routes->post('catat-pelanggaran', 'Piket::catatPelanggaran');  
 });
 
 // Pelanggaran (BP)

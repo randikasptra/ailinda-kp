@@ -4,13 +4,21 @@ namespace App\Controllers;
 
 use App\Models\SiswaModel;
 use App\Models\SuratIzinModel;
-
+use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Piket extends BaseController
 {
+    protected $siswaModel;
+    protected $izinModel;
+
+    public function __construct()
+    {
+        $this->siswaModel = new SiswaModel();
+        $this->izinModel  = new SuratIzinModel();
+    }
+
     public function formIzin()
     {
-        $siswaModel = new SiswaModel();
         $keyword = $this->request->getGet('keyword');
         $selectedNISN = $this->request->getGet('nisn');
 
@@ -18,7 +26,7 @@ class Piket extends BaseController
         $selectedSiswa = null;
 
         if ($keyword) {
-            $siswaList = $siswaModel
+            $siswaList = $this->siswaModel
                 ->like('nisn', $keyword)
                 ->orLike('nama', $keyword)
                 ->findAll();
@@ -26,42 +34,20 @@ class Piket extends BaseController
             if (count($siswaList) === 1) {
                 $selectedSiswa = $siswaList[0];
             } elseif ($selectedNISN) {
-                // ambil data spesifik dari dropdown
-                $selectedSiswa = $siswaModel->where('nisn', $selectedNISN)->first();
+                $selectedSiswa = $this->siswaModel->where('nisn', $selectedNISN)->first();
             }
         }
 
         return view('pages/piket/surat_izin', [
-            'title' => 'Form Surat Izin',
-            'siswaList' => $siswaList,
-            'siswa' => $selectedSiswa,
-            'keyword' => $keyword,
+            'title'      => 'Form Surat Izin',
+            'siswaList'  => $siswaList,
+            'siswa'      => $selectedSiswa,
+            'keyword'    => $keyword,
         ]);
     }
-
-
-
-
-    public function cetakIzin($id)
-    {
-        $model = new SuratIzinModel();
-        $izin = $model->find($id);
-
-        if (!$izin) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Data tidak ditemukan');
-        }
-
-        return view('pages/piket/izin_cetak', [
-            'izin' => $izin,
-            'title' => 'Cetak Surat Izin'
-        ]);
-    }
-
 
     public function simpanIzin()
     {
-        $model = new SuratIzinModel();
-
         $data = [
             'nama'           => $this->request->getPost('nama'),
             'nisn'           => $this->request->getPost('nisn'),
@@ -69,11 +55,49 @@ class Piket extends BaseController
             'alasan'         => $this->request->getPost('alasan'),
             'waktu_keluar'   => $this->request->getPost('waktu_keluar'),
             'waktu_kembali'  => $this->request->getPost('waktu_kembali'),
+            'status_kembali' => 'belum kembali',
+            'poin_pelanggaran' => 0,
         ];
 
-        $insertedId = $model->insert($data);
+        $insertedId = $this->izinModel->insert($data);
 
         return redirect()->to('/piket/izin_cetak/' . $insertedId);
+    }
 
+    public function cetakIzin($id)
+    {
+        $izin = $this->izinModel->find($id);
+
+        if (!$izin) {
+            throw PageNotFoundException::forPageNotFound('Data tidak ditemukan');
+        }
+
+        return view('pages/piket/izin_cetak', [
+            'izin'  => $izin,
+            'title' => 'Cetak Surat Izin',
+        ]);
+    }
+
+    public function konfirmasiKembali()
+    {
+        $izinBelumKembali = $this->izinModel->where('status_kembali', 'belum kembali')->findAll();
+
+        return view('pages/piket/konfirmasi_kembali', [
+            'title' => 'Konfirmasi Siswa Kembali',
+            'izinList' => $izinBelumKembali,
+        ]);
+    }
+
+    public function catatPelanggaran()
+    {
+        $id    = $this->request->getPost('izin_id');
+        $poin  = $this->request->getPost('poin_pelanggaran');
+
+        $this->izinModel->update($id, [
+            'status_kembali'   => 'sudah kembali',
+            'poin_pelanggaran' => $poin,
+        ]);
+
+        return redirect()->to('/piket/konfirmasi_kembali')->with('success', 'Data berhasil diperbarui.');
     }
 }
