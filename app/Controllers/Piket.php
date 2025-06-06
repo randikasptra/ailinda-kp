@@ -49,14 +49,14 @@ class Piket extends BaseController
     public function simpanIzin()
     {
         $data = [
-            'nama'           => $this->request->getPost('nama'),
-            'nisn'           => $this->request->getPost('nisn'),
-            'kelas'          => $this->request->getPost('kelas'),
-            'alasan'         => $this->request->getPost('alasan'),
-            'waktu_keluar'   => $this->request->getPost('waktu_keluar'),
-            'waktu_kembali'  => $this->request->getPost('waktu_kembali'),
-            'status_kembali' => 'belum kembali',
-            'poin_pelanggaran' => 0,
+            'nama'              => $this->request->getPost('nama'),
+            'nisn'              => $this->request->getPost('nisn'),
+            'kelas'             => $this->request->getPost('kelas'),
+            'alasan'            => $this->request->getPost('alasan'),
+            'waktu_keluar'      => $this->request->getPost('waktu_keluar'),
+            'waktu_kembali'     => $this->request->getPost('waktu_kembali'),
+            'status_kembali'    => 'belum kembali',
+            'poin_pelanggaran'  => 0,
         ];
 
         $insertedId = $this->izinModel->insert($data);
@@ -80,24 +80,28 @@ class Piket extends BaseController
 
     public function konfirmasiKembali()
     {
-        $izinBelumKembali = $this->izinModel->where('status_kembali', 'belum kembali')->findAll();
+        $izinList = $this->izinModel
+            ->where('status_kembali', 'belum kembali')
+            ->findAll();
 
         return view('pages/piket/konfirmasi_kembali', [
-            'title' => 'Konfirmasi Siswa Kembali',
-            'izinList' => $izinBelumKembali,
+            'title'    => 'Konfirmasi Siswa Kembali',
+            'izinList' => $izinList,
         ]);
     }
 
     public function catatPelanggaran()
     {
-        $id    = $this->request->getPost('izin_id');
-        $poin  = $this->request->getPost('poin_pelanggaran');
+        $id     = $this->request->getPost('izin_id');
+        $poin   = (int) $this->request->getPost('poin_pelanggaran');
+        $waktu  = $this->request->getPost('waktu_kembali_siswa');
 
         $this->izinModel->update($id, [
-            'status_kembali'   => 'sudah kembali',
-            'poin_pelanggaran' => $poin,
+            'status_kembali'       => 'sudah kembali',
+            'poin_pelanggaran'     => $poin,
+            'waktu_kembali_siswa'  => $waktu
         ]);
 
-        return redirect()->to('/piket/konfirmasi_kembali')->with('success', 'Data berhasil diperbarui.');
+        return redirect()->to('/piket/konfirmasi_kembali')->with('success', 'Data berhasil dikonfirmasi.');
     }
 }

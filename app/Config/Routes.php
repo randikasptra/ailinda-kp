@@ -16,13 +16,12 @@ $routes->get('/logout', 'Auth::logout');
 // Tambahin ini biar akses /dashboard langsung ke admin
 $routes->get('dashboard', 'Dashboard::admin');
 
-// Group dashboard tetap bisa dipakai juga
 $routes->group('dashboard', function ($routes) {
     $routes->get('piket', 'Dashboard::piket'); 
     $routes->get('bp', 'Dashboard::bp');       
     $routes->get('admin', 'Dashboard::admin'); 
 });
-// Surat Izin (Piket)
+
 $routes->group('piket', function ($routes) {
     $routes->get('surat_izin', 'Piket::formIzin');        
     $routes->post('surat_izin', 'Piket::simpanIzin');     
