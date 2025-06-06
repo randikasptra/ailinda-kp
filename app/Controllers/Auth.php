@@ -30,7 +30,8 @@ class Auth extends BaseController
             return redirect()->to('/dashboard/' . $user['role']);
         }
 
-        return redirect()->back()->with('error', 'Login gagal');
+        session()->setFlashdata('error', 'Login gagal');
+        return redirect()->back();
     }
 
     public function logout()
