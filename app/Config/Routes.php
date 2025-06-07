@@ -30,6 +30,7 @@ $routes->group('piket', function ($routes) {
     $routes->post('catat-pelanggaran', 'Piket::catatPelanggaran');  
     $routes->get('data_siswa', 'Piket::dataSiswa'); 
     $routes->get('history_konfirmasi', 'Piket::history'); 
+    
 
 });
 
@@ -39,6 +40,7 @@ $routes->group('bp', function ($routes) {
     $routes->get('detail-siswa/(:num)', 'BP::detailSiswa/$1');
 });
 
+$routes->get('/pelanggaran', 'Pelanggaran::index');
 
 $routes->group('admin', ['filter' => 'authAdmin'], function ($routes) {
     $routes->get('dashboard', 'Admin::dashboard');

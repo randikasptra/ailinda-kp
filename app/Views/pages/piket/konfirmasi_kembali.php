@@ -39,13 +39,18 @@
                                 <td class="px-4 py-2">
                                     <input type="time" name="waktu_kembali_siswa" required class="border rounded-lg px-2 py-1 text-sm w-full">
                                 </td>
-                                <td class="px-4 py-2">
-                                    <select name="poin_pelanggaran" class="border rounded-lg px-2 py-1 text-sm w-full">
-                                        <option value="0">Tidak Ada</option>
-                                        <option value="5">Atribut Tidak Lengkap (5 Poin)</option>
-                                        <option value="10">Merokok (10 Poin)</option>
-                                    </select>
-                                </td>
+                             <td class="px-4 py-2">
+    <select name="pelanggaran_id" class="border rounded-lg px-2 py-1 text-sm w-full" required>
+        <option value="">-- Pilih Pelanggaran --</option>
+        <?php foreach ($pelanggaran as $p): ?>
+            <option value="<?= $p['id'] ?>">
+                <?= esc($p['jenis']) ?> (<?= $p['poin'] ?> poin)
+            </option>
+        <?php endforeach; ?>
+    </select>
+</td>
+
+
                                 <td class="px-4 py-2">
                                     <button type="submit" class="bg-[#1E5631] text-white px-3 py-1 rounded-lg hover:bg-[#145128] text-sm">
                                         Konfirmasi

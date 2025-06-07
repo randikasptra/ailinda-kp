@@ -30,22 +30,3 @@ class PelanggaranSeeder extends Seeder
 
 
 
-// 3. Controller: Pelanggaran.php
-namespace App\Controllers;
-
-use App\Models\PelanggaranModel;
-use CodeIgniter\Controller;
-
-class Pelanggaran extends BaseController
-{
-    public function index()
-    {
-        $model = new PelanggaranModel();
-        $data = [
-            'title' => 'Data Pelanggaran',
-            'pelanggaran' => $model->findAll()
-        ];
-
-        return view('pages/pelanggaran/index', $data);
-    }
-}

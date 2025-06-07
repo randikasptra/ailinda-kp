@@ -6,6 +6,7 @@ use App\Models\SiswaModel;
 use App\Models\SuratIzinModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use App\Models\HistoryKonfirmasiModel;
+use App\Models\PelanggaranModel;
 
 
 class Piket extends BaseController
@@ -80,17 +81,19 @@ class Piket extends BaseController
         ]);
     }
 
-    public function konfirmasiKembali()
-    {
-        $izinList = $this->izinModel
-            ->where('status_kembali', 'belum kembali')
-            ->findAll();
+public function konfirmasiKembali()
+{
+    $izinModel = new SuratIzinModel();
+    $pelanggaranModel = new \App\Models\PelanggaranModel();
 
-        return view('pages/piket/konfirmasi_kembali', [
-            'title'    => 'Konfirmasi Siswa Kembali',
-            'izinList' => $izinList,
-        ]);
-    }
+    $data = [
+        'title'       => 'Konfirmasi Kembali',
+        'izinList'    => $izinModel->where('status', 'belum kembali')->findAll(),
+        'pelanggaran' => $pelanggaranModel->findAll()
+    ];
+
+    return view('pages/piket/konfirmasi_kembali', $data);
+}
     public function history()
 {
     $historyModel = new HistoryKonfirmasiModel();
@@ -138,31 +141,44 @@ class Piket extends BaseController
 }
 
 
-    public function catatPelanggaran()
+ public function catatPelanggaran()
 {
-    $id     = $this->request->getPost('izin_id');
-    $poin   = (int) $this->request->getPost('poin_pelanggaran');
-    $waktu  = $this->request->getPost('waktu_kembali_siswa');
+    $izinModel = new SuratIzinModel();
+    $pelanggaranModel = new \App\Models\PelanggaranModel();
+    $siswaModel = new \App\Models\SiswaModel();
 
-    $this->izinModel->update($id, [
-        'status_kembali'       => 'sudah kembali',
-        'poin_pelanggaran'     => $poin,
-        'waktu_kembali_siswa'  => $waktu
-    ]);
+    $izinId = $this->request->getPost('izin_id');
+    $waktuKembaliSiswa = $this->request->getPost('waktu_kembali_siswa');
+    $pelanggaranId = $this->request->getPost('pelanggaran_id');
 
-    $historyModel = new \App\Models\HistoryKonfirmasiModel(); 
-    $izin = $this->izinModel->find($id);
-    $historyModel->insert([
-        'izin_id'              => $izin['id'],
-        'nama'                 => $izin['nama'],
-        'kelas'                => $izin['kelas'],
-        'waktu_keluar'         => $izin['waktu_keluar'],
-        'waktu_kembali'        => $izin['waktu_kembali'],
-        'waktu_kembali_siswa'  => $waktu,
-        'poin_pelanggaran'     => $poin,
-    ]);
+    // Ambil izin
+    $izin = $izinModel->find($izinId);
 
-    return redirect()->to('/piket/konfirmasi_kembali')->with('success', 'Data berhasil dikonfirmasi.');
+    if ($izin) {
+        // Update status izin
+        $izinModel->update($izinId, [
+            'waktu_kembali_siswa' => $waktuKembaliSiswa,
+            'status'              => 'sudah kembali',
+        ]);
+
+        // Tambahkan poin jika ada pelanggaran
+        if ($pelanggaranId) {
+            $pelanggaran = $pelanggaranModel->find($pelanggaranId);
+            if ($pelanggaran && $pelanggaran['poin'] > 0) {
+                // Tambahkan poin ke siswa
+                $siswa = $siswaModel->where('nama', $izin['nama'])->first();
+                if ($siswa) {
+                    $newPoin = $siswa['poin'] + $pelanggaran['poin'];
+                    $siswaModel->update($siswa['id'], ['poin' => $newPoin]);
+                }
+            }
+        }
+
+        return redirect()->back()->with('success', 'Konfirmasi berhasil disimpan.');
+    }
+
+    return redirect()->back()->with('error', 'Data tidak ditemukan.');
 }
+
 
 }

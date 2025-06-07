@@ -8,5 +8,5 @@ class PelanggaranModel extends Model
 {
     protected $table = 'pelanggaran';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['jenis_pelanggaran', 'poin'];
+    protected $allowedFields = ['jenis', 'poin'];
 }
