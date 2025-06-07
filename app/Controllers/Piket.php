@@ -90,6 +90,17 @@ class Piket extends BaseController
         ]);
     }
 
+    public function dataSiswa()
+{
+    $siswa = $this->siswaModel->findAll();
+
+    return view('pages/piket/data_siswa', [
+        'title'  => 'Data Siswa',
+        'siswa'  => $siswa
+    ]);
+}
+
+
     public function catatPelanggaran()
     {
         $id     = $this->request->getPost('izin_id');
