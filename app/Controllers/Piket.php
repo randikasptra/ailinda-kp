@@ -90,13 +90,39 @@ class Piket extends BaseController
         ]);
     }
 
-    public function dataSiswa()
+   public function dataSiswa()
 {
-    $siswa = $this->siswaModel->findAll();
+    $keyword   = $this->request->getGet('keyword');
+    $kelas     = $this->request->getGet('kelas');
+    $jurusan   = $this->request->getGet('jurusan');
+
+    $builder = $this->siswaModel;
+
+    if ($keyword) {
+        $builder = $builder->groupStart()
+                           ->like('nama', $keyword)
+                           ->orLike('nisn', $keyword)
+                           ->groupEnd();
+    }
+
+    if ($kelas) {
+        $builder = $builder->where('kelas', $kelas);
+    }
+
+    if ($jurusan) {
+        $builder = $builder->where('jurusan', $jurusan);
+    }
+
+    $siswa = $builder->findAll();
 
     return view('pages/piket/data_siswa', [
-        'title'  => 'Data Siswa',
-        'siswa'  => $siswa
+        'title'   => 'Data Siswa',
+        'siswa'   => $siswa,
+        'filter'  => [
+            'keyword' => $keyword,
+            'kelas'   => $kelas,
+            'jurusan' => $jurusan
+        ]
     ]);
 }
 
