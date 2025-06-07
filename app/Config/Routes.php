@@ -28,6 +28,8 @@ $routes->group('piket', function ($routes) {
     $routes->get('izin_cetak/(:num)', 'Piket::cetakIzin/$1');
     $routes->get('konfirmasi_kembali', 'Piket::konfirmasiKembali'); 
     $routes->post('catat-pelanggaran', 'Piket::catatPelanggaran');  
+    $routes->get('data_siswa', 'Piket::dataSiswa'); 
+
 });
 
 // Pelanggaran (BP)

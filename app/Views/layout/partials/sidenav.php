@@ -3,20 +3,22 @@
         <span class="text-[#A4DE02]">MAN 1</span> <br> Dashboard
     </div>
     <nav class="flex-1 p-4 space-y-2 text-sm overflow-y-auto">
-        <?php if (session()->get('role') == 'piket'): ?>
-            <a href="/dashboard/piket" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
-                <i data-lucide="home" class="w-4 h-4"></i> Dashboard Piket
-            </a>
-            <a href="/piket/surat_izin" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
-                <i data-lucide="file-plus" class="w-4 h-4"></i> Input Surat Izin
-            </a>
-            <a href="/piket/konfirmasi_kembali" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
-                <i data-lucide="check-circle" class="w-4 h-4"></i> Konfirmasi Kembali
-            </a>
-            <a href="/piket/catat-pelanggaran" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
-                <i data-lucide="alert-triangle" class="w-4 h-4"></i> Catat Pelanggaran
-            </a>
-        <?php else: ?>
+       <?php if (session()->get('role') == 'piket'): ?>
+    <a href="/dashboard/piket" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
+        <i data-lucide="home" class="w-4 h-4"></i> Dashboard Piket
+    </a>
+    <a href="/piket/surat_izin" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
+        <i data-lucide="file-plus" class="w-4 h-4"></i> Input Surat Izin
+    </a>
+    <a href="/piket/konfirmasi_kembali" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
+        <i data-lucide="check-circle" class="w-4 h-4"></i> Konfirmasi Kembali
+    </a>
+   <a href="/piket/data_siswa" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
+        <i data-lucide="users" class="w-4 h-4"></i> Data Siswa
+    </a>
+    
+<?php else: ?>
+
             <a href="/dashboard/bp" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
                 <i data-lucide="home" class="w-4 h-4"></i> Dashboard BP
             </a>
