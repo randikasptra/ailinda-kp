@@ -5,7 +5,8 @@
 <?= $this->extend('layout/dashboard') ?>
 <?= $this->section('content') ?>
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="ml-64">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div class="bg-white shadow-lg rounded-xl p-6 border-l-4 border-green-500">
         <div class="flex items-center">
             <i data-lucide="users" class="w-8 h-8 text-green-500 mr-4"></i>
@@ -53,6 +54,7 @@
             <?php endif; ?>
         </ul>
     </div>
+</div>
 </div>
 
 <?= $this->endSection() ?>

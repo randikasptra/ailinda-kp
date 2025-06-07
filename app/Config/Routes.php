@@ -29,6 +29,7 @@ $routes->group('piket', function ($routes) {
     $routes->get('konfirmasi_kembali', 'Piket::konfirmasiKembali'); 
     $routes->post('catat-pelanggaran', 'Piket::catatPelanggaran');  
     $routes->get('data_siswa', 'Piket::dataSiswa'); 
+    $routes->get('history_konfirmasi', 'Piket::history'); 
 
 });
 

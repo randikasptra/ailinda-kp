@@ -13,6 +13,10 @@
     <a href="/piket/konfirmasi_kembali" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
         <i data-lucide="check-circle" class="w-4 h-4"></i> Konfirmasi Kembali
     </a>
+    <a href="/piket/history_konfirmasi" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
+    <i data-lucide="history" class="w-4 h-4"></i> Riwayat Konfirmasi
+</a>
+
    <a href="/piket/data_siswa" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
         <i data-lucide="users" class="w-4 h-4"></i> Data Siswa
     </a>

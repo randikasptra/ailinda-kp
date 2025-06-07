@@ -5,6 +5,8 @@ namespace App\Controllers;
 use App\Models\SiswaModel;
 use App\Models\SuratIzinModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
+use App\Models\HistoryKonfirmasiModel;
+
 
 class Piket extends BaseController
 {
@@ -89,6 +91,15 @@ class Piket extends BaseController
             'izinList' => $izinList,
         ]);
     }
+    public function history()
+{
+    $historyModel = new HistoryKonfirmasiModel();
+    $data = [
+        'title' => 'Riwayat Konfirmasi Kembali',
+        'historyList' => $historyModel->orderBy('created_at', 'DESC')->findAll(),
+    ];
+    return view('pages/piket/history_konfirmasi', $data);
+}
 
    public function dataSiswa()
 {
@@ -128,17 +139,30 @@ class Piket extends BaseController
 
 
     public function catatPelanggaran()
-    {
-        $id     = $this->request->getPost('izin_id');
-        $poin   = (int) $this->request->getPost('poin_pelanggaran');
-        $waktu  = $this->request->getPost('waktu_kembali_siswa');
+{
+    $id     = $this->request->getPost('izin_id');
+    $poin   = (int) $this->request->getPost('poin_pelanggaran');
+    $waktu  = $this->request->getPost('waktu_kembali_siswa');
 
-        $this->izinModel->update($id, [
-            'status_kembali'       => 'sudah kembali',
-            'poin_pelanggaran'     => $poin,
-            'waktu_kembali_siswa'  => $waktu
-        ]);
+    $this->izinModel->update($id, [
+        'status_kembali'       => 'sudah kembali',
+        'poin_pelanggaran'     => $poin,
+        'waktu_kembali_siswa'  => $waktu
+    ]);
 
-        return redirect()->to('/piket/konfirmasi_kembali')->with('success', 'Data berhasil dikonfirmasi.');
-    }
+    $historyModel = new \App\Models\HistoryKonfirmasiModel(); 
+    $izin = $this->izinModel->find($id);
+    $historyModel->insert([
+        'izin_id'              => $izin['id'],
+        'nama'                 => $izin['nama'],
+        'kelas'                => $izin['kelas'],
+        'waktu_keluar'         => $izin['waktu_keluar'],
+        'waktu_kembali'        => $izin['waktu_kembali'],
+        'waktu_kembali_siswa'  => $waktu,
+        'poin_pelanggaran'     => $poin,
+    ]);
+
+    return redirect()->to('/piket/konfirmasi_kembali')->with('success', 'Data berhasil dikonfirmasi.');
+}
+
 }
