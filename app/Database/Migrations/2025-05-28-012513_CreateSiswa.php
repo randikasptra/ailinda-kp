@@ -15,7 +15,7 @@ class CreateSiswa extends Migration
             'kelas'      => ['type' => 'VARCHAR', 'constraint' => 10],
             'jurusan'    => [
                 'type'       => 'ENUM',
-                'constraint' => ['IPA', 'IPS', 'BAHASA'], // ✅ ENUM jurusan
+                'constraint' => ['IPA', 'IPS', 'BAHASA'], 
             ],
             'poin'       => ['type' => 'INT', 'default' => 0],
             'created_at' => ['type' => 'DATETIME', 'null' => true],
