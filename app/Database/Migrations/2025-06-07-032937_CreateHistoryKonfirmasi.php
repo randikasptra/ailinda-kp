@@ -15,7 +15,7 @@ class CreateHistoryKonfirmasi extends Migration
             'kelas' => ['type' => 'VARCHAR', 'constraint' => 10],
             'waktu_keluar' => ['type' => 'TIME'],
             'waktu_kembali' => ['type' => 'TIME'],
-            'waktu_kembali_siswa' => ['type' => 'TIME'],
+            'waktu_kembali_siswa' => ['type' => 'TIME', 'null' => true],
             'poin_pelanggaran' => ['type' => 'INT'],
             'created_at' => ['type' => 'DATETIME', 'null' => true],
         ]);

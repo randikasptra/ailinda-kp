@@ -2,7 +2,7 @@
 // File: app/Views/pages/admin/dashboard.php
 ?>
 
-<?= $this->extend('layout/dashboard') ?>
+<?= $this->extend('layout/dashboard_admin') ?>
 <?= $this->section('content') ?>
 
 <div class="ml-64">

@@ -16,7 +16,7 @@ class CreateSuratIzinTable extends Migration
             'alasan'         => ['type' => 'TEXT'],
             'waktu_keluar'   => ['type' => 'TIME'],
             'waktu_kembali'  => ['type' => 'TIME'],
-            'status'        => [ // ✅ Tambahkan ini
+            'status'        => [ 
         'type'       => 'ENUM',
         'constraint' => ['belum kembali', 'sudah kembali'],
         'default'    => 'belum kembali',

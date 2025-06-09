@@ -23,7 +23,7 @@
 <body class="flex min-h-screen bg-[#F0F9F1]">
 
     <!-- Sidebar -->
-    <?= $this->include('layout/partials/sidenav') ?>
+    <?= $this->include('layout/partials/sidenav_admin') ?>
 
     <!-- Main Content -->
     <main class="flex-1 p-6 relative">

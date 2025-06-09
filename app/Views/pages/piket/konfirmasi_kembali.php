@@ -39,18 +39,18 @@
                                 <td class="px-4 py-2">
                                     <input type="time" name="waktu_kembali_siswa" required class="border rounded-lg px-2 py-1 text-sm w-full">
                                 </td>
-                             <td class="px-4 py-2">
-    <select name="pelanggaran_id" class="border rounded-lg px-2 py-1 text-sm w-full" required>
-        <option value="">-- Pilih Pelanggaran --</option>
-        <?php foreach ($pelanggaran as $p): ?>
-            <option value="<?= $p['id'] ?>">
-                <?= esc($p['jenis']) ?> (<?= $p['poin'] ?> poin)
-            </option>
-        <?php endforeach; ?>
-    </select>
-</td>
-
-
+                                <td class="px-4 py-2">
+                                    <div style="max-height: 200px; overflow-y: auto; border: 1px solid #ccc; border-radius: 8px; padding: 8px; background: #f9f9f9;">
+                                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;">
+                                            <?php foreach ($pelanggaran as $p): ?>
+                                                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; background: #fff; padding: 6px 8px; border-radius: 6px; box-shadow: 0 0 2px rgba(0,0,0,0.1); font-size: 14px;">
+                                                    <input type="checkbox" name="pelanggaran_id[]" value="<?= $p['id'] ?>">
+                                                    <?= esc($p['jenis_pelanggaran']) ?> (<?= $p['poin'] ?> poin)
+                                                </label>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                </td>
                                 <td class="px-4 py-2">
                                     <button type="submit" class="bg-[#1E5631] text-white px-3 py-1 rounded-lg hover:bg-[#145128] text-sm">
                                         Konfirmasi
