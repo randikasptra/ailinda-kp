@@ -7,41 +7,42 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 // Auth
+// Redirect root
+
 $routes->get('/', 'Auth::login');
-$routes->post('/login', 'Auth::doLogin');
-$routes->get('/logout', 'Auth::logout');
+$routes->get('login', 'Auth::login');
+$routes->post('login', 'Auth::doLogin');
+$routes->get('logout', 'Auth::logout');
 
-// Dashboard
 
-// Tambahin ini biar akses /dashboard langsung ke admin
-$routes->get('dashboard', 'Dashboard::admin');
+// Redirect default dashboard ke admin
+$routes->get('dashboard', 'Dashboard::admin', ['filter' => 'role:admin']);
 
+// Dashboard masing-masing role
 $routes->group('dashboard', function ($routes) {
-    $routes->get('piket', 'Dashboard::piket'); 
-    $routes->get('bp', 'Dashboard::bp');       
-    $routes->get('admin', 'Dashboard::admin'); 
+    $routes->get('piket', 'Dashboard::piket', ['filter' => 'role:piket']);
+    $routes->get('bp', 'Dashboard::bp', ['filter' => 'role:bp']);
+    $routes->get('admin', 'Dashboard::admin', ['filter' => 'role:admin']);
 });
 
-$routes->group('piket', function ($routes) {
-    $routes->get('surat_izin', 'Piket::formIzin');        
-    $routes->post('surat_izin', 'Piket::simpanIzin');     
+// Halaman untuk piket
+$routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
+    $routes->get('surat_izin', 'Piket::formIzin');
+    $routes->post('surat_izin', 'Piket::simpanIzin');
     $routes->get('izin_cetak/(:num)', 'Piket::cetakIzin/$1');
-    $routes->get('konfirmasi_kembali', 'Piket::konfirmasiKembali'); 
-    $routes->post('catat-pelanggaran', 'Piket::catatPelanggaran');  
-    $routes->get('data_siswa', 'Piket::dataSiswa'); 
-    $routes->get('history_konfirmasi', 'Piket::history'); 
-    
-
+    $routes->get('konfirmasi_kembali', 'Piket::konfirmasiKembali');
+    $routes->post('catat-pelanggaran', 'Piket::catatPelanggaran');
+    $routes->get('data_siswa', 'Piket::dataSiswa');
+    $routes->get('history_konfirmasi', 'Piket::history');
 });
 
-// Pelanggaran (BP)
-$routes->group('bp', function ($routes) {
-    $routes->get('rekap', 'BP::rekapPelanggaran');         // views/pages/bp/rekap.php ✅
+// Halaman untuk BP
+$routes->group('bp', ['filter' => 'role:bp'], function ($routes) {
+    $routes->get('rekap', 'BP::rekapPelanggaran');
     $routes->get('detail-siswa/(:num)', 'BP::detailSiswa/$1');
 });
 
-$routes->get('/pelanggaran', 'Pelanggaran::index');
-
+// Halaman Admin
 $routes->group('admin', ['filter' => 'authAdmin'], function ($routes) {
     $routes->get('dashboard', 'Admin::dashboard');
     $routes->get('users', 'Admin::listUsers');
@@ -51,3 +52,8 @@ $routes->group('admin', ['filter' => 'authAdmin'], function ($routes) {
     $routes->post('users/update/(:num)', 'Admin::updateUser/$1');
     $routes->get('users/delete/(:num)', 'Admin::deleteUser/$1');
 });
+
+// Optional: pelanggaran bebas akses
+$routes->get('/pelanggaran', 'Pelanggaran::index');
+$routes->get('unauthorized', 'Error::unauthorized');
+

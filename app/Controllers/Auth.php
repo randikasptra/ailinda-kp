@@ -7,9 +7,15 @@ use App\Models\UserModel;
 class Auth extends BaseController
 {
     public function login()
-    {
-        return view('auth/login');
+{
+    if (session()->get('logged_in')) {
+        return redirect()->to('/dashboard/' . session()->get('role'));
     }
+    return view('auth/login');
+}
+
+
+
 
     public function doLogin()
     {
@@ -37,6 +43,7 @@ class Auth extends BaseController
     public function logout()
     {
         session()->destroy();
-        return redirect()->to('/login');
+        return redirect()->to('/');
     }
+    
 }
