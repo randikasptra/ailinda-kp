@@ -17,6 +17,7 @@ class RoleFilter implements FilterInterface
         if ($arguments && ! in_array($role, $arguments)) {
             return redirect()->to('/unauthorized');
         }
+        
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)

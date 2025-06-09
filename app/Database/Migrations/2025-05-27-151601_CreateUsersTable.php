@@ -12,7 +12,7 @@ class CreateUsersTable extends Migration
             'id'       => ['type' => 'INT', 'auto_increment' => true],
             'username' => ['type' => 'VARCHAR', 'constraint' => 50],
             'password' => ['type' => 'VARCHAR', 'constraint' => 255],
-            'role'     => ['type' => 'ENUM', 'constraint' => ['piket', 'bp']],
+            'role'     => ['type' => 'ENUM', 'constraint' => ['piket', 'bp','admin']],
             'created_at' => ['type' => 'DATETIME', 'null' => true],
             'updated_at' => ['type' => 'DATETIME', 'null' => true],
         ]);

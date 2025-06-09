@@ -2,6 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Models\UserModel;
+use App\Models\PelanggaranModel;
+use App\Models\SiswaModel;
 use App\Models\SuratIzinModel;
 
 class Dashboard extends BaseController
@@ -44,8 +47,21 @@ class Dashboard extends BaseController
         return view('pages/bp/bp', ['title' => 'Dashboard BP']);
     }
 
-    public function admin()
-    {
-        return view('pages/admin/dashboard', ['title' => 'Dashboard Admin']);
-    }
+  public function admin()
+{
+    $userModel = new UserModel();
+    $pelanggaranModel = new PelanggaranModel();
+    $siswaModel = new SiswaModel();
+
+    $totalAdmin = $userModel->where('role', 'admin')->countAllResults();
+    $totalPelanggaran = $pelanggaranModel->countAllResults();
+    $totalSiswa = $siswaModel->countAllResults();
+
+    return view('pages/admin/dashboard', [
+        'title'            => 'Dashboard Admin',
+        'totalAdmin'       => $totalAdmin,
+        'totalPelanggaran' => $totalPelanggaran,
+        'totalSiswa'       => $totalSiswa
+    ]);
+}
 }

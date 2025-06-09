@@ -4,7 +4,7 @@
     </div>
     <nav class="flex-1 p-4 space-y-2 text-sm overflow-y-auto">
         <?php if (session()->get('role') == 'admin'): ?>
-            <a href="/admin/dashboard" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
+            <a href="/dashboard/admin" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
                 <i data-lucide="home" class="w-4 h-4"></i> Dashboard Admin
             </a>
             <a href="/admin/users" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">

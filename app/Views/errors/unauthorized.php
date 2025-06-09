@@ -28,8 +28,8 @@
     <h1>Access Denied</h1>
     <p>You do not have permission to access this page.</p>
     <p>
-    <p><a href="/login">Go to Login</a></p>
-<p><button onclick="window.location.href='/login'">Go to Login</button></p>
+    <p><a href="/">Go to Login</a></p>
+<p><button onclick="window.location.href='/'">Go to Login</button></p>
 
 
 </p>

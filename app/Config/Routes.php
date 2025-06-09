@@ -43,7 +43,9 @@ $routes->group('bp', ['filter' => 'role:bp'], function ($routes) {
 });
 
 // Halaman Admin
-$routes->group('admin', ['filter' => 'authAdmin'], function ($routes) {
+$routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
+
+// $routes->group('admin', ['filter' => 'authAdmin'], function ($routes) {
     $routes->get('dashboard', 'Admin::dashboard');
     $routes->get('users', 'Admin::listUsers');
     $routes->get('users/create', 'Admin::createUser');
@@ -54,6 +56,6 @@ $routes->group('admin', ['filter' => 'authAdmin'], function ($routes) {
 });
 
 // Optional: pelanggaran bebas akses
-$routes->get('/pelanggaran', 'Pelanggaran::index');
-$routes->get('unauthorized', 'Error::unauthorized');
+ $routes->get('/pelanggaran', 'Pelanggaran::index');
+ $routes->get('unauthorized', 'Error::unauthorized');
 

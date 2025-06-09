@@ -86,10 +86,14 @@ public function konfirmasiKembali()
     $izinModel = new SuratIzinModel();
     $pelanggaranModel = new \App\Models\PelanggaranModel();
 
+    // Ambil semua data izin yang belum kembali
+    $izinBelumKembali = $izinModel->where('status', 'belum kembali')->findAll();
+
     $data = [
-        'title'       => 'Konfirmasi Kembali',
-        'izinList'    => $izinModel->where('status', 'belum kembali')->findAll(),
-        'pelanggaran' => $pelanggaranModel->findAll()
+        'title'        => 'Konfirmasi Kembali',
+        'izinList'     => $izinBelumKembali,
+        'pelanggaran'  => $pelanggaranModel->findAll(),
+        'belumKembali' => count($izinBelumKembali) // ini yang penting
     ];
 
     return view('pages/piket/konfirmasi_kembali', $data);
@@ -168,26 +172,37 @@ public function catatPelanggaran()
         return redirect()->back()->with('error', 'Data izin tidak ditemukan.');
     }
 
-   $poinPelanggaran = 0;
+    $poinPelanggaran = 0;
 
-if ($pelanggaranId && is_array($pelanggaranId)) {
-    $pelanggarans = $pelanggaranModel->find($pelanggaranId); // hasil: array of pelanggaran
-    foreach ($pelanggarans as $p) {
-        if (isset($p['poin'])) {
-            $poinPelanggaran += $p['poin'];
+    if ($pelanggaranId && is_array($pelanggaranId)) {
+        $pelanggarans = $pelanggaranModel->find($pelanggaranId);
+        foreach ($pelanggarans as $p) {
+            if (isset($p['poin'])) {
+                $poinPelanggaran += $p['poin'];
+            }
         }
     }
-}
 
+    // 1. Update data izin
+    $izinModel->update($izinId, [
+        'waktu_kembali_siswa' => $waktuKembaliSiswa,
+        'status'              => 'sudah kembali',
+        'poin_pelanggaran'    => $poinPelanggaran,
+    ]);
 
-   $izinModel->update($izinId, [
-    'waktu_kembali_siswa' => $waktuKembaliSiswa, 
-    'status'              => 'sudah kembali',
-    'poin_pelanggaran'    => $poinPelanggaran,
-]);
+    // 2. Tambahkan poin ke siswa
+    if ($poinPelanggaran > 0) {
+        $siswa = $siswaModel->where('nisn', $izin['nisn'])->first();
 
+        if ($siswa) {
+            $poinSebelumnya = $siswa['poin'] ?? 0;
+            $poinBaru = $poinSebelumnya + $poinPelanggaran;
 
-
+            $siswaModel->update($siswa['id'], [
+                'poin' => $poinBaru
+            ]);
+        }
+    }
 
     return redirect()->to('/piket/history_konfirmasi')->with('success', 'Konfirmasi berhasil disimpan.');
 }
