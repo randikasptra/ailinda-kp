@@ -187,6 +187,31 @@ class Dashboard extends BaseController
         return view('pages/admin/pelanggaran', $data);
     }
 
+    public function editSiswa($id)
+    {
+        $model = new SiswaModel();
+        $siswa = $model->find($id);
+
+        if (!$siswa) {
+            return redirect()->to('/admin/siswa')->with('error', 'Data siswa tidak ditemukan.');
+        }
+
+        return view('pages/admin/edit_siswa', [
+            'title' => 'Edit Data Siswa',
+            'siswa' => $siswa
+        ]);
+    }
+
+    public function updateSiswa($id)
+    {
+        $model = new SiswaModel();
+        $data = $this->request->getPost();
+
+        $model->update($id, $data);
+        return redirect()->to('/admin/siswa')->with('success', 'Data siswa berhasil diperbarui!');
+    }
+
+
     public function tambahPelanggaran()
     {
         $model = new PelanggaranModel();

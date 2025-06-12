@@ -36,13 +36,18 @@
                         <td class="px-4 py-2 border"><?= esc($s['kelas']) ?></td>
                         <td class="px-4 py-2 border"><?= esc($s['jurusan']) ?></td>
                         <td class="px-4 py-2 border"><?= esc($s['poin']) ?></td>
-                        <td class="px-4 py-2 border flex gap-2">
-                            <a href="/admin/siswa/detail_siswa/<?= $s['id'] ?>" class="text-blue-600 hover:underline">
-                                <i data-lucide="eye" class="w-4 h-4 inline-block"></i>
+                        <td class="px-4 py-2 border flex gap-2 justify-center ">
+                            <a href="/admin/siswa/detail_siswa/<?= $s['id'] ?>" class="text-blue-600 hover:text-blue-800"
+                                title="Lihat Detail">
+                                <i data-lucide="eye" class="w-4 h-4"></i>
+                            </a>
+                            <a href="/admin/siswa/edit_siswa/<?= $s['id'] ?>" class="text-yellow-500 hover:text-yellow-700"
+                                title="Edit Siswa">
+                                <i data-lucide="pencil" class="w-4 h-4"></i>
                             </a>
                             <a href="/admin/siswa/hapus/<?= $s['id'] ?>" onclick="return confirm('Yakin hapus?')"
-                                class="text-red-600 hover:underline">
-                                <i data-lucide="trash-2" class="w-4 h-4 inline-block"></i>
+                                class="text-red-600 hover:text-red-800" title="Hapus Siswa">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </a>
                         </td>
                     </tr>
