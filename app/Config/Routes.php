@@ -51,6 +51,10 @@ $routes->group('bp', ['filter' => 'role:bp'], function ($routes) {
 // =======================
 $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
     $routes->get('dashboard', 'Admin::dashboard');
+    $routes->get('siswa', 'Dashboard::siswa');
+    $routes->post('siswa/tambah', 'Dashboard::tambahSiswa');
+    $routes->get('siswa/detail/(:num)', 'Dashboard::detailSiswa/$1');
+    $routes->get('siswa/hapus/(:num)', 'Dashboard::hapusSiswa/$1');
 
     // User Management
     $routes->get('users', 'Dashboard::users');
