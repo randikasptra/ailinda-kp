@@ -13,7 +13,7 @@
             <a href="/admin/pelanggaran" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
                 <i data-lucide="alert-triangle" class="w-4 h-4"></i> Kelola Pelanggaran
             </a>
-            <a href="/admin/data_siswa" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
+            <a href="/admin/siswa" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
                 <i data-lucide="users" class="w-4 h-4"></i> Data Siswa
             </a>
         <?php endif; ?>

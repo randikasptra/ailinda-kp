@@ -50,6 +50,36 @@ class Dashboard extends BaseController
         return view('pages/bp/bp', ['title' => 'Dashboard BP']);
     }
 
+
+    public function siswa()
+    {
+        $model = new \App\Models\SiswaModel();
+        $data['siswa'] = $model->findAll();
+        return view('pages/admin/siswa', $data);
+    }
+
+    public function tambahSiswa()
+    {
+        $data = $this->request->getPost();
+        $model = new \App\Models\SiswaModel();
+        $model->save($data);
+        return redirect()->to('/admin/siswa')->with('success', 'Siswa ditambahkan!');
+    }
+
+    public function detailSiswa($id)
+    {
+        $model = new \App\Models\SiswaModel();
+        $data['siswa'] = $model->find($id);
+        return view('pages/admin/detail_siswa', $data);
+    }
+
+    public function hapusSiswa($id)
+    {
+        $model = new \App\Models\SiswaModel();
+        $model->delete($id);
+        return redirect()->to('/admin/siswa')->with('success', 'Siswa dihapus!');
+    }
+
     // DASHBOARD ADMIN
     public function admin()
     {
