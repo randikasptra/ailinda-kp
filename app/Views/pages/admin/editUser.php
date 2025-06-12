@@ -14,11 +14,7 @@
                     class="w-full border px-3 py-2 rounded" required>
             </div>
 
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" name="email" value="<?= esc($user['email']) ?>"
-                    class="w-full border px-3 py-2 rounded" required>
-            </div>
+         
 
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Password (Kosongkan jika tidak diubah)</label>

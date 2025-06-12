@@ -105,7 +105,7 @@ class Dashboard extends BaseController
             return redirect()->to('/admin/users')->with('error', 'User tidak ditemukan.');
         }
 
-        return view('pages/admin/edit_user', [
+        return view('pages/admin/editUser', [
             'title' => 'Edit User',
             'user' => $user
         ]);
