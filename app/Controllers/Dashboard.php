@@ -111,6 +111,17 @@ class Dashboard extends BaseController
         ]);
     }
 
+    // public function detailSiswa($id)
+    // {
+    //     $siswa = $this->SiswaModel->find($id);
+
+    //     if (!$siswa) {
+    //         return redirect()->to('/admin/siswa')->with('error', 'Data siswa tidak ditemukan.');
+    //     }
+
+    //     return view('pages/admin/detail_siswa', ['siswa' => $siswa]);
+    // }
+
     // Proses update user
     public function updateUser($id)
     {

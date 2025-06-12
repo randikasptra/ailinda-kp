@@ -37,7 +37,7 @@
                         <td class="px-4 py-2 border"><?= esc($s['jurusan']) ?></td>
                         <td class="px-4 py-2 border"><?= esc($s['poin']) ?></td>
                         <td class="px-4 py-2 border flex gap-2">
-                            <a href="/admin/siswa/detail/<?= $s['id'] ?>" class="text-blue-600 hover:underline">
+                            <a href="/admin/siswa/detail_siswa/<?= $s['id'] ?>" class="text-blue-600 hover:underline">
                                 <i data-lucide="eye" class="w-4 h-4 inline-block"></i>
                             </a>
                             <a href="/admin/siswa/hapus/<?= $s['id'] ?>" onclick="return confirm('Yakin hapus?')"
