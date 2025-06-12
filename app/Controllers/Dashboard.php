@@ -97,6 +97,47 @@ class Dashboard extends BaseController
             'totalSiswa' => $totalSiswa
         ]);
     }
+    // Tampilkan form edit user
+    public function editUser($id)
+    {
+        $user = $this->userModel->find($id);
+        if (!$user) {
+            return redirect()->to('/admin/users')->with('error', 'User tidak ditemukan.');
+        }
+
+        return view('pages/admin/edit_user', [
+            'title' => 'Edit User',
+            'user' => $user
+        ]);
+    }
+
+    // Proses update user
+    public function updateUser($id)
+    {
+        $data = [
+            'username' => $this->request->getPost('username'),
+            'email' => $this->request->getPost('email'),
+            'role' => $this->request->getPost('role'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+
+        // Jika password diisi, update
+        $password = $this->request->getPost('password');
+        if (!empty($password)) {
+            $data['password'] = password_hash($password, PASSWORD_DEFAULT);
+        }
+
+        $this->userModel->update($id, $data);
+
+        return redirect()->to('/admin/users')->with('success', 'User berhasil diperbarui!');
+    }
+
+    // Proses hapus user
+    public function deleteUser($id)
+    {
+        $this->userModel->delete($id);
+        return redirect()->to('/admin/users')->with('success', 'User berhasil dihapus!');
+    }
 
     public function users()
     {

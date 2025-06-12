@@ -22,8 +22,8 @@
 
             <select name="jurusan" class="border rounded-lg p-2">
                 <option value="">Semua Jurusan</option>
-                <option value="IPA" <?= ($filter['jurusan'] == 'IPA' ? 'selected' : '') ?>>IPA</option>
-                <option value="IPS" <?= ($filter['jurusan'] == 'IPS' ? 'selected' : '') ?>>IPS</option>
+                <option value="SAINTEK" <?= ($filter['jurusan'] == 'SAINTEK' ? 'selected' : '') ?>>SAINTEK</option>
+                <option value="SOSHUM" <?= ($filter['jurusan'] == 'SOSHUM' ? 'selected' : '') ?>>SOSHUM</option>
                 <option value="BAHASA" <?= ($filter['jurusan'] == 'BAHASA' ? 'selected' : '') ?>>BAHASA</option>
             </select>
 

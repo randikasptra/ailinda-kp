@@ -66,8 +66,10 @@ $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
     $routes->get('pelanggaran', 'Dashboard::pelanggaran');
     $routes->post('pelanggaran/tambah', 'Dashboard::tambahPelanggaran');
     $routes->get('pelanggaran/hapus/(:num)', 'Dashboard::hapusPelanggaran/$1');
-
-    $routes->get('users/delete/(:num)', 'Admin::deleteUser/$1');
+$routes->get('editUser/(:num)', 'Dashboard::editUser/$1');
+$routes->post('updateUser/(:num)', 'Dashboard::updateUser/$1');
+$routes->post('deleteUser/(:num)', 'Dashboard::deleteUser/$1');
+    $routes->get('users/delete/(:num)', 'Dashboard::deleteUser/$1');
 });
 
 // =======================

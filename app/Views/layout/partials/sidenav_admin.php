@@ -8,7 +8,7 @@
                 <i data-lucide="home" class="w-4 h-4"></i> Dashboard Admin
             </a>
             <a href="/admin/users" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
-                <i data-lucide="user-plus" class="w-4 h-4"></i> Kelola Admin
+                <i data-lucide="user-plus" class="w-4 h-4"></i> Kelola Users
             </a>
             <a href="/admin/pelanggaran" class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#145128]">
                 <i data-lucide="alert-triangle" class="w-4 h-4"></i> Kelola Pelanggaran

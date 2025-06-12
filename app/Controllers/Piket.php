@@ -7,7 +7,7 @@ use App\Models\SuratIzinModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use App\Models\HistoryKonfirmasiModel;
 use App\Models\PelanggaranModel;
-
+use CodeIgniter\I18n\Time;
 
 class Piket extends BaseController
 {
@@ -81,20 +81,27 @@ class Piket extends BaseController
         ]);
     }
 
-    
+
+
     public function konfirmasiKembali()
     {
         $izinModel = new SuratIzinModel();
         $pelanggaranModel = new \App\Models\PelanggaranModel();
 
-        // Ambil semua data izin yang belum kembali
-        $izinBelumKembali = $izinModel->where('status', 'belum kembali')->findAll();
+        // Ambil tanggal hari ini dalam format Y-m-d
+        $today = date('Y-m-d');
+
+        // Ambil semua data izin yang belum kembali dan dibuat hari ini
+        $izinBelumKembali = $izinModel
+            ->where('status', 'belum kembali')
+            ->like('created_at', $today) // pastikan kolom created_at tersedia
+            ->findAll();
 
         $data = [
             'title' => 'Konfirmasi Kembali',
             'izinList' => $izinBelumKembali,
             'pelanggaran' => $pelanggaranModel->findAll(),
-            'belumKembali' => count($izinBelumKembali) // ini yang penting
+            'belumKembali' => count($izinBelumKembali)
         ];
 
         return view('pages/piket/konfirmasi_kembali', $data);

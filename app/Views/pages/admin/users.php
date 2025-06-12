@@ -30,13 +30,25 @@
                         <td class="px-4 py-2"><?= esc($user['username']) ?></td>
                         <td class="px-4 py-2"><?= esc($user['role']) ?></td>
                         <td class="px-4 py-2"><?= date('d M Y', strtotime($user['created_at'])) ?></td>
-                        <td class="px-4 py-2 flex gap-3">
-                            <a href="#" title="Edit" class="text-blue-600 hover:text-blue-800">
-                                <i class="fas fa-edit"></i>
+                       
+                        <td class="px-4 py-2 flex items-center gap-2">
+
+                            <!-- Tombol Edit -->
+                            <a href="<?= site_url('admin/editUser/' . $user['id']) ?>"
+                                class="text-blue-600 hover:text-blue-800 transition duration-200" title="Edit">
+                                <i data-lucide="pencil" class="w-5 h-5"></i>
                             </a>
-                            <a href="#" title="Hapus" class="text-red-600 hover:text-red-800">
-                                <i class="fas fa-trash-alt"></i>
-                            </a>
+
+                            <!-- Tombol Hapus -->
+                            <form action="<?= site_url('admin/deleteUser/' . $user['id']) ?>" method="post"
+                                onsubmit="return confirm('Yakin ingin menghapus user ini?')">
+                                <?= csrf_field() ?>
+                                <button type="submit" title="Hapus"
+                                    class="text-red-600 hover:text-red-800 transition duration-200">
+                                    <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                </button>
+                            </form>
+
                         </td>
                     </tr>
                 <?php endforeach ?>
