@@ -10,17 +10,19 @@ use App\Models\SuratIzinModel;
 class Dashboard extends BaseController
 {
     protected $izinModel;
+    protected $userModel;
 
     public function __construct()
     {
         $this->izinModel = new SuratIzinModel();
+        $this->userModel = new UserModel();
     }
 
+    // DASHBOARD PIKET
     public function piket()
     {
         $today = date('Y-m-d');
 
-        // Data dinamis
         $totalIzinHariIni = $this->izinModel
             ->where('DATE(waktu_keluar)', $today)
             ->countAllResults();
@@ -35,33 +37,61 @@ class Dashboard extends BaseController
             ->countAllResults();
 
         return view('pages/piket/piket', [
-            'title'              => 'Dashboard Piket',
-            'totalIzinHariIni'   => $totalIzinHariIni,
-            'belumKembali'       => $belumKembali,
+            'title' => 'Dashboard Piket',
+            'totalIzinHariIni' => $totalIzinHariIni,
+            'belumKembali' => $belumKembali,
             'pelanggaranHariIni' => $pelanggaranHariIni,
         ]);
     }
 
+    // DASHBOARD BP
     public function bp()
     {
         return view('pages/bp/bp', ['title' => 'Dashboard BP']);
     }
 
-  public function admin()
-{
-    $userModel = new UserModel();
-    $pelanggaranModel = new PelanggaranModel();
-    $siswaModel = new SiswaModel();
+    // DASHBOARD ADMIN
+    public function admin()
+    {
+        $pelanggaranModel = new PelanggaranModel();
+        $siswaModel = new SiswaModel();
 
-    $totalAdmin = $userModel->where('role', 'admin')->countAllResults();
-    $totalPelanggaran = $pelanggaranModel->countAllResults();
-    $totalSiswa = $siswaModel->countAllResults();
+        $totalAdmin = $this->userModel->where('role', 'admin')->countAllResults();
+        $totalPelanggaran = $pelanggaranModel->countAllResults();
+        $totalSiswa = $siswaModel->countAllResults();
 
-    return view('pages/admin/dashboard', [
-        'title'            => 'Dashboard Admin',
-        'totalAdmin'       => $totalAdmin,
-        'totalPelanggaran' => $totalPelanggaran,
-        'totalSiswa'       => $totalSiswa
-    ]);
-}
+        return view('pages/admin/dashboard', [
+            'title' => 'Dashboard Admin',
+            'totalAdmin' => $totalAdmin,
+            'totalPelanggaran' => $totalPelanggaran,
+            'totalSiswa' => $totalSiswa
+        ]);
+    }
+
+    public function users()
+    {
+        $users = $this->userModel->findAll();
+        return view('pages/admin/users', [
+            'title' => 'Kelola Users',
+            'users' => $users
+        ]);
+    }
+
+    public function tambahUser()
+    {
+        $data = $this->request->getPost();
+
+        if ($data) {
+            $this->userModel->save([
+                'username' => $data['username'],
+                'email' => $data['email'],
+                'password' => password_hash($data['password'], PASSWORD_DEFAULT),
+                'role' => $data['role'],
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+            return redirect()->to('admin/users')->with('success', 'User berhasil ditambahkan!');
+        }
+
+        return redirect()->back()->with('error', 'Gagal menambahkan user.');
+    }
 }
