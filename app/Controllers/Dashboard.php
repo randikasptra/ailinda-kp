@@ -94,4 +94,34 @@ class Dashboard extends BaseController
 
         return redirect()->back()->with('error', 'Gagal menambahkan user.');
     }
+
+    public function pelanggaran()
+    {
+        $model = new PelanggaranModel();
+        $data = [
+            'title' => 'Kelola Pelanggaran',
+            'pelanggaran' => $model->findAll()
+        ];
+        return view('pages/admin/pelanggaran', $data);
+    }
+
+    public function tambahPelanggaran()
+    {
+        $model = new PelanggaranModel();
+        $data = $this->request->getPost();
+
+        if ($data) {
+            $model->save($data);
+            return redirect()->to('/admin/pelanggaran')->with('success', 'Pelanggaran berhasil ditambahkan!');
+        }
+
+        return redirect()->back()->with('error', 'Gagal menambahkan pelanggaran.');
+    }
+
+    public function hapusPelanggaran($id)
+    {
+        $model = new PelanggaranModel();
+        $model->delete($id);
+        return redirect()->to('/admin/pelanggaran')->with('success', 'Pelanggaran berhasil dihapus!');
+    }
 }

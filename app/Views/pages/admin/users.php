@@ -30,9 +30,13 @@
                         <td class="px-4 py-2"><?= esc($user['username']) ?></td>
                         <td class="px-4 py-2"><?= esc($user['role']) ?></td>
                         <td class="px-4 py-2"><?= date('d M Y', strtotime($user['created_at'])) ?></td>
-                        <td class="px-4 py-2 flex gap-2">
-                            <a href="#" class="text-blue-600 hover:underline">Edit</a>
-                            <a href="#" class="text-red-600 hover:underline">Hapus</a>
+                        <td class="px-4 py-2 flex gap-3">
+                            <a href="#" title="Edit" class="text-blue-600 hover:text-blue-800">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="#" title="Hapus" class="text-red-600 hover:text-red-800">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
                         </td>
                     </tr>
                 <?php endforeach ?>
@@ -45,7 +49,7 @@
 <div id="tambahModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
     <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
         <h2 class="text-xl font-bold mb-4 text-[#1E5631]">Tambah User Baru</h2>
-        <form method="POST" action=<?="/admin/tambahUser"?> >
+        <form method="POST" action=<?= "/admin/tambahUser" ?>>
             <div class="mb-3">
                 <label class="block text-sm font-medium text-gray-700">Username</label>
                 <input type="text" name="username" class="w-full border px-3 py-2 rounded" required>

@@ -51,15 +51,18 @@ $routes->group('bp', ['filter' => 'role:bp'], function ($routes) {
 // =======================
 $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
     $routes->get('dashboard', 'Admin::dashboard');
-    
+
     // User Management
     $routes->get('users', 'Dashboard::users');
     $routes->get('users/tambah', 'Dashboard::tambahUser');
-    // $routes->get('users/tambah', 'Dashboard::tambahUser');
-    $routes->post('tambahUser', 'Dashboard::tambahUser'); // ✅ Fix: agar /admin/users/tambah bisa post form
-    $routes->post('users/store', 'Admin::storeUser');   // ✅ Alternatif path POST
+    $routes->post('tambahUser', 'Dashboard::tambahUser');
+    $routes->post('users/store', 'Admin::storeUser');
     $routes->get('users/edit/(:num)', 'Admin::editUser/$1');
     $routes->post('users/update/(:num)', 'Admin::updateUser/$1');
+    $routes->get('pelanggaran', 'Dashboard::pelanggaran');
+    $routes->post('pelanggaran/tambah', 'Dashboard::tambahPelanggaran');
+    $routes->get('pelanggaran/hapus/(:num)', 'Dashboard::hapusPelanggaran/$1');
+
     $routes->get('users/delete/(:num)', 'Admin::deleteUser/$1');
 });
 
