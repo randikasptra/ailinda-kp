@@ -1,4 +1,5 @@
 <?= $this->extend('layout/dashboard_admin') ?>
+
 <?= $this->section('content') ?>
 
 <div class="mt-20 p-8">

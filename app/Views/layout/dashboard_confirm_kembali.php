@@ -46,6 +46,57 @@
 
 
 
+
+   
+<script>
+function pelanggaranModal() {
+    return {
+        open: false,
+        selected: [],
+        list: <?= json_encode($pelanggarans, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>,
+
+        toggle(item) {
+            const index = this.selected.findIndex(p => p.id === item.id);
+            if (index > -1) {
+                this.selected.splice(index, 1);
+            } else {
+                this.selected.push(item);
+            }
+        },
+
+        isSelected(item) {
+            return this.selected.some(p => p.id === item.id);
+        },
+
+        remove(index) {
+            this.selected.splice(index, 1);
+        }
+    };
+}
+</script>
+
+    <script>
+        function pelanggaranDropdown() {
+            return {
+                open: false,
+                selected: [],
+                list: <?= json_encode($pelanggarans) ?>,
+                toggle(p) {
+                    if (this.isSelected(p)) {
+                        this.selected = this.selected.filter(item => item.id !== p.id);
+                    } else {
+                        this.selected.push(p);
+                    }
+                },
+                remove(index) {
+                    this.selected.splice(index, 1);
+                },
+                isSelected(p) {
+                    return this.selected.some(item => item.id === p.id);
+                }
+            }
+        }
+    </script>
     
 
 </body>

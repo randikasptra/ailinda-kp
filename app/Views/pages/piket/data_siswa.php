@@ -1,7 +1,7 @@
 <?= $this->extend('layout/dashboard') ?>
 <?= $this->section('content') ?>
 
-<div class="ml-64 p-6">
+<div class="mt-24 ml-64 p-6">
     <div class="bg-white shadow rounded-lg p-4">
         <h1 class="text-2xl font-bold mb-4 text-[#1E5631]">Data Siswa</h1>
 
