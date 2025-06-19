@@ -1,42 +1,63 @@
 <?php
+
 namespace App\Controllers;
 
+use App\Controllers\BaseController;
 use App\Models\SiswaModel;
-use App\Models\SuratIzinModel;
+use App\Models\HistoryKonfirmasiModel;
 
 class Bp extends BaseController
 {
-    protected $siswaModel;
-    protected $izinModel;
-
-    public function __construct()
+    public function rekapPoin()
     {
-        $this->siswaModel = new SiswaModel();
-        $this->izinModel  = new SuratIzinModel();
+        $siswaModel = new SiswaModel();
+        $data = [
+            'title' => 'Rekap Poin Pelanggaran',
+            'siswaList' => $siswaModel->findAll()
+        ];
+
+        return view('pages/bp/rekap_poin', $data);
     }
 
     public function index()
     {
-        $bulanIni = date('Y-m'); // contoh: '2025-06'
+        $siswaModel = new SiswaModel();
+        $historyModel = new HistoryKonfirmasiModel();
 
-        // Hitung total poin pelanggaran bulan ini dari tabel surat izin
-        $total = $this->izinModel
-            ->selectSum('poin_pelanggaran')
-            ->like('updated_at', $bulanIni, 'after')
-            ->where('status', 'sudah kembali')
-            ->first();
+        // Ambil bulan ini (format: YYYY-MM)
+        $bulanIni = date('Y-m');
 
-        $totalPelanggaran = $total['poin_pelanggaran'] ?? 0;
+        // Total pelanggaran dari history_konfirmasi bulan ini
+        $totalPelanggaranBulanIni = $historyModel
+            ->where("DATE_FORMAT(created_at, '%Y-%m')", $bulanIni)
+            ->countAllResults();
 
-        // Hitung siswa yang mendekati DO (≥ 180 poin)
-        $siswaMendekatiDO = $this->siswaModel
+        // Jumlah siswa mendekati DO (≥180 poin)
+        $jumlahSiswaMendekatiDO = $siswaModel
             ->where('poin >=', 180)
             ->countAllResults();
 
+        // Ambil 5 siswa dengan poin tertinggi
+        $topSiswa = $siswaModel
+            ->orderBy('poin', 'DESC')
+            ->limit(5)
+            ->findAll();
+
         return view('pages/bp/bp', [
-            'totalPelanggaran' => $totalPelanggaran,
-            'siswaMendekatiDO' => $siswaMendekatiDO,
-            'title' => 'Dashboard BP'
+            'title' => 'Dashboard BP',
+            'totalPelanggaranBulanIni' => $totalPelanggaranBulanIni,
+            'jumlahSiswaMendekatiDO' => $jumlahSiswaMendekatiDO,
+            'topSiswa' => $topSiswa
         ]);
+    }
+
+    public function hapusPoin($id)
+    {
+        $siswaModel = new SiswaModel();
+
+        // Set poin ke 0 untuk siswa tersebut
+        $siswaModel->update($id, ['poin' => 0]);
+
+        return redirect()->back()->with('success', 'Poin siswa berhasil dihapus.');
     }
 }

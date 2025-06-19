@@ -35,17 +35,25 @@ $routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
     $routes->get('konfirmasi_kembali', 'Piket::konfirmasiKembali');
     $routes->post('catat-pelanggaran', 'Piket::catatPelanggaran');
     $routes->get('data_siswa', 'Piket::dataSiswa');
-    $routes->get('history_konfirmasi', 'Piket::history');
+    $routes->get('history_konfirmasi', 'HistoryKonfirmasi::history');
+    $routes->get('history_konfirmasi/delete/(:num)', 'HistoryKonfirmasi::delete/$1');
+    $routes->post('history_konfirmasi/hapus_hari_ini', 'HistoryKonfirmasi::hapusHariIni');
+    $routes->get('history_konfirmasi/edit/(:num)', 'HistoryKonfirmasi::edit/$1'); // untuk fetch data modal
+    $routes->post('history_konfirmasi/update/(:num)', 'HistoryKonfirmasi::update/$1'); // untuk submit edit form
 });
+
 
 // =======================
 // BP
 // =======================
 $routes->group('bp', ['filter' => 'role:bp'], function ($routes) {
-    $routes->get('rekap', 'BP::rekapPelanggaran');
-    $routes->get('detail-siswa/(:num)', 'BP::detailSiswa/$1');
-});
+    $routes->get('rekap_poin', 'Bp::rekapPoin');
+    $routes->get('hapus-poin/(:num)', 'Bp::hapusPoin/$1'); // ini penting!
+    $routes->get('bp', 'Bp::index'); // dashboard
+    $routes->get('rekap_poin', 'Bp::rekapPoin');
+    $routes->post('hapus-poin', 'Bp::hapusPoin');
 
+});
 // =======================
 // ADMIN
 // =======================
