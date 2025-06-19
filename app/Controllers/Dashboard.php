@@ -11,11 +11,13 @@ class Dashboard extends BaseController
 {
     protected $izinModel;
     protected $userModel;
+    protected $pelanggaranModel;
 
     public function __construct()
     {
         $this->izinModel = new SuratIzinModel();
         $this->userModel = new UserModel();
+        $this->pelanggaranModel = new PelanggaranModel();
     }
 
     // DASHBOARD PIKET
@@ -111,18 +113,30 @@ class Dashboard extends BaseController
         ]);
     }
 
-    // public function detailSiswa($id)
-    // {
-    //     $siswa = $this->SiswaModel->find($id);
+    public function editPelanggaran($id)
+    {
+        
+        $data['title'] = 'Edit Pelanggaran';
+        $data['pelanggaran'] = $this->pelanggaranModel->find($id);
 
-    //     if (!$siswa) {
-    //         return redirect()->to('/admin/siswa')->with('error', 'Data siswa tidak ditemukan.');
-    //     }
+        if (!$data['pelanggaran']) {
+            return redirect()->to('/admin/pelanggaran')->with('error', 'Data tidak ditemukan.');
+        }
 
-    //     return view('pages/admin/detail_siswa', ['siswa' => $siswa]);
-    // }
+        return view('pages/admin/edit_pelanggaran', $data);
+    }
 
-    // Proses update user
+    public function updatePelanggaran($id)
+    {
+        $data = $this->request->getPost();
+
+        $this->pelanggaranModel->update($id, [
+            'jenis_pelanggaran' => $data['jenis_pelanggaran'],
+            'poin' => $data['poin']
+        ]);
+
+        return redirect()->to('/admin/pelanggaran')->with('success', 'Data pelanggaran berhasil diperbarui.');
+    }
     public function updateUser($id)
     {
         $data = [

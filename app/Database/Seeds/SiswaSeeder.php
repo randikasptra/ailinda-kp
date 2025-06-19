@@ -8,82 +8,79 @@ class SiswaSeeder extends Seeder
 {
     public function run()
     {
-        // Bersihin isi tabel dulu (reset data)
+        // Kosongkan tabel siswa sebelum isi ulang
         $this->db->table('siswa')->truncate();
 
         $data = [
             [
-                'nisn'    => '0038217465',
+                'nisn'    => '1000000001',
                 'nama'    => 'Ahmad Fauzi',
-                'kelas'   => 'XII IPA 1',
+                'kelas'   => '10',
+                'jurusan' => 'SAINTEK',
+                'poin'    => 5
+            ],
+            [
+                'nisn'    => '1000000002',
+                'nama'    => 'Dina Safitri',
+                'kelas'   => '11',
                 'jurusan' => 'SAINTEK',
                 'poin'    => 10
             ],
             [
-                'nisn'    => '0038217466',
-                'nama'    => 'Dina Safitri',
-                'kelas'   => 'XI IPS 2',
-                'jurusan' => 'SOSHUM',
-                'poin'    => 5
-            ],
-            [
-                'nisn'    => '0038217467',
+                'nisn'    => '1000000003',
                 'nama'    => 'Rafi Pratama',
-                'kelas'   => 'X TKJ 1',
+                'kelas'   => '12',
                 'jurusan' => 'SAINTEK',
                 'poin'    => 15
             ],
             [
-                'nisn'    => '0038217123',
-                'nama'    => 'Ahmad Putra',
-                'kelas'   => 'XI IPS 2',
-                'jurusan' => 'SOSHUM',
-                'poin'    => 15
-            ],
-            // 🔁 Data duplikat nama (1)
-            [
-                'nisn'    => '0038217555',
-                'nama'    => 'Ahmad Fauzi',
-                'kelas'   => 'XII IPS 3',
-                'jurusan' => 'SAINTEK',
-                'poin'    => 7
-            ],
-            // 🔁 Data duplikat nama (2)
-            [
-                'nisn'    => '0038217999',
-                'nama'    => 'Rafi Pratama',
-                'kelas'   => 'XI IPA 2',
-                'jurusan' => 'SOSHUM',
-                'poin'    => 12
-            ],
-            // ✅ Data unik lainnya
-            [
-                'nisn'    => '0038217666',
+                'nisn'    => '1000000004',
                 'nama'    => 'Nisa Khairunnisa',
-                'kelas'   => 'XII Bahasa 1',
+                'kelas'   => 'SOSHUM 1',
                 'jurusan' => 'SOSHUM',
                 'poin'    => 0
             ],
             [
-                'nisn'    => '0038217777',
+                'nisn'    => '1000000005',
                 'nama'    => 'M. Rizky Alfarizi',
-                'kelas'   => 'X IPA 3',
-                'jurusan' => 'SOSHUM',
-                'poin'    => 2
-            ],
-            [
-                'nisn'    => '0038217888',
-                'nama'    => 'Siti Maesaroh',
-                'kelas'   => 'XI Bahasa 2',
+                'kelas'   => 'SOSHUM 2',
                 'jurusan' => 'SOSHUM',
                 'poin'    => 4
             ],
             [
-                'nisn'    => '0038217333',
-                'nama'    => 'Ahmad Fauzi',
-                'kelas'   => 'X TKJ 2',
+                'nisn'    => '1000000006',
+                'nama'    => 'Siti Maesaroh',
+                'kelas'   => 'SOSHUM 3',
                 'jurusan' => 'SOSHUM',
-                'poin'    => 20
+                'poin'    => 7
+            ],
+            [
+                'nisn'    => '1000000007',
+                'nama'    => 'Ahmad Putra',
+                'kelas'   => 'SOSHUM 4',
+                'jurusan' => 'SOSHUM',
+                'poin'    => 8
+            ],
+            [
+                'nisn'    => '1000000008',
+                'nama'    => 'Rina Wulandari',
+                'kelas'   => 'SOSHUM 5',
+                'jurusan' => 'SOSHUM',
+                'poin'    => 2
+            ],
+            [
+                'nisn'    => '1000000009',
+                'nama'    => 'Bagas Prakoso',
+                'kelas'   => '10',
+                'jurusan' => 'SAINTEK',
+                'poin'    => 1
+            ],
+            [
+                'nisn'    => '1000000010',
+                'nama'    => 'Lestari Dewi',
+                'kelas'   => '11',
+                'jurusan' => 'SAINTEK',
+                'poin'    => 3
             ]
         ];
 

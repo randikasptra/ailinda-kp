@@ -28,11 +28,11 @@
         }
     </style>
 
-    <?php if (session()->getFlashdata('error')) : ?>
-    <div class="alert alert-danger">
-        <?= session()->getFlashdata('error') ?>
-    </div>
-<?php endif; ?>
+    <?php if (session()->getFlashdata('error')): ?>
+        <div class="alert alert-danger">
+            <?= session()->getFlashdata('error') ?>
+        </div>
+    <?php endif; ?>
 
 </head>
 
@@ -51,19 +51,47 @@
         <?php endif; ?>
 
         <!-- ✅ Arahkan ke /login (bukan /auth/login) -->
-        <form method="POST" action="/login" class="space-y-5">
-
+        <form method="POST" action="/login" class="space-y-6">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                <input type="text" name="username" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#A4DE02] focus:border-[#A4DE02] transition" required>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path
+                                d="M2.94 6.06a2 2 0 012.828 0L10 10.293l4.232-4.233a2 2 0 112.828 2.828l-5.657 5.657a2 2 0 01-2.828 0L2.94 8.889a2 2 0 010-2.828z" />
+                        </svg>
+                    </div>
+                    <input type="email" name="email"
+                        class="input-field w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#A4DE02] focus:border-[#A4DE02] outline-none"
+                        placeholder="Masukkan email" required>
+                </div>
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                <input type="password" name="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#A4DE02] focus:border-[#A4DE02] transition" required>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <input type="password" name="password"
+                        class="input-field w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#A4DE02] focus:border-[#A4DE02] outline-none"
+                        placeholder="Masukkan password" required>
+                </div>
             </div>
 
-            <button type="submit" class="w-full bg-[#1E5631] hover:bg-[#145128] text-white font-semibold py-2 rounded-lg transition duration-200 shadow-md hover:shadow-lg">
+            <button type="submit"
+                class="btn-primary w-full text-white font-semibold py-3 rounded-lg flex items-center justify-center bg-[#1E5631] hover:bg-[#145128]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                        clip-rule="evenodd" />
+                </svg>
                 Login
             </button>
         </form>

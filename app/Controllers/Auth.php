@@ -7,36 +7,34 @@ use App\Models\UserModel;
 class Auth extends BaseController
 {
     public function login()
-{
-    if (session()->get('logged_in')) {
-        return redirect()->to('/dashboard/' . session()->get('role'));
+    {
+        if (session()->get('logged_in')) {
+            return redirect()->to('/dashboard/' . session()->get('role'));
+        }
+        return view('auth/login');
     }
-    return view('auth/login');
-}
-
-
-
 
     public function doLogin()
     {
         $userModel = new UserModel();
-        $username = $this->request->getPost('username');
+        $email = $this->request->getPost('email');
         $password = $this->request->getPost('password');
 
-        $user = $userModel->where('username', $username)->first();
+        // Cari user berdasarkan email
+        $user = $userModel->where('email', $email)->first();
 
         if ($user && password_verify($password, $user['password'])) {
             session()->set([
                 'username' => $user['username'],
+                'email' => $user['email'],
                 'role' => $user['role'],
                 'logged_in' => true
             ]);
 
-            // Redirect berdasarkan role
             return redirect()->to('/dashboard/' . $user['role']);
         }
 
-        session()->setFlashdata('error', 'Login gagal');
+        session()->setFlashdata('error', 'Login gagal. Email atau password salah.');
         return redirect()->back();
     }
 
@@ -45,5 +43,4 @@ class Auth extends BaseController
         session()->destroy();
         return redirect()->to('/');
     }
-    
 }

@@ -55,6 +55,8 @@ $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
     $routes->get('siswa', 'Dashboard::siswa');
     $routes->post('siswa/tambah', 'Dashboard::tambahSiswa');
     $routes->get('siswa/hapus/(:num)', 'Dashboard::hapusSiswa/$1');
+    $routes->get('pelanggaran/edit/(:num)', 'Dashboard::editPelanggaran/$1');
+    $routes->post('pelanggaran/update/(:num)', 'Dashboard::updatePelanggaran/$1');
 
     // User Management
     $routes->get('users', 'Dashboard::users');
@@ -71,7 +73,7 @@ $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
     $routes->post('deleteUser/(:num)', 'Dashboard::deleteUser/$1');
     $routes->get('users/delete/(:num)', 'Dashboard::deleteUser/$1');
     $routes->get('siswa/edit_siswa/(:num)', 'Dashboard::editSiswa/$1');
-$routes->post('siswa/update/(:num)', 'Dashboard::updateSiswa/$1');
+    $routes->post('siswa/update/(:num)', 'Dashboard::updateSiswa/$1');
 
 
 });
