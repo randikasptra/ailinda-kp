@@ -49,7 +49,29 @@ class Dashboard extends BaseController
     // DASHBOARD BP
     public function bp()
     {
-        return view('pages/bp/bp', ['title' => 'Dashboard BP']);
+        $siswaModel = new \App\Models\SiswaModel();
+        $historyModel = new \App\Models\HistoryKonfirmasiModel();
+
+        $bulanIni = date('Y-m');
+        $totalPelanggaranBulanIni = $historyModel
+            ->where("DATE_FORMAT(created_at, '%Y-%m')", $bulanIni)
+            ->countAllResults();
+
+        $jumlahSiswaMendekatiDO = $siswaModel
+            ->where('poin >=', 180)
+            ->countAllResults();
+
+        $topSiswa = $siswaModel
+            ->orderBy('poin', 'DESC')
+            ->limit(5)
+            ->findAll();
+
+        return view('pages/bp/bp', [
+            'title' => 'Dashboard BP',
+            'totalPelanggaranBulanIni' => $totalPelanggaranBulanIni,
+            'jumlahSiswaMendekatiDO' => $jumlahSiswaMendekatiDO,
+            'topSiswa' => $topSiswa
+        ]);
     }
 
 
@@ -115,7 +137,7 @@ class Dashboard extends BaseController
 
     public function editPelanggaran($id)
     {
-        
+
         $data['title'] = 'Edit Pelanggaran';
         $data['pelanggaran'] = $this->pelanggaranModel->find($id);
 

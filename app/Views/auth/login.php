@@ -6,6 +6,8 @@
     <title>Login - Surat Izin MAN 1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="icon" href="<?= base_url('assets/img/MAN1.png') ?>" type="image/png">
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         

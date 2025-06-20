@@ -47,9 +47,9 @@ $routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
 // BP
 // =======================
 $routes->group('bp', ['filter' => 'role:bp'], function ($routes) {
-    $routes->get('rekap_poin', 'Bp::rekapPoin');
+    // $routes->get('bp', 'Bp::index'); 
+    // $routes->get('rekap_poin', 'Bp::rekapPoin');
     $routes->get('hapus-poin/(:num)', 'Bp::hapusPoin/$1'); // ini penting!
-    $routes->get('bp', 'Bp::index'); // dashboard
     $routes->get('rekap_poin', 'Bp::rekapPoin');
     $routes->post('hapus-poin', 'Bp::hapusPoin');
 
@@ -91,3 +91,7 @@ $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
 // =======================
 $routes->get('pelanggaran', 'Pelanggaran::index');
 $routes->get('unauthorized', 'Error::unauthorized');
+
+$routes->group('dashboard', function ($routes) {
+    $routes->get('rekap_poin', 'Bp::rekapPoin');
+});

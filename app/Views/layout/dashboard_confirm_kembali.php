@@ -22,7 +22,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-
+<link rel="icon" href="<?= base_url('assets/img/MAN1.png') ?>" type="image/png">
 
 </head>
 

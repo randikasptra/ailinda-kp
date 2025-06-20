@@ -6,6 +6,7 @@
     <title><?= $title ?? 'Dashboard' ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="<?= base_url('assets/img/MAN1.png') ?>" type="image/png">
     <style>
         body {
             font-family: 'Inter', sans-serif;

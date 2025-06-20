@@ -80,7 +80,7 @@
                 </div>
                 <span>Dashboard BP</span>
             </a>
-            <a href="/bp/rekap_poin" class="flex items-center gap-3 p-3 rounded-xl hover:bg-[#145128]/80 transition group">
+            <a href="rekap_poin" class="flex items-center gap-3 p-3 rounded-xl hover:bg-[#145128]/80 transition group">
                 <div class="p-1.5 rounded-lg bg-[#A4DE02]/10 group-hover:bg-[#A4DE02]/20">
                     <i data-lucide="bar-chart" class="w-4 h-4 text-[#A4DE02]"></i>
                 </div>

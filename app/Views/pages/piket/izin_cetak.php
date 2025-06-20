@@ -116,16 +116,7 @@
             Kembali
         </a>
 
-        <!-- Edit -->
-        <a href="<?= base_url('piket/edit_izin/' . $izin['id']) ?>"
-            class="flex items-center bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded text-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M11 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-5M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-            </svg>
-            Edit
-        </a>
+        
     </div>
 
 </body>
