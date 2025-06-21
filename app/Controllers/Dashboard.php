@@ -82,6 +82,39 @@ class Dashboard extends BaseController
         return view('pages/admin/siswa', $data);
     }
 
+    public function update_kelas()
+    {
+        $model = new \App\Models\SiswaModel();
+
+        // Ambil semua siswa
+        $siswaList = $model->findAll();
+
+        foreach ($siswaList as $siswa) {
+            $kelas = (int) $siswa['kelas'];
+
+            // Naik kelas jika 10 atau 11, null-kan jika 12
+            if ($kelas === 10) {
+                $model->update($siswa['id'], ['kelas' => 11]);
+            } elseif ($kelas === 11) {
+                $model->update($siswa['id'], ['kelas' => 12]);
+            } elseif ($kelas === 12) {
+                $model->update($siswa['id'], ['kelas' => null]);
+            }
+        }
+
+        return redirect()->back()->with('success', 'Kelas siswa berhasil diperbarui.');
+    }
+
+    public function hapus_lulus()
+    {
+        $model = new \App\Models\SiswaModel();
+
+        // Hapus siswa yang kelasnya 0 atau null
+        $model->where('kelas', 0)->orWhere('kelas', null)->delete();
+
+        return redirect()->back()->with('success', 'Siswa yang sudah lulus berhasil dihapus.');
+    }
+
     public function tambahSiswa()
     {
         $data = $this->request->getPost();

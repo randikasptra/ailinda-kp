@@ -55,6 +55,12 @@
                 </div>
                 <span>Input Surat Izin</span>
             </a>
+            <a href="/piket/izin_masuk_form" class="flex items-center gap-3 p-3 rounded-xl hover:bg-[#145128]/80 transition group">
+                <div class="p-1.5 rounded-lg bg-[#A4DE02]/10 group-hover:bg-[#A4DE02]/20">
+                    <i data-lucide="file-plus" class="w-4 h-4 text-[#A4DE02]"></i>
+                </div>
+                <span>Input Surat Masuk</span>
+            </a>
             <a href="/piket/konfirmasi_kembali" class="flex items-center gap-3 p-3 rounded-xl hover:bg-[#145128]/80 transition group">
                 <div class="p-1.5 rounded-lg bg-[#A4DE02]/10 group-hover:bg-[#A4DE02]/20">
                     <i data-lucide="check-circle" class="w-4 h-4 text-[#A4DE02]"></i>

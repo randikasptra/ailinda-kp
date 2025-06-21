@@ -105,8 +105,6 @@
                                 <?= esc($row['updated_at']) ?>
                             </td>
                             <td class="px-6 py-4 text-center">
-                                <a href="<?= base_url('piket/history_konfirmasi/edit/' . $row['id']) ?>"
-                                    class="text-blue-600 hover:underline text-sm mr-2">Edit</a>
                                 <a href="<?= base_url('piket/history_konfirmasi/delete/' . $row['id']) ?>"
                                     onclick="return confirm('Yakin hapus data ini?')"
                                     class="text-red-600 hover:underline text-sm">Hapus</a>

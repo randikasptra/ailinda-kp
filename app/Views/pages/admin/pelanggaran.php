@@ -31,28 +31,27 @@
             <thead class="bg-[#1E5631] text-white">
                 <tr>
                     <th scope="col"
-                        class="px-6 py-8 text-left text-md font-medium uppercase tracking-wider whitespace-nowrap">
+                        class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider whitespace-nowrap">
                         <div class="flex items-center">
-                            <i data-lucide="hash" class="w-4 h-4 mr-2"></i>
                             No
                         </div>
                     </th>
                     <th scope="col"
-                        class="px-6 py-3 text-left text-md font-medium uppercase tracking-wider whitespace-nowrap">
+                        class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider whitespace-nowrap">
                         <div class="flex items-center">
                             <i data-lucide="alert-octagon" class="w-4 h-4 mr-2"></i>
                             Jenis Pelanggaran
                         </div>
                     </th>
                     <th scope="col"
-                        class="px-6 py-3 text-left text-md font-medium uppercase tracking-wider whitespace-nowrap">
+                        class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider whitespace-nowrap">
                         <div class="flex items-center">
                             <i data-lucide="star" class="w-4 h-4 mr-2"></i>
                             Poin
                         </div>
                     </th>
                     <th scope="col"
-                        class="px-6 py-3 text-left text-md font-medium uppercase tracking-wider whitespace-nowrap">
+                        class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider whitespace-nowrap">
                         <div class="flex items-center">
                             <i data-lucide="settings" class="w-4 h-4 mr-2"></i>
                             Aksi

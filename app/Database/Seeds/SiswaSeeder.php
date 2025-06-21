@@ -13,74 +13,84 @@ class SiswaSeeder extends Seeder
 
         $data = [
             [
-                'nisn'    => '1000000001',
-                'nama'    => 'Ahmad Fauzi',
-                'kelas'   => '10',
-                'jurusan' => 'SAINTEK',
-                'poin'    => 5
+                'nisn'          => '1000000001',
+                'nama'          => 'Ahmad Fauzi',
+                'kelas'         => 10,
+                'jurusan'       => 'SAINTEK',
+                'tahun_ajaran'  => '2024/2025',
+                'poin'          => 5
             ],
             [
-                'nisn'    => '1000000002',
-                'nama'    => 'Dina Safitri',
-                'kelas'   => '11',
-                'jurusan' => 'SAINTEK',
-                'poin'    => 10
+                'nisn'          => '1000000002',
+                'nama'          => 'Dina Safitri',
+                'kelas'         => 11,
+                'jurusan'       => 'SAINTEK',
+                'tahun_ajaran'  => '2024/2025',
+                'poin'          => 10
             ],
             [
-                'nisn'    => '1000000003',
-                'nama'    => 'Rafi Pratama',
-                'kelas'   => '12',
-                'jurusan' => 'SAINTEK',
-                'poin'    => 15
+                'nisn'          => '1000000003',
+                'nama'          => 'Rafi Pratama',
+                'kelas'         => 12,
+                'jurusan'       => 'SAINTEK',
+                'tahun_ajaran'  => '2024/2025',
+                'poin'          => 15
             ],
             [
-                'nisn'    => '1000000004',
-                'nama'    => 'Nisa Khairunnisa',
-                'kelas'   => 'SOSHUM 1',
-                'jurusan' => 'SOSHUM',
-                'poin'    => 0
+                'nisn'          => '1000000004',
+                'nama'          => 'Nisa Khairunnisa',
+                'kelas'         => 10,
+                'jurusan'       => 'SOSHUM',
+                'tahun_ajaran'  => '2024/2025',
+                'poin'          => 0
             ],
             [
-                'nisn'    => '1000000005',
-                'nama'    => 'M. Rizky Alfarizi',
-                'kelas'   => 'SOSHUM 2',
-                'jurusan' => 'SOSHUM',
-                'poin'    => 4
+                'nisn'          => '1000000005',
+                'nama'          => 'M. Rizky Alfarizi',
+                'kelas'         => 10,
+                'jurusan'       => 'SOSHUM',
+                'tahun_ajaran'  => '2024/2025',
+                'poin'          => 4
             ],
             [
-                'nisn'    => '1000000006',
-                'nama'    => 'Siti Maesaroh',
-                'kelas'   => 'SOSHUM 3',
-                'jurusan' => 'SOSHUM',
-                'poin'    => 7
+                'nisn'          => '1000000006',
+                'nama'          => 'Siti Maesaroh',
+                'kelas'         => 11,
+                'jurusan'       => 'SOSHUM',
+                'tahun_ajaran'  => '2024/2025',
+                'poin'          => 7
             ],
             [
-                'nisn'    => '1000000007',
-                'nama'    => 'Ahmad Putra',
-                'kelas'   => 'SOSHUM 4',
-                'jurusan' => 'SOSHUM',
-                'poin'    => 8
+                'nisn'          => '1000000007',
+                'nama'          => 'Ahmad Putra',
+                'kelas'         => 11,
+                'jurusan'       => 'SOSHUM',
+                'tahun_ajaran'  => '2024/2025',
+                'poin'          => 8
             ],
             [
-                'nisn'    => '1000000008',
-                'nama'    => 'Rina Wulandari',
-                'kelas'   => 'SOSHUM 5',
-                'jurusan' => 'SOSHUM',
-                'poin'    => 2
+                'nisn'          => '1000000008',
+                'nama'          => 'Rina Wulandari',
+                'kelas'         => 12,
+                'jurusan'       => 'SOSHUM',
+                'tahun_ajaran'  => '2024/2025',
+                'poin'          => 2
             ],
             [
-                'nisn'    => '1000000009',
-                'nama'    => 'Bagas Prakoso',
-                'kelas'   => '10',
-                'jurusan' => 'SAINTEK',
-                'poin'    => 1
+                'nisn'          => '1000000009',
+                'nama'          => 'Bagas Prakoso',
+                'kelas'         => 10,
+                'jurusan'       => 'SAINTEK',
+                'tahun_ajaran'  => '2024/2025',
+                'poin'          => 1
             ],
             [
-                'nisn'    => '1000000010',
-                'nama'    => 'Lestari Dewi',
-                'kelas'   => '11',
-                'jurusan' => 'SAINTEK',
-                'poin'    => 3
+                'nisn'          => '1000000010',
+                'nama'          => 'Lestari Dewi',
+                'kelas'         => 11,
+                'jurusan'       => 'SAINTEK',
+                'tahun_ajaran'  => '2024/2025',
+                'poin'          => 3
             ]
         ];
 

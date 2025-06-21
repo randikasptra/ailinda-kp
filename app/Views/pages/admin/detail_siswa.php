@@ -23,6 +23,10 @@
                 <span><?= esc($siswa['jurusan']) ?></span>
             </div>
             <div>
+                <span class="font-semibold text-gray-700">Tahun Ajaran:</span>
+                <span><?= esc($siswa['tahun_ajaran']) ?></span>
+            </div>
+            <div>
                 <span class="font-semibold text-gray-700">Poin:</span>
                 <span><?= esc($siswa['poin']) ?></span>
             </div>

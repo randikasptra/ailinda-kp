@@ -33,6 +33,11 @@ $routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
     $routes->post('surat_izin', 'Piket::simpanIzin');
     $routes->get('izin_cetak/(:num)', 'Piket::cetakIzin/$1');
     $routes->get('konfirmasi_kembali', 'Piket::konfirmasiKembali');
+
+    $routes->get('izin_masuk_form', 'Piket::izinMasukForm');
+    $routes->get('izin_masuk_form(:num)', 'Piket::cetakIzinMasuk/$1');
+    $routes->post('izin_masuk/submit', 'Piket::submitIzinMasuk');
+
     $routes->post('catat-pelanggaran', 'Piket::catatPelanggaran');
     $routes->get('data_siswa', 'Piket::dataSiswa');
     $routes->get('history_konfirmasi', 'HistoryKonfirmasi::history');
@@ -65,6 +70,9 @@ $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
     $routes->get('siswa/hapus/(:num)', 'Dashboard::hapusSiswa/$1');
     $routes->get('pelanggaran/edit/(:num)', 'Dashboard::editPelanggaran/$1');
     $routes->post('pelanggaran/update/(:num)', 'Dashboard::updatePelanggaran/$1');
+    $routes->post('siswa/update_kelas', 'Dashboard::update_kelas');
+    $routes->post('siswa/hapus_lulus', 'Dashboard::hapus_lulus');
+
 
     // User Management
     $routes->get('users', 'Dashboard::users');
