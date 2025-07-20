@@ -132,22 +132,26 @@ class Piket extends BaseController
 
 
     public function simpanIzin()
-    {
-        $data = [
-            'nama' => $this->request->getPost('nama'),
-            'nisn' => $this->request->getPost('nisn'),
-            'kelas' => $this->request->getPost('kelas'),
-            'alasan' => $this->request->getPost('alasan'),
-            'waktu_keluar' => $this->request->getPost('waktu_keluar'),
-            'waktu_kembali' => $this->request->getPost('waktu_kembali'),
-            'status_kembali' => 'belum kembali',
-            'poin_pelanggaran' => 0,
-        ];
+{
+    $data = [
+        'nama' => $this->request->getPost('nama'),
+        'nisn' => $this->request->getPost('nisn'),
+        'kelas' => $this->request->getPost('kelas'),
+        'alasan' => $this->request->getPost('alasan'),
+        'waktu_keluar' => $this->request->getPost('waktu_keluar'),
+        'waktu_kembali' => $this->request->getPost('waktu_kembali'),
+        'status_kembali' => 'belum kembali',
+        'poin_pelanggaran' => 0,
+    ];
 
-        $insertedId = $this->izinModel->insert($data);
+    $insertedId = $this->izinModel->insert($data);
 
-        return redirect()->to('/piket/izin_cetak/' . $insertedId);
-    }
+    // Bawa flashdata agar ditampilkan di halaman cetak
+    session()->setFlashdata('success', 'Surat izin berhasil dibuat.');
+
+    // Redirect ke halaman cetak
+    return redirect()->to('/piket/izin_cetak/' . $insertedId);
+}
 
     public function cetakIzin($id)
     {
@@ -162,8 +166,6 @@ class Piket extends BaseController
             'title' => 'Cetak Surat Izin',
         ]);
     }
-
-
 
     public function konfirmasiKembali()
     {
@@ -190,10 +192,6 @@ class Piket extends BaseController
 
         return view('pages/piket/konfirmasi_kembali', $data);
     }
-
-
-
-
 
     public function dataSiswa()
     {
@@ -230,7 +228,6 @@ class Piket extends BaseController
             ]
         ]);
     }
-
 
     public function catatPelanggaran()
     {
@@ -293,9 +290,5 @@ class Piket extends BaseController
 
         return redirect()->back()->with('success', 'Konfirmasi berhasil disimpan dan poin siswa ditambahkan!');
     }
-
-
-
-
 
 }

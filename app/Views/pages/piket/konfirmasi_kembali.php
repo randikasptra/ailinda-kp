@@ -59,125 +59,122 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <?php foreach ($izinList as $izin): ?>
-                            <tr x-data="pelanggaranModal()" x-init>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div
-                                            class="flex-shrink-0 h-10 w-10 bg-[#1E5631]/10 rounded-full flex items-center justify-center">
-                                            <span
-                                                class="text-[#1E5631] font-medium"><?= strtoupper(substr(esc($izin['nama']), 0, 1)) ?></span>
-                                        </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900"><?= esc($izin['nama']) ?></div>
-                                        </div>
+                <tbody class="bg-white divide-y divide-gray-200">
+    <?php foreach ($izinList as $izin): ?>
+        <tr x-data="pelanggaranModal()" x-init>
+            <!-- Kolom Nama -->
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10 bg-[#1E5631]/10 rounded-full flex items-center justify-center">
+                        <span class="text-[#1E5631] font-medium"><?= strtoupper(substr(esc($izin['nama']), 0, 1)) ?></span>
+                    </div>
+                    <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900"><?= esc($izin['nama']) ?></div>
+                    </div>
+                </div>
+            </td>
+
+            <!-- Kolom Kelas -->
+            <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full"><?= esc($izin['kelas']) ?></span>
+            </td>
+
+            <!-- Kolom Jam Keluar -->
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <div class="flex items-center">
+                    <i data-lucide="clock" class="w-4 h-4 mr-1 text-gray-400"></i>
+                    <?= esc($izin['waktu_keluar']) ?>
+                </div>
+            </td>
+
+            <!-- Kolom Jam Kembali -->
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <div class="flex items-center">
+                    <i data-lucide="clock" class="w-4 h-4 mr-1 text-gray-400"></i>
+                    <?= esc($izin['waktu_kembali']) ?>
+                </div>
+            </td>
+
+            <!-- Kolom Waktu Kembali Siswa -->
+            <td class="px-6 py-4 whitespace-nowrap">
+                <form action="<?= base_url('piket/catat-pelanggaran') ?>" method="post" class="flex flex-col gap-2" id="form-<?= $izin['id'] ?>">
+                    <?= csrf_field() ?>
+                    <input type="hidden" name="izin_id" value="<?= esc($izin['id']) ?>">
+
+                    <div class="relative w-40">
+                        <input type="time" name="waktu_kembali_siswa" required
+                            class="pl-10 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] w-full">
+                    </div>
+            </td>
+
+            <!-- Kolom Sanksi -->
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="relative">
+                    <button type="button" @click="open = true"
+                        class="text-sm bg-[#1E5631]/10 text-[#1E5631] font-medium px-4 py-2 rounded-lg border border-[#1E5631]/30 hover:bg-[#1E5631]/20 transition">
+                        Pilih Pelanggaran
+                    </button>
+
+                    <div class="mt-1 flex flex-wrap gap-2">
+                        <template x-for="(item, index) in selected" :key="item.id">
+                            <span class="inline-flex items-center bg-[#1E5631] text-white text-xs font-medium rounded-full px-3 py-1">
+                                <span x-text="item.jenis_pelanggaran"></span>
+                                <button type="button" @click="remove(index)" class="ml-2 hover:text-gray-200">&times;</button>
+                            </span>
+                        </template>
+                    </div>
+
+                    <template x-for="s in selected" :key="s.id">
+                        <input type="hidden" name="pelanggaran_id[]" :value="s.id" form="form-<?= $izin['id'] ?>">
+                    </template>
+                </div>
+            </td>
+
+            <!-- Kolom Aksi -->
+            <td class="px-6 py-4 whitespace-nowrap text-right">
+                <button type="submit"
+                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-[#1E5631] to-[#2E7D32] hover:from-[#145128] hover:to-[#1B5E20] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1E5631]/50 transition-all">
+                    <i data-lucide="check-circle" class="w-4 h-4 mr-1"></i>
+                    Konfirmasi
+                </button>
+                </form>
+
+                <!-- Modal -->
+                <div x-show="open"
+                    class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center px-4"
+                    x-transition>
+                    <div @click.away="open = false"
+                        class="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
+
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-semibold text-[#1E5631]">Pilih Pelanggaran</h2>
+                            <button @click="open = false" class="text-gray-400 hover:text-red-500 text-xl">&times;</button>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <template x-for="p in list" :key="p.id">
+                                <div @click="toggle(p)"
+                                    class="p-3 border rounded-lg hover:bg-[#f4fdf6] cursor-pointer transition shadow-sm flex flex-col justify-between h-full">
+                                    <div class="text-sm font-semibold text-gray-800 break-words whitespace-normal leading-snug">
+                                        <span x-text="p.jenis_pelanggaran"></span>
                                     </div>
-                                </td>
-
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span
-                                        class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full"><?= esc($izin['kelas']) ?></span>
-                                </td>
-
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <div class="flex items-center">
-                                        <i data-lucide="clock" class="w-4 h-4 mr-1 text-gray-400"></i>
-                                        <?= esc($izin['waktu_keluar']) ?>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <span class="text-xs text-gray-500" x-text="p.poin + ' poin'"></span>
+                                        <template x-if="isSelected(p)">
+                                            <i class="text-green-500 font-bold">&#10003;</i>
+                                        </template>
                                     </div>
-                                </td>
+                                </div>
+                            </template>
+                        </div>
 
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <div class="flex items-center">
-                                        <i data-lucide="clock" class="w-4 h-4 mr-1 text-gray-400"></i>
-                                        <?= esc($izin['waktu_kembali']) ?>
-                                    </div>
-                                </td>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</tbody>
 
-                                <td colspan="3" class="px-6 py-4 whitespace-nowrap">
-                                    <form action="<?= base_url('piket/catat-pelanggaran') ?>" method="post"
-                                        class="flex flex-col gap-2">
-                                        <?= csrf_field() ?>
-                                        <input type="hidden" name="izin_id" value="<?= esc($izin['id']) ?>">
-
-                                        <div class="flex gap-2">
-                                            <div class="relative w-40">
-                                                
-                                                <input type="time" name="waktu_kembali_siswa" required
-                                                    class="pl-10 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] w-full">
-                                            </div>
-
-                                            <div class="relative">
-                                                <button type="button" @click="open = true"
-                                                    class="text-sm bg-[#1E5631]/10 text-[#1E5631] font-medium px-4 py-2 rounded-lg border border-[#1E5631]/30 hover:bg-[#1E5631]/20 transition">
-                                                    Pilih Pelanggaran
-                                                </button>
-
-                                                <!-- Selected Badge -->
-                                                <div class="mt-1 flex flex-wrap gap-2">
-                                                    <template x-for="(item, index) in selected" :key="item.id">
-                                                        <span
-                                                            class="inline-flex items-center bg-[#1E5631] text-white text-xs font-medium rounded-full px-3 py-1">
-                                                            <span x-text="item.jenis_pelanggaran"></span>
-                                                            <button type="button" @click="remove(index)"
-                                                                class="ml-2 hover:text-gray-200">&times;</button>
-                                                        </span>
-                                                    </template>
-                                                </div>
-
-                                                <!-- Hidden input -->
-                                                <template x-for="s in selected" :key="s.id">
-                                                    <input type="hidden" name="pelanggaran_id[]" :value="s.id">
-                                                </template>
-                                            </div>
-
-                                            <button type="submit"
-                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-[#1E5631] to-[#2E7D32] hover:from-[#145128] hover:to-[#1B5E20] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1E5631]/50 transition-all">
-                                                <i data-lucide="check-circle" class="w-4 h-4 mr-1"></i>
-                                                Konfirmasi
-                                            </button>
-                                        </div>
-                                    </form>
-
-                                    <!-- Modal -->
-                                    <div x-show="open"
-                                        class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center px-4"
-                                        x-transition>
-                                        <div @click.away="open = false"
-                                            class="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
-
-                                            <div class="flex justify-between items-center mb-4">
-                                                <h2 class="text-xl font-semibold text-[#1E5631]">Pilih Pelanggaran</h2>
-                                                <button @click="open = false"
-                                                    class="text-gray-400 hover:text-red-500 text-xl">&times;</button>
-                                            </div>
-
-                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <template x-for="p in list" :key="p.id">
-                                                    <div @click="toggle(p)"
-                                                        class="p-3 border rounded-lg hover:bg-[#f4fdf6] cursor-pointer transition shadow-sm flex flex-col justify-between h-full">
-
-                                                        <div
-                                                            class="text-sm font-semibold text-gray-800 break-words whitespace-normal leading-snug">
-                                                            <span x-text="p.jenis_pelanggaran"></span>
-                                                        </div>
-
-                                                        <div class="flex justify-between items-center mt-2">
-                                                            <span class="text-xs text-gray-500"
-                                                                x-text="p.poin + ' poin'"></span>
-                                                            <template x-if="isSelected(p)">
-                                                                <i class="text-green-500 font-bold">&#10003;</i>
-                                                            </template>
-                                                        </div>
-                                                    </div>
-                                                </template>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
                 </table>
             </div>
         </div>

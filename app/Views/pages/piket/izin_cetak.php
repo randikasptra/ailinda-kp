@@ -1,3 +1,15 @@
+<?php if (session()->getFlashdata('success')): ?>
+    <div id="modalSuccess" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center max-w-sm">
+            <h3 class="text-xl font-bold text-green-600 mb-2">Berhasil!</h3>
+            <p class="text-gray-700"><?= session()->getFlashdata('success') ?></p>
+            <button onclick="document.getElementById('modalSuccess').style.display='none'"
+                class="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Tutup</button>
+        </div>
+    </div>
+<?php endif; ?>
+
+
 </html>
 
 <!DOCTYPE html>

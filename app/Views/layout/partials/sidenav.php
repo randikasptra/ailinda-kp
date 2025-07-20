@@ -8,25 +8,7 @@
             </span>
         </div>
         
-        <div class="flex items-center gap-5">
-            <button class="relative p-2 rounded-xl hover:bg-gray-100/80 transition-all duration-200 group">
-                <i data-lucide="bell" class="w-5 h-5 text-gray-600 group-hover:text-gray-900"></i>
-                <span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse ring-2 ring-red-200"></span>
-            </button>
-            
-            <div class="h-8 w-px bg-gray-200/60"></div>
-            
-            <div class="flex items-center gap-3 group cursor-pointer">
-                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-[#1E5631] to-[#68BB59] flex items-center justify-center text-white font-semibold shadow-md group-hover:shadow-lg transition-all">
-                    <?= strtoupper(substr(session()->get('username'), 0, 1)) ?>
-                </div>
-                <div class="flex flex-col -space-y-0.5">
-                    <span class="text-sm font-medium text-gray-700"><?= session()->get('username') ?></span>
-                    <span class="text-xs text-gray-400"><?= ucfirst(session()->get('role')) ?></span>
-                </div>
-                <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 ml-1 transition-transform group-hover:translate-y-0.5"></i>
-            </div>
-        </div>
+       
     </div>
 </header>
 
@@ -55,12 +37,12 @@
                 </div>
                 <span>Input Surat Izin</span>
             </a>
-            <a href="/piket/izin_masuk_form" class="flex items-center gap-3 p-3 rounded-xl hover:bg-[#145128]/80 transition group">
+            <!-- <a href="/piket/izin_masuk_form" class="flex items-center gap-3 p-3 rounded-xl hover:bg-[#145128]/80 transition group">
                 <div class="p-1.5 rounded-lg bg-[#A4DE02]/10 group-hover:bg-[#A4DE02]/20">
                     <i data-lucide="file-plus" class="w-4 h-4 text-[#A4DE02]"></i>
                 </div>
                 <span>Input Surat Masuk</span>
-            </a>
+            </a> -->
             <a href="/piket/konfirmasi_kembali" class="flex items-center gap-3 p-3 rounded-xl hover:bg-[#145128]/80 transition group">
                 <div class="p-1.5 rounded-lg bg-[#A4DE02]/10 group-hover:bg-[#A4DE02]/20">
                     <i data-lucide="check-circle" class="w-4 h-4 text-[#A4DE02]"></i>
