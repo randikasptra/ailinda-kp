@@ -6,18 +6,21 @@ use App\Models\UserModel;
 use App\Models\PelanggaranModel;
 use App\Models\SiswaModel;
 use App\Models\SuratIzinModel;
+use App\Models\HistoryKonfirmasiModel;
 
 class Dashboard extends BaseController
 {
     protected $izinModel;
     protected $userModel;
     protected $pelanggaranModel;
+    protected $historyModel;
 
     public function __construct()
     {
         $this->izinModel = new SuratIzinModel();
         $this->userModel = new UserModel();
         $this->pelanggaranModel = new PelanggaranModel();
+        $this->historyModel = new HistoryKonfirmasiModel(); // ✅ Fix properti model
     }
 
     // DASHBOARD PIKET
@@ -25,26 +28,45 @@ class Dashboard extends BaseController
     {
         $today = date('Y-m-d');
 
-        $totalIzinHariIni = $this->izinModel
-            ->where('DATE(waktu_keluar)', $today)
+        // Total surat izin yang dibuat hari ini
+        $izinHariIni = $this->izinModel
+            ->like('created_at', $today)
             ->countAllResults();
 
+        // Total surat izin yang dikonfirmasi kembali hari ini
+        $historyHariIni = $this->historyModel
+            ->like('updated_at', $today)
+            ->countAllResults();
+
+        // Total surat izin hari ini = surat_izin + history_konfirmasi hari ini
+        $totalIzinHariIni = $izinHariIni + $historyHariIni;
+
+        // Total siswa yang belum kembali (masih berstatus belum kembali)
         $belumKembali = $this->izinModel
-            ->where('status_kembali', 'belum kembali')
+            ->where('status', 'belum kembali')
             ->countAllResults();
 
-        $pelanggaranHariIni = $this->izinModel
-            ->where('DATE(waktu_keluar)', $today)
-            ->where('poin_pelanggaran >', 0)
+        // Total pelanggaran hari ini
+        $pelanggaranHariIni = $this->pelanggaranModel
+            ->like('created_at', $today)
             ->countAllResults();
+
+        // Ambil 5 surat izin terbaru
+        $izinTerbaru = $this->izinModel
+            ->orderBy('created_at', 'DESC')
+            ->limit(5)
+            ->findAll();
 
         return view('pages/piket/piket', [
             'title' => 'Dashboard Piket',
             'totalIzinHariIni' => $totalIzinHariIni,
             'belumKembali' => $belumKembali,
             'pelanggaranHariIni' => $pelanggaranHariIni,
+            'izinTerbaru' => $izinTerbaru
         ]);
     }
+
+
 
     // DASHBOARD BP
     public function bp()
@@ -139,21 +161,22 @@ class Dashboard extends BaseController
 
     // DASHBOARD ADMIN
     public function admin()
-    {
-        $pelanggaranModel = new PelanggaranModel();
-        $siswaModel = new SiswaModel();
+{
+    $pelanggaranModel = new PelanggaranModel();
+    $siswaModel = new SiswaModel();
 
-        $totalAdmin = $this->userModel->where('role', 'admin')->countAllResults();
-        $totalPelanggaran = $pelanggaranModel->countAllResults();
-        $totalSiswa = $siswaModel->countAllResults();
+    $totalUser = $this->userModel->countAllResults(); // dihitung semua user
+    $totalPelanggaran = $pelanggaranModel->countAllResults();
+    $totalSiswa = $siswaModel->countAllResults();
 
-        return view('pages/admin/dashboard', [
-            'title' => 'Dashboard Admin',
-            'totalAdmin' => $totalAdmin,
-            'totalPelanggaran' => $totalPelanggaran,
-            'totalSiswa' => $totalSiswa
-        ]);
-    }
+    return view('pages/admin/dashboard', [
+        'title' => 'Dashboard Admin',
+        'totalUser' => $totalUser,
+        'totalPelanggaran' => $totalPelanggaran,
+        'totalSiswa' => $totalSiswa
+    ]);
+}
+
     // Tampilkan form edit user
     public function editUser($id)
     {
@@ -279,6 +302,44 @@ class Dashboard extends BaseController
         $model->update($id, $data);
         return redirect()->to('/admin/siswa')->with('success', 'Data siswa berhasil diperbarui!');
     }
+
+  public function importCSV()
+{
+    $file = $this->request->getFile('csv_file');
+
+    if ($file->isValid() && $file->getClientExtension() === 'csv') {
+        $handle = fopen($file->getTempName(), 'r');
+
+        // Skip header
+        fgetcsv($handle);
+
+        $siswaModel = new \App\Models\SiswaModel();
+
+        while (($row = fgetcsv($handle, 1000, ',')) !== false) {
+            $data = [
+                'nisn'          => $row[0],
+                'nama'          => $row[1],
+                'kelas'         => (int)$row[2],
+                'tahun_ajaran'  => $row[3],
+                'jurusan'       => strtoupper($row[4]), // SOSHUM / SAINTEK / BAHASA
+                'poin'          => 0,
+                'created_at'    => date('Y-m-d H:i:s'),
+                'updated_at'    => date('Y-m-d H:i:s'),
+            ];
+
+            $siswaModel->insert($data);
+        }
+
+        fclose($handle);
+        session()->setFlashdata('success', 'Data siswa berhasil diimpor.');
+    } else {
+        session()->setFlashdata('error', 'File tidak valid atau tidak ditemukan.');
+    }
+
+    return redirect()->to('/admin/siswa');
+}
+
+
 
 
     public function tambahPelanggaran()

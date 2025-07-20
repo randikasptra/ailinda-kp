@@ -79,7 +79,7 @@ class Piket extends BaseController
         $pelanggaranModel = new \App\Models\PelanggaranModel();
         $poin = $request->getPost('poin');
 
-        // Cari nama pelanggaran berdasarkan poin
+        // Cari nama pelanggaran berpiketarkan poin
         $pelanggaran = $pelanggaranModel->where('poin', $poin)->first();
 
         $data = [

@@ -153,12 +153,7 @@
                         class="h-4 w-4 text-[#1E5631] focus:ring-[#A4DE02] border-gray-300 rounded">
                     <label for="remember-me" class="ml-2 block text-sm text-gray-600">Ingat saya</label>
                 </div>
-                <div class="text-sm">
-                    <a href="#" class="font-medium text-[#1E5631] hover:text-[#145128] hover:underline transition">
-                        <i data-lucide="help-circle" class="w-4 h-4 inline mr-1"></i>
-                        Lupa password?
-                    </a>
-                </div>
+              
             </div>
 
             <button type="submit"

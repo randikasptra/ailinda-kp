@@ -44,7 +44,7 @@ $routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
     $routes->get('history_konfirmasi/delete/(:num)', 'HistoryKonfirmasi::delete/$1');
     $routes->post('history_konfirmasi/hapus_hari_ini', 'HistoryKonfirmasi::hapusHariIni');
     $routes->get('history_konfirmasi/edit/(:num)', 'HistoryKonfirmasi::edit/$1'); // untuk fetch data modal
-    $routes->post('history_konfirmasi/update/(:num)', 'HistoryKonfirmasi::update/$1'); // untuk submit edit form
+    $routes->post('history_konfirmasi/update/(:num)', 'HistoryKonfirmasi::update/$1'); 
 });
 
 
@@ -52,8 +52,7 @@ $routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
 // BP
 // =======================
 $routes->group('bp', ['filter' => 'role:bp'], function ($routes) {
-    // $routes->get('bp', 'Bp::index'); 
-    // $routes->get('rekap_poin', 'Bp::rekapPoin');
+
     $routes->get('hapus-poin/(:num)', 'Bp::hapusPoin/$1'); // ini penting!
     $routes->get('rekap_poin', 'Bp::rekapPoin');
     $routes->post('hapus-poin', 'Bp::hapusPoin');
@@ -90,6 +89,9 @@ $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
     $routes->get('users/delete/(:num)', 'Dashboard::deleteUser/$1');
     $routes->get('siswa/edit_siswa/(:num)', 'Dashboard::editSiswa/$1');
     $routes->post('siswa/update/(:num)', 'Dashboard::updateSiswa/$1');
+
+
+    $routes->post('siswa/import_csv', 'Dashboard::importCSV');
 
 
 });
