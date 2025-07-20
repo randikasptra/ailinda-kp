@@ -80,7 +80,8 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <div class="flex items-center">
                                 <i data-lucide="clock" class="w-4 h-4 mr-1 text-gray-400"></i>
-                                <?= date('d M Y', strtotime($user['created_at'])) ?>
+                                <?= !empty($user['created_at']) ? date('d M Y', strtotime($user['created_at'])) : '-' ?>
+
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
