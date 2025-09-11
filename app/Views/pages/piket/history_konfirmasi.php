@@ -1,6 +1,6 @@
 <?= $this->extend('layout/dashboard') ?>
 <?= $this->section('content') ?>
-<div class="ml-64 mt-16 px-8 py-6">
+<div class=" mt-16 px-8 py-6">
     <!-- Page Header -->
     <div class="flex justify-between items-center mb-8">
         <div>

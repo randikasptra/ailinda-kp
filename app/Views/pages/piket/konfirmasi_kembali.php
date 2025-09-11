@@ -1,7 +1,7 @@
 <?= $this->extend('layout/dashboard_confirm_kembali') ?>
 <?= $this->section('content') ?>
 
-<div class="ml-64 mt-24 px-8">
+<div class=" mt-24 px-8">
     <!-- Page Header -->
     <div class="flex justify-between items-center mb-8">
         <div>

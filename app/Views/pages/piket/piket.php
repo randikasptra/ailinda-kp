@@ -1,7 +1,7 @@
 <?= $this->extend('layout/dashboard') ?>
 <?= $this->section('content') ?>
 
-<div class="ml-64 mt-24 p-6">
+<div class="mt-24 p-6">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <!-- Card 1 -->
         <div class="bg-gradient-to-br from-[#f0fdf4] to-[#d9f99d] rounded-xl shadow-lg p-5 border-l-4 border-[#A4DE02] hover:shadow-xl transition-all">

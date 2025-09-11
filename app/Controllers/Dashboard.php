@@ -80,7 +80,7 @@ class Dashboard extends BaseController
             ->countAllResults();
 
         $jumlahSiswaMendekatiDO = $siswaModel
-            ->where('poin >=', 180)
+            ->where('poin >=', 100)
             ->countAllResults();
 
         $topSiswa = $siswaModel
