@@ -303,35 +303,55 @@ class Dashboard extends BaseController
         return redirect()->to('/admin/siswa')->with('success', 'Data siswa berhasil diperbarui!');
     }
 
-  public function importCSV()
+ public function importCSV()
 {
     $file = $this->request->getFile('csv_file');
 
     if ($file->isValid() && $file->getClientExtension() === 'csv') {
         $handle = fopen($file->getTempName(), 'r');
-
-        // Skip header
-        fgetcsv($handle);
+        fgetcsv($handle); // Skip header
 
         $siswaModel = new \App\Models\SiswaModel();
+        $dataToInsert = [];
+        $nisnsInCsv = []; // Untuk cek duplikasi di CSV
 
         while (($row = fgetcsv($handle, 1000, ',')) !== false) {
-            $data = [
-                'nisn'          => $row[0],
+            $nisn = $row[0];
+
+            // Cek duplikasi di CSV
+            if (in_array($nisn, $nisnsInCsv)) {
+                session()->setFlashdata('error', "Duplikasi NISN '$nisn' ditemukan di file CSV.");
+                fclose($handle);
+                return redirect()->to('/admin/siswa');
+            }
+
+            $nisnsInCsv[] = $nisn;
+
+            // Cek duplikasi di database
+            if ($siswaModel->where('nisn', $nisn)->first()) {
+                continue; // Lewati jika sudah ada di database
+            }
+
+            $dataToInsert[] = [
+                'nisn'          => $nisn,
                 'nama'          => $row[1],
                 'kelas'         => (int)$row[2],
                 'tahun_ajaran'  => $row[3],
-                'jurusan'       => strtoupper($row[4]), // SOSHUM / SAINTEK / BAHASA
+                'jurusan'       => strtoupper($row[4]),
                 'poin'          => 0,
                 'created_at'    => date('Y-m-d H:i:s'),
                 'updated_at'    => date('Y-m-d H:i:s'),
             ];
-
-            $siswaModel->insert($data);
         }
 
         fclose($handle);
-        session()->setFlashdata('success', 'Data siswa berhasil diimpor.');
+
+        if (!empty($dataToInsert)) {
+            $siswaModel->insertBatch($dataToInsert);
+            session()->setFlashdata('success', 'Data siswa berhasil diimpor.');
+        } else {
+            session()->setFlashdata('warning', 'Tidak ada data baru untuk diimpor.');
+        }
     } else {
         session()->setFlashdata('error', 'File tidak valid atau tidak ditemukan.');
     }

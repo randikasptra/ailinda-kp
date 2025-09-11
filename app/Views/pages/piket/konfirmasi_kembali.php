@@ -181,4 +181,28 @@
     <?php endif; ?>
 </div>
 
+
+<script>
+function pelanggaranModal() {
+    return {
+        open: false,
+        // pakai nama yang dikirim controller, dan fallback ke array kosong supaya aman
+        list: <?= json_encode($pelanggarans ?? [], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+        selected: [],
+        toggle(p) {
+            let index = this.selected.findIndex(item => item.id === p.id);
+            if (index === -1) this.selected.push(p);
+            else this.selected.splice(index, 1);
+        },
+        isSelected(p) {
+            return this.selected.some(item => item.id === p.id);
+        },
+        remove(index) {
+            this.selected.splice(index, 1);
+        }
+    }
+}
+</script>
+
+
 <?= $this->endSection() ?>

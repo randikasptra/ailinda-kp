@@ -8,23 +8,38 @@
     <style>
         @media print {
             @page {
-                size: 10cm 15cm;
-                margin: 0.5cm;
+                size: 58mm auto; /* lebar 58mm, tinggi mengikuti konten */
+                margin: 0;       /* hilangkan margin default browser */
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
             }
 
             .no-print {
                 display: none !important;
             }
 
-            body {
+            .surat {
+                width: 58mm;    /* pas kertas */
                 margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-size: 11px;
+                font-family: "Times New Roman", serif;
             }
+        }
+
+        body {
+            background: white;
         }
     </style>
 </head>
 
-<body class="bg-white text-black text-[11px] font-serif p-4">
-    <div class="max-w-[10cm] w-[10cm] h-[15cm] border border-black p-4 shadow-sm">
+<body class="bg-white text-black text-[11px] font-serif">
+
+    <div class="surat">
         <!-- KOP -->
         <div class="text-center mb-4">
             <h1 class="text-[12px] font-bold leading-tight">KEMENTERIAN AGAMA</h1>
@@ -37,7 +52,7 @@
 
         <table class="mt-2 w-full text-[11px] leading-tight">
             <tr>
-                <td class="w-28">Nama</td>
+                <td class="w-20">Nama</td>
                 <td>: <?= esc($izin['nama']) ?></td>
             </tr>
             <tr>
@@ -45,7 +60,7 @@
                 <td>: <?= esc($izin['kelas']) ?> <?= esc($izin['jurusan']) ?></td>
             </tr>
             <tr>
-                <td>Alasan Terlambat</td>
+                <td>Alasan</td>
                 <td>: <?= esc($izin['alasan']) ?></td>
             </tr>
             <tr>
@@ -63,13 +78,11 @@
             <div class="text-center">
                 <p>Mengetahui,</p>
                 <p class="mb-10">Guru Piket</p>
-                <p></p>
                 <p class="text-[10px]">NIP. ......................</p>
             </div>
 
             <div class="text-center">
                 <p class="mb-10">Ttd. Siswa</p>
-                <p></p>
             </div>
         </div>
     </div>
