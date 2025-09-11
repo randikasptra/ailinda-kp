@@ -1,66 +1,133 @@
 <?= $this->extend('layout/dashboard_confirm_kembali') ?>
 <?= $this->section('content') ?>
 
-<div class=" mt-24 px-8">
+<div class="mt-24 px-8">
     <!-- Page Header -->
-    <div class="flex justify-between items-center mb-8">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-800">Konfirmasi Kembali Siswa</h1>
-            <p class="text-gray-500 mt-1">Kelola konfirmasi kedatangan kembali siswa</p>
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <div class="flex items-center">
+            <div class="p-3 rounded-xl bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] shadow-lg mr-4">
+                <i class="fas fa-user-check text-white text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">Konfirmasi Kembali Siswa</h1>
+                <p class="text-gray-600 mt-1">Kelola konfirmasi kedatangan kembali siswa</p>
+            </div>
+        </div>
+        
+        <!-- Stats Overview -->
+        <div class="flex items-center gap-4">
+            <div class="bg-white rounded-xl shadow-sm p-3 border border-gray-200">
+                <div class="flex items-center gap-2">
+                    <div class="p-2 rounded-lg bg-green-100 text-green-600">
+                        <i class="fas fa-users text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Menunggu Konfirmasi</p>
+                        <p class="font-semibold text-gray-800"><?= count($izinList) ?> Siswa</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Flash Message -->
     <?php if (session()->getFlashdata('success')): ?>
-        <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-lg shadow-sm">
-            <div class="flex items-center">
-                <i data-lucide="check-circle" class="w-5 h-5 text-green-500 mr-2"></i>
-                <p class="text-green-700 font-medium"><?= esc(session()->getFlashdata('success')) ?></p>
+        <div class="flex items-center bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-xl shadow-sm">
+            <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
+            <div>
+                <p class="font-medium"><?= esc(session()->getFlashdata('success')) ?></p>
             </div>
+            <button class="ml-auto text-green-700 hover:text-green-900" onclick="this.parentElement.style.display='none'">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
     <?php endif; ?>
 
     <!-- Empty State -->
     <?php if (empty($izinList)): ?>
-        <div class="bg-white rounded-xl shadow-sm p-8 text-center">
-            <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                <i data-lucide="check" class="w-12 h-12 text-green-500"></i>
+        <div class="bg-white rounded-2xl shadow-lg p-12 text-center">
+            <div class="mx-auto w-24 h-24 bg-green-50 rounded-full flex items-center justify-center mb-6">
+                <i class="fas fa-check-circle text-green-500 text-4xl"></i>
             </div>
-            <h3 class="text-lg font-medium text-gray-800 mb-1">Semua siswa telah kembali</h3>
-            <p class="text-gray-500">Tidak ada siswa yang perlu dikonfirmasi saat ini</p>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">Semua siswa telah kembali</h3>
+            <p class="text-gray-500 mb-6">Tidak ada siswa yang perlu dikonfirmasi saat ini</p>
+            <div class="bg-green-50 rounded-xl p-4 max-w-md mx-auto">
+                <div class="flex items-center">
+                    <i class="fas fa-info-circle text-green-500 mr-3"></i>
+                    <p class="text-sm text-green-700">Sistem akan secara otomatis menampilkan siswa yang perlu dikonfirmasi ketika ada yang keluar</p>
+                </div>
+            </div>
         </div>
     <?php else: ?>
         <!-- Student List Table -->
-        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+            <!-- Table Header -->
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Daftar Siswa Menunggu Konfirmasi</h3>
+                        <p class="text-sm text-gray-600">Total <?= count($izinList) ?> siswa perlu dikonfirmasi</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="relative">
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <input type="text" placeholder="Cari siswa..." 
+                                class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gradient-to-r from-[#1E5631] to-[#2E7D32]">
+                    <thead class="bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white">
                         <tr>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">Nama
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <i class="fas fa-user mr-2"></i>
+                                    Nama Siswa
+                                </div>
                             </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">Kelas
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <i class="fas fa-school mr-2"></i>
+                                    Kelas
+                                </div>
                             </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">Jam
-                                Keluar</th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">Jam
-                                Kembali</th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">Waktu
-                                Kembali Siswa</th>
-                            <th scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium text-white/90 uppercase tracking-wider">
-                                Sanksi</th>
-                            <th scope="col"
-                                class="px-6 py-3 text-right text-xs font-medium text-white/90 uppercase tracking-wider">Aksi
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>
+                                    Jam Keluar
+                                </div>
+                            </th>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <i class="fas fa-sign-in-alt mr-2"></i>
+                                    Jam Kembali
+                                </div>
+                            </th>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <i class="fas fa-clock mr-2"></i>
+                                    Waktu Kembali
+                                </div>
+                            </th>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                                    Sanksi
+                                </div>
+                            </th>
+                            <th class="px-6 py-4 text-right text-sm font-medium uppercase tracking-wider">
+                                <div class="flex items-center justify-end">
+                                    <i class="fas fa-cog mr-2"></i>
+                                    Aksi
+                                </div>
                             </th>
                         </tr>
                     </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-    <?php foreach ($izinList as $izin): ?>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                         <?php foreach ($izinList as $izin): ?>
         <tr x-data="pelanggaranModal()" x-init>
             <!-- Kolom Nama -->
             <td class="px-6 py-4 whitespace-nowrap">
@@ -173,8 +240,7 @@
             </td>
         </tr>
     <?php endforeach; ?>
-</tbody>
-
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -202,7 +268,31 @@ function pelanggaranModal() {
         }
     }
 }
+
+// Initialize icons
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+});
 </script>
 
+<style>
+[x-cloak] {
+    display: none !important;
+}
+
+.shadow-lg {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.rounded-2xl {
+    border-radius: 1rem;
+}
+
+.transition-all {
+    transition: all 0.3s ease;
+}
+</style>
 
 <?= $this->endSection() ?>

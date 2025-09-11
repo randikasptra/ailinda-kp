@@ -23,39 +23,40 @@ class HistoryKonfirmasi extends BaseController
     }
 
     // 🔹 List History dengan JOIN pelanggaran
-   public function history()
+public function history()
 {
     $db = \Config\Database::connect();
 
     $builder = $db->table('history_konfirmasi hk')
-        ->select('
-            hk.id,
-            hk.izin_id,
-            hk.nama,
-            hk.kelas,
-            hk.waktu_keluar,
-            hk.waktu_kembali,
-            hk.waktu_kembali_siswa,
-            hk.created_at,
-            hk.updated_at,
-            GROUP_CONCAT(p.jenis_pelanggaran SEPARATOR ", ") as pelanggaran,
-            COALESCE(SUM(p.poin), 0) as total_poin
-        ')
-        ->join('history_konfirmasi_pelanggaran hkp', 'hk.id = hkp.history_konfirmasi_id', 'left')
-        ->join('pelanggaran p', 'hkp.pelanggaran_id = p.id', 'left')
-        ->groupBy('hk.id')
-        ->orderBy('hk.updated_at', 'DESC');
+    ->select('
+        hk.id,
+        hk.izin_id,
+        s.nisn,
+        hk.nama,
+        hk.kelas,
+        hk.waktu_keluar,
+        hk.waktu_kembali,
+        hk.waktu_kembali_siswa,
+        hk.created_at,
+        hk.updated_at,
+        GROUP_CONCAT(p.jenis_pelanggaran SEPARATOR ", ") as pelanggaran,
+        COALESCE(SUM(p.poin), 0) as total_poin
+    ')
+    ->join('siswa s', 'hk.nama = s.nama AND hk.kelas = s.kelas', 'left')
+    ->join('history_konfirmasi_pelanggaran hkp', 'hk.id = hkp.history_konfirmasi_id', 'left')
+    ->join('pelanggaran p', 'hkp.pelanggaran_id = p.id', 'left')
+    ->groupBy('hk.id')
+    ->orderBy('hk.updated_at', 'DESC');
+
 
     $data = [
         'title' => 'Riwayat Konfirmasi Kembali',
         'historyList' => $builder->get()->getResultArray(),
     ];
 
-    // Coba debug dulu untuk lihat hasil
-    // dd($data['historyList']);
-
     return view('pages/piket/history_konfirmasi', $data);
 }
+
 
 
     // 🔹 Hapus satu history (beserta relasi pelanggarannya)
