@@ -20,22 +20,20 @@
 <!-- Sidebar -->
 <aside class="w-64 h-screen fixed top-0 left-0 bg-gradient-to-b from-[#1E5631] to-[#0c3c22] text-white flex flex-col z-50 shadow-2xl">
     <!-- Logo/Brand -->
-    <div class="p-6 pb-4">
-        <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-xl bg-[#A4DE02] flex items-center justify-center text-[#1E5631] font-bold text-xl shadow-lg">
-                M1
-            </div>
-            <div>
-                <div class="font-bold text-white text-lg">MAN 1</div>
-                <div class="text-xs text-[#A4DE02]/90 font-medium">Admin Panel</div>
-            </div>
+    <div class="p-6 pb-4 flex flex-col items-center">
+        <div class="w-16 h-16 rounded-xl bg-gradient-to-r from-[#A4DE02] to-[#DDFF73] flex items-center justify-center shadow-xl mb-3">
+            <img src="<?= base_url('assets/img/logo-man1.png') ?>" alt="Logo MAN 1" class="w-14 h-14 object-contain rounded-xl transition-transform duration-300 hover:scale-105">
+        </div>
+        <div class="text-center">
+            <div class="font-bold text-white text-xl">MAN 1 Kota Tasikmalaya</div>
+            <div class="text-xs text-[#A4DE02]/90 font-medium mt-1">Admin Panel</div>
         </div>
     </div>
     
     <!-- Navigation -->
     <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
         <?php if (session()->get('role') == 'admin'): ?>
-            <a href="/dashboard/admin" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5">
+            <a href="/dashboard/admin" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/dashboard/admin') ? 'bg-white/10 shadow-lg' : '' ?>">
                 <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
                     <i data-lucide="layout-dashboard" class="w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
                 </div>
@@ -43,7 +41,7 @@
                 <i data-lucide="chevron-right" class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-[#A4DE02]"></i>
             </a>
             
-            <a href="/admin/users" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5">
+            <a href="/admin/users" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/admin/users') ? 'bg-white/10 shadow-lg' : '' ?>">
                 <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
                     <i data-lucide="user-cog" class="w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
                 </div>
@@ -51,7 +49,7 @@
                 <i data-lucide="chevron-right" class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-[#A4DE02]"></i>
             </a>
             
-            <a href="/admin/pelanggaran" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5">
+            <a href="/admin/pelanggaran" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/admin/pelanggaran') ? 'bg-white/10 shadow-lg' : '' ?>">
                 <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
                     <i data-lucide="shield-alert" class="w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
                 </div>
@@ -59,7 +57,7 @@
                 <i data-lucide="chevron-right" class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-[#A4DE02]"></i>
             </a>
             
-            <a href="/admin/siswa" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5">
+            <a href="/admin/siswa" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/admin/siswa') ? 'bg-white/10 shadow-lg' : '' ?>">
                 <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
                     <i data-lucide="graduation-cap" class="w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
                 </div>

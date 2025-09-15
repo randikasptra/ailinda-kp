@@ -25,21 +25,35 @@
 </header>
 
 <!-- Sidebar -->
+<!-- Sidebar -->
 <aside class="w-64 h-screen fixed top-0 left-0 bg-gradient-to-b from-[#1E5631] to-[#0C3A1D] text-white flex flex-col shadow-2xl z-50">
     <!-- Brand Header -->
-    <div class="p-6 pb-4 border-b border-green-700/20">
-        <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-[#A4DE02] to-[#DDFF73] flex items-center justify-center shadow-lg">
-                <span class="text-[#1E5631] font-bold text-lg">M</span>
+    <div class="p-6 pb-4 border-b border-green-700/40 flex flex-col items-center">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-r from-[#A4DE02] to-[#DDFF73] flex items-center justify-center shadow-xl mb-3">
+            <img src="<?= base_url('assets/img/logo-man1.png') ?>" alt="Logo MAN 1" class="w-14 h-14 object-contain rounded-2xl transition-transform duration-300 hover:scale-105">
+        </div>
+        <div class="text-center">
+            <div class="text-2xl font-extrabold tracking-tight">
+                <span class="bg-gradient-to-r from-[#A4DE02] to-[#DDFF73] bg-clip-text text-transparent">MAN 1 Kota Tasikmalaya</span>
             </div>
-            <div>
-                <div class="text-xl font-bold tracking-tight">
-                    <span class="bg-gradient-to-r from-[#A4DE02] to-[#DDFF73] bg-clip-text text-transparent">MAN 1</span>
-                </div>
-                <div class="text-xs font-medium text-gray-300 mt-1">Administration Dashboard</div>
+            <div class="text-sm font-medium text-gray-200 mt-1.5">Guru Piket Dashboard</div>
+        </div>
+    </div>
+
+    <!-- User Profile Mini -->
+    <div class="px-4 py-3 border-b border-green-700/30">
+        <div class="flex items-center gap-3 p-2 rounded-lg bg-white/5 backdrop-blur-sm">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-[#A4DE02] to-[#DDFF73] flex items-center justify-center text-white font-bold text-lg">
+                <?= strtoupper(substr(session()->get('username') ?? 'A', 0, 1)) ?>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium truncate"><?= session()->get('username') ?? 'Admin' ?></p>
+                <p class="text-xs text-green-200 capitalize"><?= session()->get('role') ?? 'admin' ?></p>
+                <p class="text-xs text-gray-300 truncate"><?= session()->get('email') ?? 'admin@example.com' ?></p>
             </div>
         </div>
     </div>
+
 
     <!-- Navigation -->
     <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
@@ -87,14 +101,14 @@
                 <i class="fas fa-chevron-right ml-auto text-xs text-gray-400 group-hover:text-[#A4DE02] transition-transform duration-300 group-hover:translate-x-1"></i>
             </a>
         <?php else: ?>
-            <a href="/bp" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-[#145128]/90 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/bp') ? 'bg-[#145128] shadow-lg' : '' ?>" aria-current="<?= current_url(true) == base_url('/bp') ? 'page' : 'false' ?>">
+            <a href="/dashboard/bp" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-[#145128]/90 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/bp') ? 'bg-[#145128] shadow-lg' : '' ?>" aria-current="<?= current_url(true) == base_url('/bp') ? 'page' : 'false' ?>">
                 <div class="p-2 rounded-xl bg-[#A4DE02]/10 group-hover:bg-[#A4DE02]/20 shadow-sm">
                     <i class="fas fa-home w-5 h-5 text-[#A4DE02]"></i>
                 </div>
                 <span class="font-medium">Dashboard BP</span>
                 <i class="fas fa-chevron-right ml-auto text-xs text-gray-400 group-hover:text-[#A4DE02] transition-transform duration-300 group-hover:translate-x-1"></i>
             </a>
-            <a href="/rekap_poin" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-[#145128]/90 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/rekap_poin') ? 'bg-[#145128] shadow-lg' : '' ?>" aria-current="<?= current_url(true) == base_url('/rekap_poin') ? 'page' : 'false' ?>">
+            <a href="/bp/rekap_poin" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-[#145128]/90 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/rekap_poin') ? 'bg-[#145128] shadow-lg' : '' ?>" aria-current="<?= current_url(true) == base_url('/rekap_poin') ? 'page' : 'false' ?>">
                 <div class="p-2 rounded-xl bg-[#A4DE02]/10 group-hover:bg-[#A4DE02]/20 shadow-sm">
                     <i class="fas fa-chart-bar w-5 h-5 text-[#A4DE02]"></i>
                 </div>
@@ -115,7 +129,6 @@
         </a>
     </div>
 </aside>
-
 <!-- Main Content Area -->
 <main class="pt-20 min-h-screen bg-gradient-to-br from-gray-50/50 to-gray-100/50 pl-64">
     <!-- Your page content goes here -->
