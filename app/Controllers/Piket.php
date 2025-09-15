@@ -110,8 +110,10 @@ class Piket extends BaseController
 
         if ($keyword) {
             $siswaList = $this->siswaModel
-                ->like('nisn', $keyword)
-                ->orLike('nama', $keyword)
+                ->groupStart()
+                    ->like('nisn', $keyword)
+                    ->orLike('nama', $keyword)
+                ->groupEnd()
                 ->findAll();
 
             if (count($siswaList) === 1) {
@@ -129,36 +131,44 @@ class Piket extends BaseController
         ]);
     }
 
-
-
     public function simpanIzin()
-{
-    $data = [
-        'nama' => $this->request->getPost('nama'),
-        'nisn' => $this->request->getPost('nisn'),
-        'kelas' => $this->request->getPost('kelas'),
-        'alasan' => $this->request->getPost('alasan'),
-        'waktu_keluar' => $this->request->getPost('waktu_keluar'),
-        'waktu_kembali' => $this->request->getPost('waktu_kembali'),
-        'status_kembali' => 'belum kembali',
-        'poin_pelanggaran' => 0,
-    ];
+    {
+        if (! $this->validate([
+            'nama' => 'required',
+            'nisn' => 'required',
+            'kelas' => 'required',
+            'alasan' => 'required',
+            'waktu_keluar' => 'required',
+            'waktu_kembali' => 'required',
+        ])) {
+            return redirect()->back()->withInput()->with('error', 'Semua field wajib diisi');
+        }
 
-    $insertedId = $this->izinModel->insert($data);
+        $data = [
+            'nama' => $this->request->getPost('nama'),
+            'nisn' => $this->request->getPost('nisn'),
+            'kelas' => $this->request->getPost('kelas'),
+            'alasan' => $this->request->getPost('alasan'),
+            'waktu_keluar' => $this->request->getPost('waktu_keluar'),
+            'waktu_kembali' => $this->request->getPost('waktu_kembali'),
+            'status_kembali' => 'belum kembali',
+            'poin_pelanggaran' => 0,
+        ];
 
-    // Bawa flashdata agar ditampilkan di halaman cetak
-    session()->setFlashdata('success', 'Surat izin berhasil dibuat.');
+        $this->izinModel->insert($data);
+        $insertedId = $this->izinModel->getInsertID();
 
-    // Redirect ke halaman cetak
-    return redirect()->to('/piket/izin_cetak/' . $insertedId);
-}
+        session()->setFlashdata('success', 'Surat izin berhasil dibuat.');
+
+        return redirect()->to('/piket/izin_cetak/' . $insertedId);
+    }
 
     public function cetakIzin($id)
     {
         $izin = $this->izinModel->find($id);
 
         if (!$izin) {
-            throw PageNotFoundException::forPageNotFound('Data tidak ditemukan');
+            return redirect()->to('/piket')->with('error', 'Data tidak ditemukan');
         }
 
         return view('pages/piket/izin_cetak', [
@@ -166,6 +176,7 @@ class Piket extends BaseController
             'title' => 'Cetak Surat Izin',
         ]);
     }
+
 
     public function konfirmasiKembali()
     {
