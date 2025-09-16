@@ -105,6 +105,9 @@ $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
 // =======================
 $routes->get('pelanggaran', 'Pelanggaran::index');
 $routes->get('unauthorized', 'Error::unauthorized');
+// Surat Izin Masuk
+$routes->get('piket/izin_masuk_form', 'SuratMasukController::izin_masuk_form');
+$routes->post('piket/simpanIzinMasuk', 'SuratMasukController::simpanIzinMasuk');
 
 $routes->group('dashboard', function ($routes) {
     $routes->get('rekap_poin', 'Bp::rekapPoin');

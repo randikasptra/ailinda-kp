@@ -37,41 +37,7 @@ class Piket extends BaseController
         return view('pages/piket/izin_masuk_form', $data);
     }
 
-    public function izinMasukSubmit()
-    {
-        $data = [
-            'nama' => $this->request->getPost('nama'),
-            'nisn' => $this->request->getPost('nisn'),
-            'kelas' => $this->request->getPost('kelas'),
-            'jurusan' => $this->request->getPost('jurusan'),
-            'tahun_ajaran' => $this->request->getPost('tahun_ajaran'),
-            'alasan' => $this->request->getPost('alasan'),
-            'tindak_lanjut' => $this->request->getPost('tindak_lanjut'),
-            'poin' => $this->request->getPost('poin'),
-            'created_at' => date('Y-m-d H:i:s')
-        ];
-
-        $this->izinMasukModel->insert($data);
-
-        $lastId = $this->izinMasukModel->insertID(); // ID terakhir
-
-        // Redirect ke halaman cetak
-        return redirect()->to(base_url('piket/izin-masuk/cetak/' . $lastId));
-    }
-
-    public function cetakIzinMasuk($id)
-    {
-        $izin = $this->izinMasukModel->find($id);
-
-        if (!$izin) {
-            return redirect()->back()->with('error', 'Data izin masuk tidak ditemukan.');
-        }
-
-        return view('pages/piket/izin_masuk_cetak', [
-            'title' => 'Cetak Surat Izin Masuk',
-            'izin' => $izin
-        ]);
-    }
+   
 
     public function submitIzinMasuk()
     {

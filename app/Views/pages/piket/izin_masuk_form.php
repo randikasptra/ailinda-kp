@@ -1,128 +1,534 @@
 <?= $this->extend('layout/dashboard') ?>
 <?= $this->section('content') ?>
 
-<div class="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow">
-    <h1 class="text-2xl font-bold mb-4 text-[#1E5631] flex items-center gap-2">
-        <i data-lucide="log-in" class="w-6 h-6"></i>
-        Form Surat Izin Masuk
-    </h1>
-    <form action="<?= base_url('/piket/izin-masuk/submit') ?>" method="POST" class="space-y-4">
-        <!-- Pilih Nama Siswa -->
-        <div>
-            <label class="block mb-1 font-medium">Nama Siswa</label>
-            <select name="nama" id="nama" class="w-full border px-3 py-2 rounded" required onchange="isiDataSiswa()">
-                <option value="">-- Pilih Siswa --</option>
-                <?php foreach ($siswa as $s): ?>
-                    <option value="<?= esc($s['nama']) ?>" 
-                        data-nisn="<?= esc($s['nisn']) ?>"
-                        data-kelas="<?= esc($s['kelas']) ?>"
-                        data-jurusan="<?= esc($s['jurusan']) ?>"
-                        data-tahun="<?= esc($s['tahun_ajaran']) ?>"
-                        data-poin="<?= esc($s['poin']) ?>">
-                        <?= esc($s['nama']) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-
-        <!-- NISN -->
-        <input type="hidden" name="nisn" id="nisn">
-        <input type="hidden" name="kelas" id="kelas">
-        <input type="hidden" name="jurusan" id="jurusan">
-        <input type="hidden" name="tahun_ajaran" id="tahun_ajaran">
-        <input type="hidden" name="poin_awal" id="poin_awal">
-
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <label class="block mb-1 font-medium">NISN</label>
-                <input type="text" id="nisn_show" class="w-full border px-3 py-2 rounded bg-gray-100" disabled>
+<?php if (session()->getFlashdata('success')): ?>
+    <div id="modalSuccess" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 transition-opacity duration-300">
+        <div class="bg-white p-6 rounded-xl shadow-2xl text-center max-w-sm mx-4 border-l-4 border-green-500 transform scale-100 transition-transform duration-300">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
             </div>
-            <div>
-                <label class="block mb-1 font-medium">Kelas</label>
-                <input type="text" id="kelas_show" class="w-full border px-3 py-2 rounded bg-gray-100" disabled>
-            </div>
-            <div>
-                <label class="block mb-1 font-medium">Jurusan</label>
-                <input type="text" id="jurusan_show" class="w-full border px-3 py-2 rounded bg-gray-100" disabled>
-            </div>
-            <div>
-                <label class="block mb-1 font-medium">Tahun Ajaran</label>
-                <input type="text" id="tahun_ajaran_show" class="w-full border px-3 py-2 rounded bg-gray-100" disabled>
-            </div>
-        </div>
-
-        <!-- Alasan Terlambat -->
-        <div>
-            <label class="block mb-1 font-medium">Alasan Terlambat</label>
-            <textarea name="alasan" rows="2" class="w-full border px-3 py-2 rounded" required></textarea>
-        </div>
-
-        <!-- Tindak Lanjut -->
-        <div>
-            <label class="block mb-1 font-medium">Tindak Lanjut</label>
-            <textarea name="tindak_lanjut" rows="2" class="w-full border px-3 py-2 rounded"></textarea>
-        </div>
-
-        <!-- Dropdown Pelanggaran -->
-        <div>
-            <label class="block mb-1 font-medium">Pelanggaran</label>
-            <select name="poin" id="poin" class="w-full border px-3 py-2 rounded" required onchange="updatePoinTotal()">
-                <option value="">-- Pilih Pelanggaran --</option>
-                <?php foreach ($pelanggaran as $p): ?>
-                    <option value="<?= esc($p['poin']) ?>">
-                        <?= esc($p['jenis_pelanggaran']) ?> (<?= esc($p['poin']) ?> poin)
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-
-        <!-- Total Poin Akhir -->
-        <div>
-            <label class="block mb-1 font-medium">Total Poin Setelah Ditambah</label>
-            <input type="text" id="poin_total" class="w-full border px-3 py-2 rounded bg-gray-100 font-semibold text-red-600" readonly>
-        </div>
-
-        <!-- Submit -->
-        <div class="pt-4 text-right">
-            <button type="submit" class="bg-[#1E5631] text-white px-5 py-2 rounded hover:bg-[#145128]">
-                <i data-lucide="printer" class="inline w-4 h-4 mr-1"></i> Cetak & Tambah Poin
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Berhasil!</h3>
+            <p class="text-gray-600 mb-4"><?= session()->getFlashdata('success') ?></p>
+            <button onclick="document.getElementById('modalSuccess').style.display='none'" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                Tutup
             </button>
         </div>
-    </form>
+    </div>
+<?php endif; ?>
+
+<style>
+    @media print {
+        @page { 
+            size: 8.2cm auto; 
+            margin: 0; 
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        .print-area {
+            width: 7.8cm;
+            margin: 0 auto;
+            font-family: 'Times New Roman', serif;
+            font-size: 11px;
+            padding: 4px 6px;
+            box-sizing: border-box;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        td { vertical-align: top; padding: 1px 0; }
+        .no-print { display: none !important; }
+    }
+    
+    /* Animasi untuk modal */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slideIn {
+        from { transform: translateY(-10px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    
+    .modal-animation {
+        animation: fadeIn 0.3s ease-out;
+    }
+    
+    .modal-content-animation {
+        animation: slideIn 0.3s ease-out;
+    }
+</style>
+
+<div class="print-area">
+    <div class="p-4 md:p-6">
+        <div class="bg-white p-6 rounded-2xl shadow-lg max-w-4xl mx-auto border-l-4 border-[#FF9800]">
+            <div class="flex items-center mb-6">
+                <div class="bg-[#FF9800] p-3 rounded-xl mr-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Manajemen Surat Izin Masuk</h2>
+                    <p class="text-gray-600">Siswa terlambat masuk sekolah</p>
+                </div>
+            </div>
+
+            <!-- PENCARIAN SISWA -->
+            <div class="mb-8 bg-gray-50 p-5 rounded-xl border border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                    <svg class="w-5 h-5 text-[#FF9800] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    Pencarian Siswa
+                </h3>
+                <form method="get" action="<?= base_url('piket/izin_masuk_form') ?>" class="flex flex-col md:flex-row gap-3">
+                    <div class="relative flex-grow">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <input type="text" name="keyword" value="<?= esc($keyword ?? '') ?>" placeholder="Cari berdasarkan NISN atau Nama..."
+                            class="pl-10 w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#FF9800] focus:border-transparent focus:outline-none transition-all duration-200" />
+                    </div>
+                    <button type="submit" class="bg-[#FF9800] text-white px-6 py-3 rounded-xl hover:bg-[#e68900] transition-all duration-200 flex items-center justify-center shadow-md hover:shadow-lg">
+                        <svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        Cari
+                    </button>
+                </form>
+            </div>
+
+            <!-- FORM INPUT SURAT IZIN MASUK -->
+            <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold text-gray-700 flex items-center">
+                        <svg class="w-5 h-5 text-[#FF9800] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Form Input Surat Izin Masuk
+                    </h3>
+                    <button type="button" id="btnTambahManual" 
+                        class="bg-[#2196F3] text-white px-4 py-2 rounded-xl hover:bg-[#0b7dda] transition-all duration-200 flex items-center shadow-md hover:shadow-lg">
+                        <svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Tambah Manual
+                    </button>
+                </div>
+
+                <form id="formSuratIzinMasuk" action="<?= base_url('/piket/simpanIzinMasuk') ?>" method="post" class="space-y-5">
+                    <?= csrf_field() ?>
+
+                    <?php if (!empty($siswaList) && count($siswaList) > 1): ?>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Siswa</label>
+                            <div class="relative">
+                                <select onchange="location.href='<?= base_url('piket/izin_masuk_form?keyword=' . urlencode($keyword)) ?>&nisn=' + this.value"
+                                    class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white appearance-none focus:ring-2 focus:ring-[#FF9800] focus:border-transparent focus:outline-none transition-all duration-200 pr-10">
+                                    <option value="">-- Pilih salah satu --</option>
+                                    <?php foreach ($siswaList as $s): ?>
+                                        <option value="<?= $s['nisn'] ?>" <?= ($siswa['nisn'] ?? '') === $s['nisn'] ? 'selected' : '' ?>>
+                                            <?= esc($s['nama']) ?> (<?= esc($s['nisn']) ?> - <?= esc($s['kelas']) ?>)
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama</label>
+                            <input type="text" name="nama" value="<?= esc($siswa['nama'] ?? '') ?>" readonly
+                                class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-gray-50 focus:outline-none transition-all duration-200" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">NISN</label>
+                            <input type="text" name="nisn" value="<?= esc($siswa['nisn'] ?? '') ?>" <?= isset($siswa) ? 'readonly' : '' ?>
+                                class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-gray-50 focus:outline-none transition-all duration-200" />
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label>
+                            <input type="text" name="kelas" value="<?= esc($siswa['kelas'] ?? '') ?>" readonly
+                                class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-gray-50 focus:outline-none transition-all duration-200" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Jurusan</label>
+                            <input type="text" name="jurusan" value="<?= esc($siswa['jurusan'] ?? '') ?>" readonly
+                                class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-gray-50 focus:outline-none transition-all duration-200" />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="alasan_terlambat" class="block text-sm font-medium text-gray-700 mb-2">Alasan Terlambat</label>
+                        <textarea name="alasan_terlambat" id="alasan_terlambat" rows="3" required
+                            class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#FF9800] focus:border-transparent focus:outline-none transition-all duration-200" placeholder="Masukkan alasan terlambat"><?= old('alasan_terlambat') ?></textarea>
+                    </div>
+
+                    <div>
+                        <label for="tindak_lanjut" class="block text-sm font-medium text-gray-700 mb-2">Tindak Lanjut</label>
+                        <textarea name="tindak_lanjut" id="tindak_lanjut" rows="2" required
+                            class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#FF9800] focus:border-transparent focus:outline-none transition-all duration-200" placeholder="Masukkan tindak lanjut"><?= old('tindak_lanjut') ?></textarea>
+                    </div>
+
+                    <div class="text-right pt-4">
+                        <button type="submit"
+                            class="bg-[#FF9800] text-white px-8 py-3 rounded-xl hover:bg-[#e68900] transition-all duration-200 flex items-center justify-center shadow-md hover:shadow-lg inline-flex">
+                            <svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                            Kirim Izin Masuk
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Preview -->
+<div id="modalPreview" class="fixed inset-0 hidden bg-black bg-opacity-50 flex items-center justify-center z-50 modal-animation p-4">
+    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl p-6 relative modal-content-animation">
+        <button type="button" id="closeModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition-colors duration-200 bg-gray-100 hover:bg-gray-200 rounded-full p-1">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+
+        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+            <svg class="w-6 h-6 text-[#FF9800] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            Preview Surat Izin Masuk
+        </h3>
+
+        <div id="previewContent" class="space-y-3 text-gray-800 text-sm bg-gray-50 p-4 rounded-lg"></div>
+
+        <div class="mt-6 flex justify-end gap-3">
+            <button id="printPreview" class="px-5 py-2.5 bg-[#2196F3] text-white rounded-xl hover:bg-[#0b7dda] transition-colors duration-200 flex items-center shadow-md hover:shadow-lg">
+                <svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2z"></path>
+                </svg>
+                Print
+            </button>
+            <button type="button" id="confirmSubmit" class="px-5 py-2.5 bg-[#FF9800] text-white rounded-xl hover:bg-[#e68900] transition-colors duration-200 flex items-center shadow-md hover:shadow-lg">
+                <svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                Konfirmasi
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Tambah Manual -->
+<div id="modalManual" class="fixed inset-0 hidden bg-black bg-opacity-50 flex items-center justify-center z-50 modal-animation p-4">
+    <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-6 relative modal-content-animation">
+        <button type="button" id="closeManual" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition-colors duration-200 bg-gray-100 hover:bg-gray-200 rounded-full p-1">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+
+        <h2 class="text-xl font-bold text-gray-800 mb-5 flex items-center">
+            <svg class="w-6 h-6 text-[#2196F3] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Tambah Surat Manual
+        </h2>
+
+        <form id="formManual" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Nama</label>
+                <input type="text" name="nama" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2196F3] focus:border-transparent focus:outline-none transition-all duration-200" required>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">NISN</label>
+                <input type="text" name="nisn" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2196F3] focus:border-transparent focus:outline-none transition-all duration-200" required>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label>
+                <input type="text" name="kelas" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2196F3] focus:border-transparent focus:outline-none transition-all duration-200" required>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Jurusan</label>
+                <input type="text" name="jurusan" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2196F3] focus:border-transparent focus:outline-none transition-all duration-200" required>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Alasan Terlambat</label>
+                <textarea name="alasan_terlambat" rows="2" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2196F3] focus:border-transparent focus:outline-none transition-all duration-200" required></textarea>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Tindak Lanjut</label>
+                <textarea name="tindak_lanjut" rows="2" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2196F3] focus:border-transparent focus:outline-none transition-all duration-200" required></textarea>
+            </div>
+
+            <div class="flex justify-end gap-3 mt-6">
+                <button type="button" id="printManual" class="px-5 py-2.5 bg-[#2196F3] text-white rounded-xl hover:bg-[#0b7dda] transition-colors duration-200 flex items-center shadow-md hover:shadow-lg">
+                    <svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2z"></path>
+                    </svg>
+                    Print
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script>
-    function isiDataSiswa() {
-        const select = document.getElementById('nama');
-        const selected = select.options[select.selectedIndex];
+// --- Tambah Surat Manual ---
+const btnTambahManual = document.getElementById('btnTambahManual');
+const modalManual = document.getElementById('modalManual');
+const closeManual = document.getElementById('closeManual');
+const formManual = document.getElementById('formManual');
+const printManual = document.getElementById('printManual');
 
-        const nisn = selected.getAttribute('data-nisn');
-        const kelas = selected.getAttribute('data-kelas');
-        const jurusan = selected.getAttribute('data-jurusan');
-        const tahun = selected.getAttribute('data-tahun');
-        const poin = parseInt(selected.getAttribute('data-poin')) || 0;
+btnTambahManual.addEventListener('click', () => {
+    modalManual.classList.remove('hidden');
+});
 
-        document.getElementById('nisn').value = nisn;
-        document.getElementById('kelas').value = kelas;
-        document.getElementById('jurusan').value = jurusan;
-        document.getElementById('tahun_ajaran').value = tahun;
-        document.getElementById('poin_awal').value = poin;
+closeManual.addEventListener('click', () => {
+    modalManual.classList.add('hidden');
+    formManual.reset();
+});
 
-        document.getElementById('nisn_show').value = nisn;
-        document.getElementById('kelas_show').value = kelas;
-        document.getElementById('jurusan_show').value = jurusan;
-        document.getElementById('tahun_ajaran_show').value = tahun;
+// Print dari modal manual
+printManual.addEventListener('click', () => {
+    const formData = new FormData(formManual);
 
-        updatePoinTotal();
+    const content = `
+        <div style="font-size:9px; line-height:1.3;">
+            <!-- Kop Surat -->
+            <div style="display:flex; align-items:center; border-bottom:1px solid #000; padding-bottom:2px; margin-bottom:4px;">
+                <img src="<?= base_url('assets/img/logo-man1.png') ?>" style="width:28px; height:auto; margin-right:4px;">
+                <div style="flex:1; text-align:center;">
+                    <div style="font-size:9.5px; font-weight:bold;">KEMENTERIAN AGAMA</div>
+                    <div style="font-size:8.5px; font-weight:600;">MAN 1 KOTA TASIKMALAYA</div>
+                    <div style="font-size:6px;">Jl. Letnan Harun No. 30, Kota Tasikmalaya</div>
+                </div>
+            </div>
+
+            <div style="text-align:center; font-weight:bold; text-decoration:underline; margin:4px 0; font-size:11px;">
+                SURAT IZIN MASUK (TERLAMBAT)
+            </div>
+
+            <table style="font-size:9px;">
+                <tr><td style="width:28%;">Nama</td><td>: ${formData.get('nama')}</td></tr>
+                <tr><td>NISN</td><td>: ${formData.get('nisn')}</td></tr>
+                <tr><td>Kelas</td><td>: ${formData.get('kelas')}</td></tr>
+                <tr><td>Jurusan</td><td>: ${formData.get('jurusan')}</td></tr>
+                <tr><td>Alasan Terlambat</td><td>: ${formData.get('alasan_terlambat')}</td></tr>
+                <tr><td>Tindak Lanjut</td><td>: ${formData.get('tindak_lanjut')}</td></tr>
+                <tr><td>Tanggal</td><td>: <?= date('d M Y') ?></td></tr>
+            </table>
+
+            <div style="display:flex; justify-content:space-between; margin-top:12px; font-size:9px;">
+                <div style="text-align:center; width:45%;">
+                    <p style="margin-bottom:28px;">Petugas Piket</p>
+                    <span>( ......................... )</span>
+                </div>
+                <div style="text-align:center; width:45%;">
+                    <p>Tasikmalaya, <?= date('d M Y') ?></p>
+                    <p style="margin-bottom:28px;">Bagian Kesiswaan</p>
+                    <span>( ......................... )</span>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const w = window.open('', '_blank', 'width=500,height=800');
+    w.document.write(`
+        <html>
+        <head>
+            <title>Print Surat Izin Masuk</title>
+            <style>
+                @media print {
+                    @page { size: 8cm 12cm; margin: 0; }
+                    body { margin:0; padding:0; }
+                }
+            </style>
+        </head>
+        <body>${content}</body>
+        </html>
+    `);
+    w.document.close();
+    w.focus();
+    setTimeout(() => { w.print(); w.close(); }, 500);
+});
+
+// Simpan manual ke DB
+formManual.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(formManual);
+
+    fetch('/surat-izin-masuk/store', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            modalManual.classList.add('hidden');
+            formManual.reset();
+            window.location.href = '/piket/konfirmasi_kembali';
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Gagal menyimpan surat izin masuk manual!');
+    });
+});
+
+const form = document.getElementById('formSuratIzinMasuk');
+const modal = document.getElementById('modalPreview');
+const closeModal = document.getElementById('closeModal');
+const previewContent = document.getElementById('previewContent');
+const confirmSubmit = document.getElementById('confirmSubmit');
+const printBtn = document.getElementById('printPreview');
+
+// Tutup modal
+closeModal.addEventListener('click', () => {
+    modal.classList.add('hidden');
+});
+
+// Kirim ke backend
+confirmSubmit.addEventListener('click', () => {
+    const formData = new FormData(form);
+
+    fetch('/surat-izin-masuk/store', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+             window.location.href = '/piket/konfirmasi_kembali';
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Terjadi kesalahan saat mengirim data!');
+    });
+});
+
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(form);
+
+    if (!formData.get('nama') || !formData.get('nisn') || !formData.get('alasan_terlambat') || 
+        !formData.get('tindak_lanjut')) {
+        alert('Harap lengkapi semua field yang diperlukan!');
+        return;
     }
 
-    function updatePoinTotal() {
-        const poin_awal = parseInt(document.getElementById('poin_awal').value) || 0;
-        const pelanggaran = parseInt(document.getElementById('poin').value) || 0;
-        const total = poin_awal + pelanggaran;
+    previewContent.innerHTML = `
+        <h2 class="text-lg font-bold text-center mb-2">Preview Surat Izin Masuk</h2>
+        <p><b>Nama:</b> ${formData.get('nama')}</p>
+        <p><b>NISN:</b> ${formData.get('nisn')}</p>
+        <p><b>Kelas:</b> ${formData.get('kelas')}</p>
+        <p><b>Jurusan:</b> ${formData.get('jurusan')}</p>
+        <p><b>Alasan Terlambat:</b> ${formData.get('alasan_terlambat')}</p>
+        <p><b>Tindak Lanjut:</b> ${formData.get('tindak_lanjut')}</p>
+    `;
+    modal.classList.remove('hidden');
+});
 
-        document.getElementById('poin_total').value = total + " poin";
-    }
+closeModal.addEventListener('click', () => {
+    modal.classList.add('hidden');
+    previewContent.innerHTML = '';
+});
+
+// Print versi rapi
+printBtn.addEventListener('click', () => {
+    const formData = new FormData(form);
+
+    const content = `
+        <div class="print-area" style="font-size:9px; line-height:1.3;">
+           <!-- Kop Surat -->
+            <div style="display:flex; align-items:center; border-bottom:1px solid #000; padding-bottom:2px; margin-bottom:4px;">
+                <img src="<?= base_url('assets/img/logo-man1.png') ?>" 
+                    alt="Logo" 
+                    style="width:28px; height:auto; margin-right:4px; margin-left:2px;">
+                <div style="flex:1; text-align:center; white-space:normal; word-wrap:break-word;">
+                    <div style="font-size:9.5px; font-weight:bold; line-height:1;">KEMENTERIAN AGAMA</div>
+                    <div style="font-size:8.5px; font-weight:600; line-height:1.2;">MAN 1 KOTA TASIKMALAYA</div>
+                    <div style="font-size:6px; line-height:1.1;">Jl. Letnan Harun No. 30, Kota Tasikmalaya, Jawa Barat 46115</div>
+                    <div style="font-size:6px; line-height:1.1;">Telp: (0265) 331336 – Email: man1kotatasik@gmail.com</div>
+                </div>
+            </div>
+
+            <div style="text-align:center; font-weight:bold; text-decoration:underline; margin:4px 0; font-size:11px;">
+                SURAT IZIN MASUK (TERLAMBAT)
+            </div>
+
+            <p style="margin:3px 0;">Yang bertanda tangan di bawah ini menerangkan <br> bahwa:</p>
+            <table style="font-size:9px;">
+                <tr><td style="width:28%;">Nama</td><td>: ${formData.get('nama')}</td></tr>
+                <tr><td>NISN</td><td>: ${formData.get('nisn')}</td></tr>
+                <tr><td>Kelas</td><td>: ${formData.get('kelas')}</td></tr>
+                <tr><td>Jurusan</td><td>: ${formData.get('jurusan')}</td></tr>
+                <tr><td>Alasan Terlambat</td><td>: ${formData.get('alasan_terlambat')}</td></tr>
+                <tr><td>Tindak Lanjut</td><td>: ${formData.get('tindak_lanjut')}</td></tr>
+                <tr><td>Tanggal</td><td>: <?= date('d M Y') ?></td></tr>
+            </table>
+
+            <p style="margin:4px 0; text-align:justify; font-size:9px;">
+                Surat ini dibuat sebagai bukti bahwa siswa tersebut telah diberikan izin untuk masuk setelah terlambat.<br>
+                Demikian surat ini dibuat agar dapat dipergunakan sebagaimana mestinya.
+            </p>
+
+            <div style="display:flex; justify-content:space-between; margin-top:12px;">
+                <div style="text-align:center; width:45%; font-size:9px;">
+                    <p style="margin-bottom:28px;">Petugas Piket</p>
+                    <span>( ......................... )</span>
+                </div>
+                <div style="text-align:center; width:45%; font-size:9px;">
+                    <p>Tasikmalaya, <?= date('d M Y') ?></p>
+                    <p style="margin-bottom:28px;">Bagian Kesiswaan</p>
+                    <span>( ......................... )</span>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const w = window.open('', '_blank', 'width=500,height=800');
+    w.document.write(`
+        <html>
+        <head>
+            <title>Print Surat Izin Masuk</title>
+            <style>
+                @media print {
+                    @page { size: 8cm 12cm; margin: 0; }
+                    body { margin:0; padding:0; }
+                }
+            </style>
+        </head>
+        <body>${content}</body>
+        </html>
+    `);
+    w.document.close();
+    w.focus();
+    setTimeout(() => { w.print(); w.close(); }, 500);
+});
 </script>
 
 <?= $this->endSection() ?>
