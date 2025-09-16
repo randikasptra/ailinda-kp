@@ -47,6 +47,10 @@ $routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
     $routes->post('history_konfirmasi/update/(:num)', 'HistoryKonfirmasi::update/$1'); 
 });
 
+$routes->get('suratizin', 'SuratIzinController::index');
+$routes->get('suratizin/search', 'SuratIzinController::search');
+$routes->post('suratizin/simpan', 'SuratIzinController::simpan');
+$routes->post('/surat-izin/store', 'SuratIzinController::store');
 
 // =======================
 // BP

@@ -12,7 +12,31 @@
     </div>
 <?php endif; ?>
 
-<div class="mt-12 p-6">
+<style>
+    @media print {
+        @page { size: 8.2cm auto; margin: 0; }  /* tambahin dikit jadi 8.2 cm */
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .print-area {
+            width: 7.8cm;  /* kasih space kanan biar ga kepotong */
+            margin: 0 auto;
+            font-family: 'Times New Roman', serif;
+            font-size: 11px;
+            padding: 4px 6px; /* kanan kiri ada buffer */
+            box-sizing: border-box;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        td { vertical-align: top; padding: 1px 0; }
+    }
+</style>
+
+
+
+
+<div class="print-area">
+    <div class="mt-12 p-6">
     <div class="bg-white p-6 rounded-xl shadow-md max-w-3xl mx-auto border-t-4 border-[#A4DE02]">
         <h2 class="text-2xl font-bold text-[#1E5631] mb-4">Pencarian Siswa</h2>
 
@@ -110,55 +134,148 @@
         </div>
 
         <script>
-            const form = document.getElementById('formSuratIzin');
-            const modal = document.getElementById('modalPreview');
-            const closeModal = document.getElementById('closeModal');
-            const previewContent = document.getElementById('previewContent');
-            const confirmSubmit = document.getElementById('confirmSubmit');
-            const printBtn = document.getElementById('printPreview');
+                const form = document.getElementById('formSuratIzin');
+                const modal = document.getElementById('modalPreview');
+                const closeModal = document.getElementById('closeModal');
+                const previewContent = document.getElementById('previewContent');
+                const confirmSubmit = document.getElementById('confirmSubmit');
+                const printBtn = document.getElementById('printPreview');
+
+                // Tutup modal
+                closeModal.addEventListener('click', () => {
+                    modal.classList.add('hidden');
+                });
+
+                // Kirim ke backend
+                confirmSubmit.addEventListener('click', () => {
+                    const formData = new FormData(form);
+
+                    fetch('/surat-izin/store', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                             window.location.href = '/piket/konfirmasi_kembali';
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert('Terjadi kesalahan saat mengirim data!');
+                    });
+                });
+
 
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
-
                 const formData = new FormData(form);
-                let html = `
-                    <div class="print-area">
-                        <h2 class="text-lg font-bold mb-2 text-center">SURAT IZIN KELUAR</h2>
-                        <p><b>Nama:</b> ${formData.get('nama')}</p>
-                        <p><b>NISN:</b> ${formData.get('nisn')}</p>
-                        <p><b>Kelas:</b> ${formData.get('kelas')}</p>
-                        <p><b>Poin Pelanggaran:</b> ${formData.get('poin')}</p>
-                        <p><b>Alasan:</b> ${formData.get('alasan')}</p>
-                        <p><b>Jam Keluar:</b> ${formData.get('waktu_keluar')}</p>
-                        <p><b>Jam Kembali:</b> ${formData.get('waktu_kembali')}</p>
-                    </div>
+
+                if (!formData.get('nama') || !formData.get('nisn') || !formData.get('alasan') || 
+                    !formData.get('waktu_keluar') || !formData.get('waktu_kembali')) {
+                    alert('Harap lengkapi semua field yang diperlukan!');
+                    return;
+                }
+
+                previewContent.innerHTML = `
+                    <h2 class="text-lg font-bold text-center mb-2">Preview Surat</h2>
+                    <p><b>Nama:</b> ${formData.get('nama')}</p>
+                    <p><b>NISN:</b> ${formData.get('nisn')}</p>
+                    <p><b>Kelas:</b> ${formData.get('kelas')}</p>
+                    <p><b>Alasan:</b> ${formData.get('alasan')}</p>
+                    <p><b>Jam Keluar:</b> ${formData.get('waktu_keluar')}</p>
+                    <p><b>Jam Kembali:</b> ${formData.get('waktu_kembali')}</p>
                 `;
-                previewContent.innerHTML = html;
                 modal.classList.remove('hidden');
             });
 
-            closeModal.addEventListener('click', () => modal.classList.add('hidden'));
-
-            confirmSubmit.addEventListener('click', () => {
-                // programmatic submit: akan submit ke action="<?= base_url('/piket/simpanIzin') ?>"
-                form.submit();
+            closeModal.addEventListener('click', () => {
+                modal.classList.add('hidden');
+                previewContent.innerHTML = '';
             });
 
+            // Print versi rapi
             printBtn.addEventListener('click', () => {
-                // print hanya konten preview: buka popup baru dan print
-                const content = previewContent.innerHTML;
-                const w = window.open('', '_blank', 'width=600,height=800');
-                w.document.write('<html><head><title>Print Surat Izin</title>');
-                w.document.write('<style>@media print {@page { size: 10cm 15cm; margin: 0.5cm; }} body{font-family: serif; font-size:12px;}</style>');
-                w.document.write('</head><body>');
-                w.document.write(content);
-                w.document.write('</body></html>');
+                const formData = new FormData(form);
+
+                const content = `
+                    <div class="print-area" style="font-size:9px; line-height:1.3;">
+                       <!-- Kop Surat -->
+                <div style="display:flex; align-items:center; border-bottom:1px solid #000; padding-bottom:2px; margin-bottom:4px;">
+                    <img src="<?= base_url('assets/img/logo-man1.png') ?>" 
+                        alt="Logo" 
+                        style="width:28px; height:auto; margin-right:4px; margin-left:2px;">
+                    <div style="flex:1; text-align:center; white-space:normal; word-wrap:break-word;">
+                        <div style="font-size:9.5px; font-weight:bold; line-height:1;">KEMENTERIAN AGAMA</div>
+                        <div style="font-size:8.5px; font-weight:600; line-height:1.2;">MAN 1 KOTA TASIKMALAYA</div>
+                        <div style="font-size:6px; line-height:1.1;">Jl. Letnan Harun No. 30, Kota Tasikmalaya, Jawa Barat 46115</div>
+                        <div style="font-size:6px; line-height:1.1;">Telp: (0265) 331336 – Email: man1kotatasik@gmail.com</div>
+                    </div>
+                </div>
+
+
+                        <div style="text-align:center; font-weight:bold; text-decoration:underline; margin:4px 0; font-size:11px;">
+                            SURAT IZIN KELUAR
+                        </div>
+
+                        <p style="margin:3px 0;">Yang bertanda tangan di bawah ini menerangkan <br> bahwa:</p>
+                        <table style="font-size:9px;">
+                            <tr><td style="width:28%;">Nama</td><td>: ${formData.get('nama')}</td></tr>
+                            <tr><td>NISN</td><td>: ${formData.get('nisn')}</td></tr>
+                            <tr><td>Kelas</td><td>: ${formData.get('kelas')}</td></tr>
+                            <tr><td>Alasan</td><td>: ${formData.get('alasan')}</td></tr>
+                            <tr><td>Jam Keluar</td><td>: ${formData.get('waktu_keluar')}</td></tr>
+                            <tr><td>Jam Kembali</td><td>: ${formData.get('waktu_kembali')}</td></tr>
+                            <tr><td>Tanggal</td><td>: <?= date('d M Y') ?></td></tr>
+                        </table>
+
+                        <p style="margin:4px 0; text-align:justify; font-size:9px;">
+                            Diberikan izin keluar dari madrasah karena <br>alasan tersebut di atas.<br>
+                            Demikian surat ini dibuat agar dapat <br> dipergunakan sebagaimana mestinya.
+                        </p>
+
+                        <div style="display:flex; justify-content:space-between; margin-top:12px;">
+                            <div style="text-align:center; width:45%; font-size:9px;">
+                                <p style="margin-bottom:28px;">Petugas Piket</p>
+                                <span>( ......................... )</span>
+                            </div>
+                            <div style="text-align:center; width:45%; font-size:9px;">
+                                <p>Tasikmalaya, <?= date('d M Y') ?></p>
+                                <p style="margin-bottom:28px;">Bagian Kesiswaan</p>
+                                <span>( ......................... )</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                const w = window.open('', '_blank', 'width=500,height=800');
+                w.document.write(`
+                    <html>
+                    <head>
+                        <title>Print Surat Izin</title>
+                        <style>
+                            @media print {
+                                @page { size: 8cm 12cm; margin: 0; }
+                                body { margin:0; padding:0; }
+                            }
+                        </style>
+                    </head>
+                    <body>${content}</body>
+                    </html>
+                `);
                 w.document.close();
                 w.focus();
-                setTimeout(() => { w.print(); w.close(); }, 300);
+                setTimeout(() => { w.print(); w.close(); }, 500);
             });
+
+            
         </script>
+
     </div>
 </div>
+</div>
+
 
 <?= $this->endSection() ?>
