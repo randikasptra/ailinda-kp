@@ -9,15 +9,22 @@ class SiswaModel extends Model
     protected $table = 'siswa';
     protected $primaryKey = 'id';
     protected $allowedFields = [
-        'nisn',
+        'nis',
+        'nism',
         'nama',
-        'kelas',          // integer: 10, 11, 12
-        'jurusan',        // enum: SOSHUM, SAINTEK, BAHASA
-        'tahun_ajaran',   // string: '2024/2025'
+        'kelas',
+        'no_absen',
+        'jk',
+        'jurusan',
+        'tahun_ajaran',
         'poin',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
+    // Timestamps otomatis
     protected $useTimestamps = true;
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+    protected $dateFormat    = 'datetime';
 }

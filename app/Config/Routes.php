@@ -39,7 +39,7 @@ $routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
     $routes->post('izin_masuk/submit', 'Piket::submitIzinMasuk');
 
     $routes->post('catat-pelanggaran', 'Piket::catatPelanggaran');
-    $routes->get('data_siswa', 'Piket::dataSiswa');
+    $routes->get('data_siswa', 'SiswaController::dataSiswa');
     $routes->get('history_konfirmasi', 'HistoryKonfirmasi::history');
     $routes->get('history_konfirmasi/delete/(:num)', 'HistoryKonfirmasi::delete/$1');
     $routes->post('history_konfirmasi/hapus_hari_ini', 'HistoryKonfirmasi::hapusHariIni');

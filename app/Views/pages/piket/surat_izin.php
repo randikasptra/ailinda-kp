@@ -168,6 +168,11 @@
                                 class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-gray-50 focus:outline-none transition-all duration-200" />
                         </div>
                         <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Kelamin</label>
+                            <input type="text" name="jk" value="<?= esc($siswa['jk'] ?? '') ?>" readonly
+                                class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-gray-50 focus:outline-none transition-all duration-200" />
+                        </div>
+                        <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Poin Pelanggaran</label>
                             <input type="text" name="poin" value="<?= esc($siswa['poin'] ?? '') ?>" readonly
                                 class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-gray-50 focus:outline-none transition-all duration-200" />

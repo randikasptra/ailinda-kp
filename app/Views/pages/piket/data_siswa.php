@@ -13,8 +13,6 @@
                 <p class="text-gray-600 mt-1">Kelola dan pantau data siswa secara lengkap</p>
             </div>
         </div>
-        
-      
     </div>
 
     <!-- Stats Overview -->
@@ -81,7 +79,7 @@
             Filter Data
         </h2>
         
-        <form method="get" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <form method="get" class="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Pencarian</label>
                 <div class="relative">
@@ -89,7 +87,7 @@
                         <i class="fas fa-search text-gray-400"></i>
                     </div>
                     <input type="text" name="keyword" value="<?= esc($filter['keyword'] ?? '') ?>"
-                        placeholder="Cari nama/NISN"
+                        placeholder="Cari nama/NIS/NISM"
                         class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all" />
                 </div>
             </div>
@@ -132,6 +130,23 @@
                 </div>
             </div>
 
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Kelamin</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-venus-mars text-gray-400"></i>
+                    </div>
+                    <select name="jk" class="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] appearance-none bg-white">
+                        <option value="">Semua Jenis Kelamin</option>
+                        <option value="L" <?= ($filter['jk'] == 'L' ? 'selected' : '') ?>>Laki-laki</option>
+                        <option value="P" <?= ($filter['jk'] == 'P' ? 'selected' : '') ?>>Perempuan</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <i class="fas fa-chevron-down text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+
             <div class="flex items-end">
                 <button type="submit" class="w-full bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white px-4 py-2.5 rounded-xl hover:shadow-lg transition-all duration-300 shadow-md group">
                     <i class="fas fa-filter group-hover:scale-110 transition-transform mr-2"></i>
@@ -143,7 +158,7 @@
         <div class="mt-4 flex justify-between items-center">
             <span class="text-sm text-gray-600">
                 Menampilkan <?= count($siswa) ?> hasil
-                <?php if (!empty($filter['keyword']) || !empty($filter['kelas']) || !empty($filter['jurusan'])): ?>
+                <?php if (!empty($filter['keyword']) || !empty($filter['kelas']) || !empty($filter['jurusan']) || !empty($filter['jk'])): ?>
                     dengan filter yang dipilih
                 <?php endif; ?>
             </span>
@@ -172,13 +187,25 @@
                         <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
                             <div class="flex items-center">
                                 <i class="fas fa-id-card mr-2"></i>
-                                NISN
+                                NIS
                             </div>
                         </th>
+                        <!-- <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
+                            <div class="flex items-center">
+                                <i class="fas fa-id-card-alt mr-2"></i>
+                                NISM
+                            </div>
+                        </th> -->
                         <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
                             <div class="flex items-center">
                                 <i class="fas fa-user mr-2"></i>
                                 Nama
+                            </div>
+                        </th>
+                        <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
+                            <div class="flex items-center">
+                                <i class="fas fa-venus-mars mr-2"></i>
+                                Jenis Kelamin
                             </div>
                         </th>
                         <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
@@ -189,8 +216,20 @@
                         </th>
                         <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
                             <div class="flex items-center">
+                                <i class="fas fa-sort-numeric-up mr-2"></i>
+                                No Absen
+                            </div>
+                        </th>
+                        <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
+                            <div class="flex items-center">
                                 <i class="fas fa-book mr-2"></i>
                                 Jurusan
+                            </div>
+                        </th>
+                        <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
+                            <div class="flex items-center">
+                                <i class="fas fa-calendar-alt mr-2"></i>
+                                Tahun Ajaran
                             </div>
                         </th>
                         <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
@@ -204,7 +243,7 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     <?php if (empty($siswa)): ?>
                         <tr>
-                            <td colspan="5" class="px-6 py-8 text-center">
+                            <td colspan="9" class="px-6 py-8 text-center">
                                 <div class="flex flex-col items-center justify-center text-gray-500">
                                     <i class="fas fa-search text-4xl mb-4 opacity-50"></i>
                                     <p class="text-lg font-medium mb-1">Tidak ada data ditemukan</p>
@@ -216,8 +255,11 @@
                         <?php foreach ($siswa as $s): ?>
                             <tr class="hover:bg-gray-50/50 transition-colors duration-200">
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="font-medium text-gray-900"><?= esc($s['nisn']) ?></div>
+                                    <div class="font-medium text-gray-900"><?= esc($s['nis']) ?></div>
                                 </td>
+                                <!-- <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="font-medium text-gray-900"><?= esc($s['nism'] ?? '-') ?></div>
+                                </td> -->
                                 <td class="px-6 py-4">
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0 h-10 w-10 bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] rounded-full flex items-center justify-center text-white font-bold shadow-md mr-3">
@@ -227,13 +269,28 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-3 py-1.5 inline-flex text-xs font-semibold rounded-full <?= ($s['jk'] == 'L' ? 'bg-blue-100 text-blue-800 border border-blue-200' : 'bg-pink-100 text-pink-800 border border-pink-200') ?>">
+                                        <?= ($s['jk'] == 'L' ? 'Laki-laki' : 'Perempuan') ?>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-3 py-1.5 inline-flex text-xs font-semibold rounded-full bg-blue-100 text-blue-800 border border-blue-200">
                                         <?= esc($s['kelas']) ?>
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-3 py-1.5 inline-flex text-xs font-semibold rounded-full bg-gray-100 text-gray-800 border border-gray-200">
+                                        <?= esc($s['no_absen'] ?? '-') ?>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-3 py-1.5 inline-flex text-xs font-semibold rounded-full bg-purple-100 text-purple-800 border border-purple-200">
                                         <?= esc($s['jurusan']) ?>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-3 py-1.5 inline-flex text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 border border-yellow-200">
+                                        <?= esc($s['tahun_ajaran'] ?? '-') ?>
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -256,7 +313,6 @@
 
 <script>
 function exportToExcel() {
-    // Simple export functionality - in real implementation, you might want to use a library like SheetJS
     alert('Fitur export Excel akan mengunduh data siswa dalam format spreadsheet.');
     // window.location.href = '/piket/export_excel'; // Uncomment and implement this endpoint
 }
