@@ -64,7 +64,7 @@
 </style>
 
 <div class="print-area">
-    <div class="p-4 md:p-6">
+    <div class="p-4 md:p-6 mt-24">
         <div class="bg-white p-6 rounded-2xl shadow-lg max-w-4xl mx-auto border-l-4 border-[#4CAF50]">
             <div class="flex items-center mb-6">
                 <div class="bg-[#4CAF50] p-3 rounded-xl mr-4">
@@ -347,7 +347,7 @@ printManual.addEventListener('click', () => {
                     <div style="flex:1; margin-left:8px;">
                         <div style="font-size:11px; font-weight:bold; margin-left:4px">KEMENTERIAN AGAMA</div>
                         <div style="font-size:10px; font-weight:600;">MAN 1 KOTA TASIKMALAYA</div>
-                        <div style="font-size:6px; margin-left:6px;">Jl. Letnan Harun No. 30, Kota Tasikmalaya</div>
+                        <div style="font-size:7px; margin-left:8px;">Jl. Kh. Busthomi, Awipari Cibeuruem</div>
                     </div>
                 </div>
 
@@ -391,10 +391,10 @@ printManual.addEventListener('click', () => {
                 </table><br>
 
                 <p style="margin:4px 0; text-align:justify; font-size:11px">
-                    Diberikan izin keluar dari madrasah <br>
-                    karena alasan tersebut di atas.<br>
-                    Demikian surat ini dibuat agar dapat <br>
-                    dipergunakan sebagaimana mestinya.
+                    Diijinkan untuk keluar kelas<br> pada jam ${formData.get('waktu_keluar')} S.d jam ${formData.get('waktu_kembali')}<br>
+                    karena alasan tersebut di atas.<br><br>
+                    Demikian surat ini dibuat agar <br>dapat 
+                    dipergunakan sebagaimana <br>mestinya.
                 </p>
 
                 <div style="display:flex; margin-top:18px; font-size:9px; margin-left:-10px"> <div style="text-align:center; width:45%;"> <p style="margin-bottom:28px;">Petugas Piket</p> <span>( ......................... )</span> </div> <div style="text-align:center; width:45%; "> <p style="margin-bottom:28px;">Bagian Kesiswaan</p> <span>( ......................... )</span> </div> </div> </div>
@@ -522,7 +522,8 @@ printBtn.addEventListener('click', () => {
                     <div style="flex:1; margin-left:8px;">
                         <div style="font-size:11px; font-weight:bold; margin-left:4px">KEMENTERIAN AGAMA</div>
                         <div style="font-size:10px; font-weight:600;">MAN 1 KOTA TASIKMALAYA</div>
-                        <div style="font-size:6px; margin-left:6px;">Jl. Letnan Harun No. 30, Kota Tasikmalaya</div>
+                        <div style="font-size:7px; margin-left:8px;">Jl. Kh. Busthomi, Awipari Cibeuruem</div>
+
                     </div>
                 </div>
 
@@ -532,7 +533,7 @@ printBtn.addEventListener('click', () => {
 
                 <p style="margin:3px 0; font-size:10px">
                     Yang bertanda tangan di bawah ini menerangkan bahwa:
-                </p> <br>
+                </p> 
 
                 <table style="font-size:10px; width:100%; border-collapse:collapse;">
                     <tr>
@@ -565,9 +566,9 @@ printBtn.addEventListener('click', () => {
                     </tr>
                 </table><br>
 
-                <p style="margin:4px 0; text-align:justify; font-size:11px">
-                    Diberikan izin keluar dari madrasah <br>
-                    karena alasan tersebut di atas.<br>
+                <p style="margin:4px 0;  font-size:11px">
+                    Diijinkan untuk keluar kelas pada jam<br>${formData.get('waktu_keluar')} S.d jam ${formData.get('waktu_kembali')}
+                    karena alasan<br> tersebut di atas.<br><br>
                     Demikian surat ini dibuat agar dapat <br>
                     dipergunakan sebagaimana mestinya.
                 </p>

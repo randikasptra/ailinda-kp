@@ -64,7 +64,7 @@
 </style>
 
 <div class="print-area">
-    <div class="p-4 md:p-6">
+    <div class="p-4 md:p-6 mt-24">
         <div class="bg-white p-6 rounded-2xl shadow-lg max-w-4xl mx-auto border-l-4 border-[#FF9800]">
             <div class="flex items-center mb-6">
                 <div class="bg-[#FF9800] p-3 rounded-xl mr-4">
