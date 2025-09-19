@@ -181,7 +181,7 @@
                                     </div>
                                     <div>
                                         <div class="font-semibold text-gray-900"><?= esc($row['nama']) ?></div>
-                                        <div class="text-sm text-gray-500">NIS: <?= esc($row['nisn'] ?? '-') ?></div>
+                                        <div class="text-sm text-gray-500">NIS: <?= esc($row['nis'] ?? '-') ?></div>
                                     </div>
                                 </div>
                             </td>
