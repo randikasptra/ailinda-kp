@@ -316,7 +316,6 @@
         </form>
     </div>
 </div>
-
 <script>
 // --- Tambah Surat Manual ---
 const btnTambahManual = document.getElementById('btnTambahManual');
@@ -339,94 +338,84 @@ printManual.addEventListener('click', () => {
     const formData = new FormData(formManual);
 
     const content = `
-            <div style="font-size:9px; line-height:1.3;">
-
-                <!-- Kop Surat -->
-                <div style="display:flex; align-items:center; border-bottom:1px solid #000; padding-bottom:2px; margin-bottom:4px; ">
-                    <img src="<?= base_url('assets/img/logo-man1.png') ?>" style="width:28px; height:auto;">
-                    <div style="flex:1; margin-left:8px;">
-                        <div style="font-size:11px; font-weight:bold; margin-left:4px">KEMENTERIAN AGAMA</div>
-                        <div style="font-size:10px; font-weight:600;">MAN 1 KOTA TASIKMALAYA</div>
-                        <div style="font-size:7px; margin-left:8px;">Jl. Kh. Busthomi, Awipari Cibeuruem</div>
-                    </div>
+        <div style="font-size:9px; line-height:1.3;">
+            <!-- Kop Surat -->
+            <div style="display:flex; align-items:center; border-bottom:1px solid #000; padding-bottom:2px; margin-bottom:4px; ">
+                <img src="<?= base_url('assets/img/logo-man1.png') ?>" style="width:28px; height:auto;">
+                <div style="flex:1; margin-left:8px;">
+                    <div style="font-size:11px; font-weight:bold; margin-left:4px">KEMENTERIAN AGAMA</div>
+                    <div style="font-size:10px; font-weight:600;">MAN 1 KOTA TASIKMALAYA</div>
+                    <div style="font-size:7px; margin-left:8px;">Jl. Kh. Busthomi, Awipari Cibeuruem</div>
                 </div>
-
-                <div style="margin-left:42px; font-weight:bold; text-decoration:underline; font-size:10px; ">
-                    SURAT IZIN KELUAR
-                </div>
-
-                <p style="margin:3px 0; font-size:10px">
-                    Yang bertanda tangan di bawah ini menerangkan bahwa:
-                </p> <br>
-
-                <table style="font-size:10px; width:100%; border-collapse:collapse;">
-                    <tr>
-                        <td style="width:28%; vertical-align:top;">Nama</td>
-                        <td style="word-break:break-word; white-space:normal;">: ${formData.get('nama')}</td>
-                    </tr>
-                    <tr>
-                        <td>NISN</td>
-                        <td style="word-break:break-word; white-space:normal;">: ${formData.get('nis')}</td>
-                    </tr>
-                    <tr>
-                        <td>Kelas</td>
-                        <td style="word-break:break-word; white-space:normal;">: ${formData.get('kelas')}</td>
-                    </tr>
-                    <tr>
-                        <td>Alasan</td>
-                        <td style="word-break:break-word; white-space:normal;">: ${formData.get('alasan')}</td>
-                    </tr>
-                    <tr>
-                        <td>Jam Keluar</td>
-                        <td>: ${formData.get('waktu_keluar')}</td>
-                    </tr>
-                    <tr>
-                        <td>Jam Kembali</td>
-                        <td>: ${formData.get('waktu_kembali')}</td>
-                    </tr>
-                    <tr>
-                        <td>Tanggal</td>
-                        <td>: <?= date('d M Y') ?></td>
-                    </tr>
-                </table><br>
-
-                <p style="margin:4px 0; text-align:justify; font-size:11px">
-                    Diijinkan untuk keluar kelas<br> pada jam ${formData.get('waktu_keluar')} S.d jam ${formData.get('waktu_kembali')}<br>
-                    karena alasan tersebut di atas.<br><br>
-                    Demikian surat ini dibuat agar <br>dapat 
-                    dipergunakan sebagaimana <br>mestinya.
-                </p>
-
-                <div style="display:flex; margin-top:18px; font-size:9px; margin-left:-10px"> <div style="text-align:center; width:45%;"> <p style="margin-bottom:28px;">Petugas Piket</p> <span>( ......................... )</span> </div> <div style="text-align:center; width:45%; "> <p style="margin-bottom:28px;">Bagian Kesiswaan</p> <span>( ......................... )</span> </div> </div> </div>
             </div>
-        `;
 
-        const w = window.open('', '_blank', 'width=500,height=800');
-        w.document.write(`
-            <html>
-            <head>
-                <title>Print Surat Izin</title>
-                <style>
-                    @media print {
-                        @page { size: 8cm 12cm; margin: 0; }
-                        body { margin:0; padding:8px; font-family: Arial, sans-serif; }
-                        table td { vertical-align: top; }
-                    }
-                </style>
-            </head>
-            <body>${content}</body>
-            </html>
-        `);
-        w.document.close();
-        w.focus();
-        setTimeout(() => { w.print(); w.close(); }, 500);
+            <div style="margin-left:42px; font-weight:bold; text-decoration:underline; font-size:10px; ">
+                SURAT IZIN KELUAR
+            </div>
 
+            <p style="margin:3px 0; font-size:10px">
+                Yang bertanda tangan di bawah ini menerangkan bahwa:
+            </p> <br>
+
+            <table style="font-size:10px; width:100%; border-collapse:collapse;">
+                <tr><td style="width:28%;">Nama</td><td>: ${formData.get('nama')}</td></tr>
+                <tr><td>NISN</td><td>: ${formData.get('nisn') || formData.get('nis')}</td></tr>
+                <tr><td>Kelas</td><td>: ${formData.get('kelas')}</td></tr>
+                <tr><td>Alasan</td><td>: ${formData.get('alasan')}</td></tr>
+                <tr><td>Jam Keluar</td><td>: ${formData.get('waktu_keluar')}</td></tr>
+                <tr><td>Jam Kembali</td><td>: ${formData.get('waktu_kembali')}</td></tr>
+                <tr><td>Tanggal</td><td>: <?= date('d M Y') ?></td></tr>
+            </table><br>
+
+            <p style="margin:4px 0; font-size:11px">
+                Diijinkan untuk keluar kelas<br> pada jam ${formData.get('waktu_keluar')} s.d ${formData.get('waktu_kembali')}<br>
+                karena alasan tersebut di atas.<br><br>
+                Demikian surat ini dibuat agar dapat dipergunakan sebagaimana mestinya.
+            </p>
+
+            <div style="display:flex; margin-top:18px; font-size:9px; margin-left:-10px">
+                <div style="text-align:center; width:45%;">
+                    <p style="margin-bottom:28px;">Petugas Piket</p>
+                    <span>( ......................... )</span>
+                </div>
+                <div style="text-align:center; width:45%;">
+                    <p style="margin-bottom:28px;">Bagian Kesiswaan</p>
+                    <span>( ......................... )</span>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const w = window.open('', '_blank', 'width=500,height=800');
+    w.document.write(`
+        <html>
+        <head>
+            <title>Print Surat Izin</title>
+            <style>
+                @media print {
+                    @page { size: 8cm 12cm; margin: 0; }
+                    body { margin:0; padding:8px; font-family: Arial, sans-serif; }
+                    table td { vertical-align: top; }
+                }
+            </style>
+        </head>
+        <body>${content}</body>
+        </html>
+    `);
+    w.document.close();
+    w.focus();
+    setTimeout(() => { w.print(); w.close(); }, 500);
 });
 
 // Simpan manual ke DB
 formManual.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(formManual);
+
+    // Pastikan nisn tetap terkirim (fallback ke nis kalau nisn kosong)
+    if (!formData.get('nisn') && formData.get('nis')) {
+        formData.append('nisn', formData.get('nis'));
+    }
 
     fetch('/surat-izin/store', {
         method: 'POST',
@@ -448,6 +437,7 @@ formManual.addEventListener('submit', (e) => {
     });
 });
 
+// --- Form otomatis ---
 const form = document.getElementById('formSuratIzin');
 const modal = document.getElementById('modalPreview');
 const closeModal = document.getElementById('closeModal');
@@ -458,11 +448,17 @@ const printBtn = document.getElementById('printPreview');
 // Tutup modal
 closeModal.addEventListener('click', () => {
     modal.classList.add('hidden');
+    previewContent.innerHTML = '';
 });
 
 // Kirim ke backend
 confirmSubmit.addEventListener('click', () => {
     const formData = new FormData(form);
+
+    // fallback nis → nisn
+    if (!formData.get('nisn') && formData.get('nis')) {
+        formData.append('nisn', formData.get('nis'));
+    }
 
     fetch('/surat-izin/store', {
         method: 'POST',
@@ -471,7 +467,7 @@ confirmSubmit.addEventListener('click', () => {
     .then(res => res.json())
     .then(data => {
         if (data.status === 'success') {
-             window.location.href = '/piket/konfirmasi_kembali';
+            window.location.href = '/piket/konfirmasi_kembali';
         } else {
             alert(data.message);
         }
@@ -482,11 +478,12 @@ confirmSubmit.addEventListener('click', () => {
     });
 });
 
+// Preview sebelum simpan
 form.addEventListener('submit', function(e) {
     e.preventDefault();
     const formData = new FormData(form);
 
-    if (!formData.get('nama') || !formData.get('nis') || !formData.get('alasan') || 
+    if (!formData.get('nama') || (!formData.get('nisn') && !formData.get('nis')) || !formData.get('alasan') || 
         !formData.get('waktu_keluar') || !formData.get('waktu_kembali')) {
         alert('Harap lengkapi semua field yang diperlukan!');
         return;
@@ -495,7 +492,7 @@ form.addEventListener('submit', function(e) {
     previewContent.innerHTML = `
         <h2 class="text-lg font-bold text-center mb-2">Preview Surat</h2>
         <p><b>Nama:</b> ${formData.get('nama')}</p>
-        <p><b>NISN:</b> ${formData.get('nis')}</p>
+        <p><b>NISN:</b> ${formData.get('nisn') || formData.get('nis')}</p>
         <p><b>Kelas:</b> ${formData.get('kelas')}</p>
         <p><b>Alasan:</b> ${formData.get('alasan')}</p>
         <p><b>Jam Keluar:</b> ${formData.get('waktu_keluar')}</p>
@@ -504,105 +501,80 @@ form.addEventListener('submit', function(e) {
     modal.classList.remove('hidden');
 });
 
-closeModal.addEventListener('click', () => {
-    modal.classList.add('hidden');
-    previewContent.innerHTML = '';
-});
-
 // Print versi rapi
 printBtn.addEventListener('click', () => {
     const formData = new FormData(form);
 
     const content = `
-       <div style="print-area font-size:9px; line-height:1.3;">
-
-                <!-- Kop Surat -->
-                <div style="display:flex; align-items:center; border-bottom:1px solid #000; padding-bottom:2px; margin-bottom:4px; ">
-                    <img src="<?= base_url('assets/img/logo-man1.png') ?>" style="width:28px; height:auto;">
-                    <div style="flex:1; margin-left:8px;">
-                        <div style="font-size:11px; font-weight:bold; margin-left:4px">KEMENTERIAN AGAMA</div>
-                        <div style="font-size:10px; font-weight:600;">MAN 1 KOTA TASIKMALAYA</div>
-                        <div style="font-size:7px; margin-left:8px;">Jl. Kh. Busthomi, Awipari Cibeuruem</div>
-
-                    </div>
+        <div style="font-size:9px; line-height:1.3;">
+            <!-- Kop Surat -->
+            <div style="display:flex; align-items:center; border-bottom:1px solid #000; padding-bottom:2px; margin-bottom:4px; ">
+                <img src="<?= base_url('assets/img/logo-man1.png') ?>" style="width:28px; height:auto;">
+                <div style="flex:1; margin-left:8px;">
+                    <div style="font-size:11px; font-weight:bold; margin-left:4px">KEMENTERIAN AGAMA</div>
+                    <div style="font-size:10px; font-weight:600;">MAN 1 KOTA TASIKMALAYA</div>
+                    <div style="font-size:7px; margin-left:8px;">Jl. Kh. Busthomi, Awipari Cibeuruem</div>
                 </div>
-
-                <div style="margin-left:42px; font-weight:bold; text-decoration:underline; font-size:10px; ">
-                    SURAT IZIN KELUAR
-                </div>
-
-                <p style="margin:3px 0; font-size:10px">
-                    Yang bertanda tangan di bawah ini menerangkan bahwa:
-                </p> 
-
-                <table style="font-size:10px; width:100%; border-collapse:collapse;">
-                    <tr>
-                        <td style="width:28%; vertical-align:top;">Nama</td>
-                        <td style="word-break:break-word; white-space:normal;">: ${formData.get('nama')}</td>
-                    </tr>
-                    <tr>
-                        <td>NISN</td>
-                        <td style="word-break:break-word; white-space:normal;">: ${formData.get('nisn')}</td>
-                    </tr>
-                    <tr>
-                        <td>Kelas</td>
-                        <td style="word-break:break-word; white-space:normal;">: ${formData.get('kelas')}</td>
-                    </tr>
-                    <tr>
-                        <td>Alasan</td>
-                        <td style="word-break:break-word; white-space:normal;">: ${formData.get('alasan')}</td>
-                    </tr>
-                    <tr>
-                        <td>Jam Keluar</td>
-                        <td>: ${formData.get('waktu_keluar')}</td>
-                    </tr>
-                    <tr>
-                        <td>Jam Kembali</td>
-                        <td>: ${formData.get('waktu_kembali')}</td>
-                    </tr>
-                    <tr>
-                        <td>Tanggal</td>
-                        <td>: <?= date('d M Y') ?></td>
-                    </tr>
-                </table><br>
-
-                <p style="margin:4px 0;  font-size:11px">
-                    Diijinkan untuk keluar kelas pada jam<br>${formData.get('waktu_keluar')} S.d jam ${formData.get('waktu_kembali')}
-                    karena alasan<br> tersebut di atas.<br><br>
-                    Demikian surat ini dibuat agar dapat <br>
-                    dipergunakan sebagaimana mestinya.
-                </p>
-
-                <div style="display:flex; margin-top:18px; font-size:9px; margin-left:-10px"> <div style="text-align:center; width:45%;"> <p style="margin-bottom:28px;">Petugas Piket</p> <span>( ......................... )</span> </div> <div style="text-align:center; width:45%; "> <p style="margin-bottom:28px;">Bagian Kesiswaan</p> <span>( ......................... )</span> </div> </div> </div>
             </div>
-                `;
 
-                const w = window.open('', '_blank', 'width=500,height=800');
-                w.document.write(`
-                    <html>
-                    <head>
-                        <title>Print Surat Izin</title>
-                        <style>
-                            @media print {
-                                @page { size: 8cm 12cm; margin: 0; }
-                                body { margin:0; padding:0; }
-                            }
-                        </style>
-                    </head>
-                    <body>${content}</body>
-                    </html>
-                `);
-                w.document.close();
-                w.focus();
-                setTimeout(() => { w.print(); w.close(); }, 500);
-            });
+            <div style="margin-left:42px; font-weight:bold; text-decoration:underline; font-size:10px;">
+                SURAT IZIN KELUAR
+            </div>
 
-            
-        </script>
+            <p style="margin:3px 0; font-size:10px">
+                Yang bertanda tangan di bawah ini menerangkan bahwa:
+            </p> 
 
-    </div>
-    </div>
-</div>
+            <table style="font-size:10px; width:100%; border-collapse:collapse;">
+                <tr><td style="width:28%;">Nama</td><td>: ${formData.get('nama')}</td></tr>
+                <tr><td>NISN</td><td>: ${formData.get('nisn') || formData.get('nis')}</td></tr>
+                <tr><td>Kelas</td><td>: ${formData.get('kelas')}</td></tr>
+                <tr><td>Alasan</td><td>: ${formData.get('alasan')}</td></tr>
+                <tr><td>Jam Keluar</td><td>: ${formData.get('waktu_keluar')}</td></tr>
+                <tr><td>Jam Kembali</td><td>: ${formData.get('waktu_kembali')}</td></tr>
+                <tr><td>Tanggal</td><td>: <?= date('d M Y') ?></td></tr>
+            </table><br>
+
+            <p style="margin:4px 0; font-size:11px">
+                Diijinkan untuk keluar kelas pada jam ${formData.get('waktu_keluar')} s.d ${formData.get('waktu_kembali')}
+                karena alasan tersebut di atas.<br><br>
+                Demikian surat ini dibuat agar dapat dipergunakan sebagaimana mestinya.
+            </p>
+
+            <div style="display:flex; margin-top:18px; font-size:9px; margin-left:-10px">
+                <div style="text-align:center; width:45%;">
+                    <p style="margin-bottom:28px;">Petugas Piket</p>
+                    <span>( ......................... )</span>
+                </div>
+                <div style="text-align:center; width:45%;">
+                    <p style="margin-bottom:28px;">Bagian Kesiswaan</p>
+                    <span>( ......................... )</span>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const w = window.open('', '_blank', 'width=500,height=800');
+    w.document.write(`
+        <html>
+        <head>
+            <title>Print Surat Izin</title>
+            <style>
+                @media print {
+                    @page { size: 8cm 12cm; margin: 0; }
+                    body { margin:0; padding:0; }
+                }
+            </style>
+        </head>
+        <body>${content}</body>
+        </html>
+    `);
+    w.document.close();
+    w.focus();
+    setTimeout(() => { w.print(); w.close(); }, 500);
+});
+</script>
+
 
 
 <?= $this->endSection() ?>

@@ -81,21 +81,7 @@
             </div>
         </div>
         
-        <div class="bg-gradient-to-br from-[#fef2f2] to-[#fecaca] rounded-2xl shadow-lg p-5 border-l-4 border-red-400">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-red-700">Belum Kembali</p>
-                    <p class="text-2xl font-bold text-red-600">
-                        <?= !empty($historyList) ? count(array_filter($historyList, function($row) {
-                            return empty($row['waktu_kembali_siswa']);
-                        })) : '0' ?>
-                    </p>
-                </div>
-                <div class="p-3 rounded-xl bg-white shadow-sm">
-                    <i class="fas fa-times-circle text-red-500 text-xl"></i>
-                </div>
-            </div>
-        </div>
+
     </div>
 
     <!-- History Table -->

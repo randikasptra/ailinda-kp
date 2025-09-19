@@ -102,7 +102,7 @@ class Piket extends BaseController
     {
         if (! $this->validate([
             'nama' => 'required',
-            'nis' => 'required',
+            'nisn' => 'required',
             'nism' => 'permit_empty',
             'kelas' => 'required',
             'jurusan' => 'required',
@@ -118,7 +118,7 @@ class Piket extends BaseController
 
         $data = [
             'nama' => $this->request->getPost('nama'),
-            'nis' => $this->request->getPost('nis'),
+            'nisn' => $this->request->getPost('nisn'),
             'nism' => $this->request->getPost('nism'),
             'kelas' => $this->request->getPost('kelas'),
             'jurusan' => $this->request->getPost('jurusan'),
