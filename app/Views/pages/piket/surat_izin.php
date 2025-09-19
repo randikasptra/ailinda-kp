@@ -130,12 +130,12 @@
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Siswa</label>
                             <div class="relative">
-                                <select onchange="location.href='<?= base_url('piket/surat_izin?keyword=' . urlencode($keyword)) ?>&nisn=' + this.value"
+                                <select onchange="location.href='<?= base_url('piket/surat_izin?keyword=' . urlencode($keyword)) ?>&nis=' + this.value"
                                     class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white appearance-none focus:ring-2 focus:ring-[#4CAF50] focus:border-transparent focus:outline-none transition-all duration-200 pr-10">
                                     <option value="">-- Pilih salah satu --</option>
                                     <?php foreach ($siswaList as $s): ?>
-                                        <option value="<?= $s['nisn'] ?>" <?= ($siswa['nisn'] ?? '') === $s['nisn'] ? 'selected' : '' ?>>
-                                            <?= esc($s['nama']) ?> (<?= esc($s['nisn']) ?> - <?= esc($s['kelas']) ?>)
+                                        <option value="<?= $s['nis'] ?>" <?= ($siswa['nis'] ?? '') === $s['nis'] ? 'selected' : '' ?>>
+                                            <?= esc($s['nama']) ?> (<?= esc($s['nis']) ?> - <?= esc($s['kelas']) ?>)
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -486,7 +486,7 @@ form.addEventListener('submit', function(e) {
     e.preventDefault();
     const formData = new FormData(form);
 
-    if (!formData.get('nama') || !formData.get('nisn') || !formData.get('alasan') || 
+    if (!formData.get('nama') || !formData.get('nis') || !formData.get('alasan') || 
         !formData.get('waktu_keluar') || !formData.get('waktu_kembali')) {
         alert('Harap lengkapi semua field yang diperlukan!');
         return;
@@ -495,7 +495,7 @@ form.addEventListener('submit', function(e) {
     previewContent.innerHTML = `
         <h2 class="text-lg font-bold text-center mb-2">Preview Surat</h2>
         <p><b>Nama:</b> ${formData.get('nama')}</p>
-        <p><b>NISN:</b> ${formData.get('nisn')}</p>
+        <p><b>NISN:</b> ${formData.get('nis')}</p>
         <p><b>Kelas:</b> ${formData.get('kelas')}</p>
         <p><b>Alasan:</b> ${formData.get('alasan')}</p>
         <p><b>Jam Keluar:</b> ${formData.get('waktu_keluar')}</p>

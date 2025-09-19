@@ -99,28 +99,7 @@ class Dashboard extends BaseController
 
 
 
-    public function update_kelas()
-    {
-        $model = new \App\Models\SiswaModel();
-
-        // Ambil semua siswa
-        $siswaList = $model->findAll();
-
-        foreach ($siswaList as $siswa) {
-            $kelas = (int) $siswa['kelas'];
-
-            // Naik kelas jika 10 atau 11, null-kan jika 12
-            if ($kelas === 10) {
-                $model->update($siswa['id'], ['kelas' => 11]);
-            } elseif ($kelas === 11) {
-                $model->update($siswa['id'], ['kelas' => 12]);
-            } elseif ($kelas === 12) {
-                $model->update($siswa['id'], ['kelas' => null]);
-            }
-        }
-
-        return redirect()->back()->with('success', 'Kelas siswa berhasil diperbarui.');
-    }
+   
 
     public function hapus_lulus()
     {
@@ -269,29 +248,9 @@ class Dashboard extends BaseController
         return view('pages/admin/pelanggaran', $data);
     }
 
-    public function editSiswa($id)
-    {
-        $model = new SiswaModel();
-        $siswa = $model->find($id);
+    
 
-        if (!$siswa) {
-            return redirect()->to('/admin/siswa')->with('error', 'Data siswa tidak ditemukan.');
-        }
-
-        return view('pages/admin/edit_siswa', [
-            'title' => 'Edit Data Siswa',
-            'siswa' => $siswa
-        ]);
-    }
-
-    public function updateSiswa($id)
-    {
-        $model = new SiswaModel();
-        $data = $this->request->getPost();
-
-        $model->update($id, $data);
-        return redirect()->to('/admin/siswa')->with('success', 'Data siswa berhasil diperbarui!');
-    }
+ 
 
  public function importCSV()
 {

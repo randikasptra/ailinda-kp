@@ -105,4 +105,63 @@ class SiswaController extends BaseController
         $data['siswa'] = $model->find($id);
         return view('pages/admin/detail_siswa', $data);
     }
+    public function editSiswa($id)
+    {
+        $model = new SiswaModel();
+        $siswa = $model->find($id);
+
+        if (!$siswa) {
+            return redirect()->to('/admin/siswa')->with('error', 'Data siswa tidak ditemukan.');
+        }
+
+        return view('pages/admin/edit_siswa', [
+            'title' => 'Edit Data Siswa',
+            'siswa' => $siswa
+        ]);
+    }
+    public function updateSiswa($id)
+    {
+        $model = new SiswaModel();
+        $data = $this->request->getPost();
+
+        $model->update($id, $data);
+        return redirect()->to('/admin/siswa')->with('success', 'Data siswa berhasil diperbarui!');
+    }
+    
+    public function update_kelas()
+    {
+        $model = new \App\Models\SiswaModel();
+
+        // Ambil semua siswa
+        $siswaList = $model->findAll();
+
+        if (empty($siswaList)) {
+            return redirect()->back()->with('error', 'Tidak ada data siswa yang ditemukan.');
+        }
+
+        try {
+            foreach ($siswaList as $siswa) {
+                // Pastikan kelas tidak null
+                if (!empty($siswa['kelas'])) {
+                    // Pisahkan tingkat kelas dan nomor kelas (contoh: 10.02 -> [10, 02])
+                    $kelasParts = explode('.', $siswa['kelas']);
+                    $tingkatKelas = (int) $kelasParts[0]; // Ambil bagian tingkat (10, 11, 12)
+                    $nomorKelas = isset($kelasParts[1]) ? '.' . $kelasParts[1] : ''; // Ambil bagian nomor (.02, .01, dll.)
+
+                    // Naik kelas jika 10 atau 11, null-kan jika 12
+                    if ($tingkatKelas === 10) {
+                        $model->update($siswa['id'], ['kelas' => '11' . $nomorKelas]);
+                    } elseif ($tingkatKelas === 11) {
+                        $model->update($siswa['id'], ['kelas' => '12' . $nomorKelas]);
+                    } elseif ($tingkatKelas === 12) {
+                        $model->update($siswa['id'], ['kelas' => null]);
+                    }
+                }
+            }
+
+            return redirect()->back()->with('success', 'Kelas siswa berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal memperbarui kelas siswa: ' . $e->getMessage());
+        }
+    }
 }

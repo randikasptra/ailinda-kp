@@ -73,7 +73,7 @@ $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
     $routes->get('siswa/hapus/(:num)', 'Dashboard::hapusSiswa/$1');
     $routes->get('pelanggaran/edit/(:num)', 'Dashboard::editPelanggaran/$1');
     $routes->post('pelanggaran/update/(:num)', 'Dashboard::updatePelanggaran/$1');
-    $routes->post('siswa/update_kelas', 'Dashboard::update_kelas');
+    $routes->post('siswa/update_kelas', 'SiswaController::update_kelas');
     $routes->post('siswa/hapus_lulus', 'Dashboard::hapus_lulus');
 
 
@@ -91,8 +91,8 @@ $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
     $routes->post('updateUser/(:num)', 'Dashboard::updateUser/$1');
     $routes->post('deleteUser/(:num)', 'Dashboard::deleteUser/$1');
     $routes->get('users/delete/(:num)', 'Dashboard::deleteUser/$1');
-    $routes->get('siswa/edit_siswa/(:num)', 'Dashboard::editSiswa/$1');
-    $routes->post('siswa/update/(:num)', 'Dashboard::updateSiswa/$1');
+    $routes->get('siswa/edit_siswa/(:num)', 'SiswaController::editSiswa/$1');
+    $routes->post('siswa/update/(:num)', 'SiswaController::updateSiswa/$1');
 
 
     $routes->post('siswa/import_csv', 'Dashboard::importCSV');
