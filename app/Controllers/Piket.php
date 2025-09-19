@@ -69,7 +69,7 @@ class Piket extends BaseController
     public function formIzin()
     {
         $keyword = $this->request->getGet('keyword');
-        $selectedNISN = $this->request->getGet('nisn');
+        $selectedNIS = $this->request->getGet('nis');
 
         $siswaList = [];
         $selectedSiswa = null;
@@ -77,15 +77,16 @@ class Piket extends BaseController
         if ($keyword) {
             $siswaList = $this->siswaModel
                 ->groupStart()
-                    ->like('nisn', $keyword)
+                    ->like('nis', $keyword)
+                    ->orLike('nism', $keyword)
                     ->orLike('nama', $keyword)
                 ->groupEnd()
                 ->findAll();
 
             if (count($siswaList) === 1) {
                 $selectedSiswa = $siswaList[0];
-            } elseif ($selectedNISN) {
-                $selectedSiswa = $this->siswaModel->where('nisn', $selectedNISN)->first();
+            } elseif ($selectedNIS) {
+                $selectedSiswa = $this->siswaModel->where('nis', $selectedNIS)->first();
             }
         }
 
@@ -101,19 +102,29 @@ class Piket extends BaseController
     {
         if (! $this->validate([
             'nama' => 'required',
-            'nisn' => 'required',
+            'nis' => 'required',
+            'nism' => 'permit_empty',
             'kelas' => 'required',
+            'jurusan' => 'required',
+            'jk' => 'required|in_list[L,P]',
+            'no_absen' => 'permit_empty|numeric',
+            'tahun_ajaran' => 'permit_empty',
             'alasan' => 'required',
             'waktu_keluar' => 'required',
             'waktu_kembali' => 'required',
         ])) {
-            return redirect()->back()->withInput()->with('error', 'Semua field wajib diisi');
+            return redirect()->back()->withInput()->with('error', 'Semua field wajib diisi kecuali NISM, No Absen, dan Tahun Ajaran');
         }
 
         $data = [
             'nama' => $this->request->getPost('nama'),
-            'nisn' => $this->request->getPost('nisn'),
+            'nis' => $this->request->getPost('nis'),
+            'nism' => $this->request->getPost('nism'),
             'kelas' => $this->request->getPost('kelas'),
+            'jurusan' => $this->request->getPost('jurusan'),
+            'jk' => $this->request->getPost('jk'),
+            'no_absen' => $this->request->getPost('no_absen'),
+            'tahun_ajaran' => $this->request->getPost('tahun_ajaran'),
             'alasan' => $this->request->getPost('alasan'),
             'waktu_keluar' => $this->request->getPost('waktu_keluar'),
             'waktu_kembali' => $this->request->getPost('waktu_kembali'),

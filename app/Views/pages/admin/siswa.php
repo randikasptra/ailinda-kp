@@ -136,136 +136,180 @@
     </div>
 
     <!-- Table Container -->
-   <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
-    <!-- Table Header with Stats -->
-    <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
-        <form method="get" class="flex flex-wrap items-center justify-between gap-4">
-            <div>
-                <h3 class="text-lg font-semibold text-gray-800">Daftar Siswa</h3>
-                <p class="text-sm text-gray-600">Total <?= count($siswa) ?> siswa terdaftar</p>
-            </div>
-            <div class="flex items-center gap-3">
-                <!-- Filter Kelas -->
-                <select name="kelas" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
-                    <option value="">Semua Kelas</option>
-                    <option value="10" <?= (service('request')->getGet('kelas') == '10') ? 'selected' : '' ?>>Kelas 10</option>
-                    <option value="11" <?= (service('request')->getGet('kelas') == '11') ? 'selected' : '' ?>>Kelas 11</option>
-                    <option value="12" <?= (service('request')->getGet('kelas') == '12') ? 'selected' : '' ?>>Kelas 12</option>
-                </select>
-
-                <!-- Filter Jurusan -->
-                <select name="jurusan" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
-                    <option value="">Semua Jurusan</option>
-                    <option value="IPA" <?= (service('request')->getGet('jurusan') == 'IPA') ? 'selected' : '' ?>>IPA</option>
-                    <option value="IPS" <?= (service('request')->getGet('jurusan') == 'IPS') ? 'selected' : '' ?>>IPS</option>
-                    <option value="TKJ" <?= (service('request')->getGet('jurusan') == 'TKJ') ? 'selected' : '' ?>>TKJ</option>
-                </select>
-
-                <!-- Filter Tahun Ajaran -->
-                <select name="tahun" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
-                    <option value="">Semua Tahun</option>
-                    <option value="2024/2025" <?= (service('request')->getGet('tahun') == '2024/2025') ? 'selected' : '' ?>>2024/2025</option>
-                    <option value="2025/2026" <?= (service('request')->getGet('tahun') == '2025/2026') ? 'selected' : '' ?>>2025/2026</option>
-                </select>
-
-                <!-- Search -->
-                <div class="relative">
-                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    <input type="text" name="search" placeholder="Cari siswa..." 
-                        value="<?= esc(service('request')->getGet('search')) ?>"
-                        class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+        <!-- Table Header with Stats -->
+        <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+            <form method="get" class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800">Daftar Siswa</h3>
+                    <p class="text-sm text-gray-600">Total <?= count($siswa) ?> siswa terdaftar</p>
                 </div>
+                <div class="flex items-center gap-3">
+                    <!-- Filter Kelas -->
+                    <select name="kelas" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
+                        <option value="">Semua Kelas</option>
+                        <option value="10" <?= ($filters['kelas'] == '10') ? 'selected' : '' ?>>Kelas 10</option>
+                        <option value="11" <?= ($filters['kelas'] == '11') ? 'selected' : '' ?>>Kelas 11</option>
+                        <option value="12" <?= ($filters['kelas'] == '12') ? 'selected' : '' ?>>Kelas 12</option>
+                    </select>
 
-                <!-- Tombol Filter -->
-                <button type="submit" class="px-4 py-2 bg-[#1E5631] text-white rounded-lg hover:bg-[#174726] transition">
-                    <i class="fas fa-filter mr-1"></i> Filter
-                </button>
+                    <!-- Filter Jurusan -->
+                    <select name="jurusan" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
+                        <option value="">Semua Jurusan</option>
+                        <option value="SAINTEK" <?= ($filters['jurusan'] == 'SAINTEK') ? 'selected' : '' ?>>SAINTEK</option>
+                        <option value="SOSHUM" <?= ($filters['jurusan'] == 'SOSHUM') ? 'selected' : '' ?>>SOSHUM</option>
+                        <option value="BAHASA" <?= ($filters['jurusan'] == 'BAHASA') ? 'selected' : '' ?>>BAHASA</option>
+                    </select>
 
-                <!-- Tombol Reset -->
-                <a href="/admin/siswa" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
-                    <i class="fas fa-undo mr-1"></i> Reset
-                </a>
-            </div>
-        </form>
-    </div>
+                    <!-- Filter Jenis Kelamin -->
+                    <select name="jk" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
+                        <option value="">Semua Jenis Kelamin</option>
+                        <option value="L" <?= ($filters['jk'] == 'L') ? 'selected' : '' ?>>Laki-laki</option>
+                        <option value="P" <?= ($filters['jk'] == 'P') ? 'selected' : '' ?>>Perempuan</option>
+                    </select>
 
-    <!-- Table -->
-    <div class="overflow-x-auto">
-        <?php if (!empty($siswa)): ?>
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white">
-                    <tr>
-                        <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider w-16">No</th>
-                        <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">NISN</th>
-                        <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Nama</th>
-                        <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Kelas & Jurusan</th>
-                        <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Tahun Ajaran</th>
-                        <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Poin</th>
-                        <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    <?php $no = 1; foreach ($siswa as $s): ?>
-                        <tr class="hover:bg-gray-50/50 transition-colors duration-200 group">
-                            <td class="px-6 py-4 text-center font-medium text-gray-500"><?= $no++ ?></td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="font-medium text-gray-900"><?= esc($s['nisn']) ?></div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 h-10 w-10 bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] rounded-full flex items-center justify-center text-white font-bold shadow-md mr-3">
-                                        <?= strtoupper(substr($s['nama'], 0, 1)) ?>
-                                    </div>
-                                    <div class="font-medium text-gray-900"><?= esc($s['nama']) ?></div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex flex-col">
-                                    <span class="font-medium text-gray-900"><?= esc($s['kelas']) ?></span>
-                                    <span class="text-sm text-gray-500"><?= esc($s['jurusan']) ?></span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= esc($s['tahun_ajaran']) ?></td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-3 py-1.5 inline-flex items-center text-sm font-semibold rounded-full bg-[#A4DE02]/20 text-[#1E5631] border border-[#A4DE02]/30">
-                                    <i class="fas fa-star text-[#A4DE02] mr-1.5 text-xs"></i>
-                                    <?= esc($s['poin']) ?>
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center space-x-2">
-                                    <a href="/admin/siswa/detail_siswa/<?= $s['id'] ?>" class="p-2.5 text-gray-600 bg-gray-100 rounded-xl hover:bg-[#1E5631] hover:text-white transition-all duration-300" title="Lihat Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="/admin/siswa/edit_siswa/<?= $s['id'] ?>" class="p-2.5 text-blue-600 bg-blue-100 rounded-xl hover:bg-blue-600 hover:text-white transition-all duration-300" title="Edit Siswa">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </a>
-                                    <a href="/admin/siswa/hapus/<?= $s['id'] ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus siswa ini?')" class="p-2.5 text-red-600 bg-red-100 rounded-xl hover:bg-red-600 hover:text-white transition-all duration-300" title="Hapus Siswa">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endforeach ?>
-                </tbody>
-            </table>
-        <?php else: ?>
-            <!-- Empty State -->
-            <div class="text-center py-16 bg-white rounded-2xl shadow-lg mt-6">
-                <i class="fas fa-user-graduate text-4xl text-gray-300 mb-4"></i>
-                <h3 class="text-lg font-semibold text-gray-700">Belum ada data siswa</h3>
-                <p class="text-gray-500 mt-1">Tambahkan siswa pertama atau impor data dari CSV</p>
-                <div class="mt-6 flex gap-4 justify-center">
-                    <button onclick="openModal('tambahModal')" class="bg-[#1E5631] text-white px-6 py-2.5 rounded-lg hover:bg-[#145128] transition-colors">
-                        <i class="fas fa-user-plus mr-2"></i>Tambah Siswa
+                    <!-- Filter Tahun Ajaran -->
+                    <select name="tahun" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
+                        <option value="">Semua Tahun</option>
+                        <option value="2024/2025" <?= ($filters['tahun'] == '2024/2025') ? 'selected' : '' ?>>2024/2025</option>
+                        <option value="2025/2026" <?= ($filters['tahun'] == '2025/2026') ? 'selected' : '' ?>>2025/2026</option>
+                    </select>
+
+                    <!-- Search -->
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" name="search" placeholder="Cari NIS/NISM/Nama..." 
+                            value="<?= esc($filters['search']) ?>"
+                            class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
+                    </div>
+
+                    <!-- Tombol Filter -->
+                    <button type="submit" class="px-4 py-2 bg-[#1E5631] text-white rounded-lg hover:bg-[#174726] transition">
+                        <i class="fas fa-filter mr-1"></i> Filter
                     </button>
+
+                    <!-- Tombol Reset -->
+                    <a href="/admin/siswa" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                        <i class="fas fa-undo mr-1"></i> Reset
+                    </a>
                 </div>
-            </div>
-        <?php endif; ?>
+            </form>
+        </div>
+
+        <!-- Table -->
+        <div class="overflow-x-auto">
+            <?php if (!empty($siswa)): ?>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider w-16">No</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">NIS</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">NISM</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Nama</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Jenis Kelamin</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Kelas</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">No Absen</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Jurusan</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Tahun Ajaran</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Poin</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <?php $no = 1; foreach ($siswa as $s): ?>
+                            <tr class="hover:bg-gray-50/50 transition-colors duration-200 group">
+                                <td class="px-6 py-4 text-center font-medium text-gray-500"><?= $no++ ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="font-medium text-gray-900"><?= esc($s['nis']) ?></div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="font-medium text-gray-900"><?= esc($s['nism'] ?? '-') ?></div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10 bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] rounded-full flex items-center justify-center text-white font-bold shadow-md mr-3">
+                                            <?= strtoupper(substr($s['nama'], 0, 1)) ?>
+                                        </div>
+                                        <div class="font-medium text-gray-900"><?= esc($s['nama']) ?></div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-3 py-1.5 inline-flex text-xs font-semibold rounded-full <?= ($s['jk'] == 'L' ? 'bg-blue-100 text-blue-800 border border-blue-200' : 'bg-pink-100 text-pink-800 border border-pink-200') ?>">
+                                        <?= ($s['jk'] == 'L' ? 'Laki-laki' : 'Perempuan') ?>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-3 py-1.5 inline-flex text-xs font-semibold rounded-full bg-blue-100 text-blue-800 border border-blue-200">
+                                        <?= esc($s['kelas']) ?>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-3 py-1.5 inline-flex text-xs font-semibold rounded-full bg-gray-100 text-gray-800 border border-gray-200">
+                                        <?= esc($s['no_absen'] ?? '-') ?>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-3 py-1.5 inline-flex text-xs font-semibold rounded-full bg-purple-100 text-purple-800 border border-purple-200">
+                                        <?= esc($s['jurusan']) ?>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= esc($s['tahun_ajaran'] ?? '-') ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-3 py-1.5 inline-flex items-center text-sm font-semibold rounded-full bg-[#A4DE02]/20 text-[#1E5631] border border-[#A4DE02]/30">
+                                        <i class="fas fa-star text-[#A4DE02] mr-1.5 text-xs"></i>
+                                        <?= esc($s['poin']) ?>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-2">
+                                        <a href="/admin/siswa/detail_siswa/<?= $s['id'] ?>" class="p-2.5 text-gray-600 bg-gray-100 rounded-xl hover:bg-[#1E5631] hover:text-white transition-all duration-300" title="Lihat Detail">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="/admin/siswa/edit_siswa/<?= $s['id'] ?>" class="p-2.5 text-blue-600 bg-blue-100 rounded-xl hover:bg-blue-600 hover:text-white transition-all duration-300" title="Edit Siswa">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </a>
+                                        <a href="/admin/siswa/hapus/<?= $s['id'] ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus siswa ini?')" class="p-2.5 text-red-600 bg-red-100 rounded-xl hover:bg-red-600 hover:text-white transition-all duration-300" title="Hapus Siswa">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <!-- Empty State -->
+                <div class="text-center py-16 bg-white rounded-2xl shadow-lg mt-6">
+                    <i class="fas fa-user-graduate text-4xl text-gray-300 mb-4"></i>
+                    <h3 class="text-lg font-semibold text-gray-700">Belum ada data siswa</h3>
+                    <p class="text-gray-500 mt-1">Tambahkan siswa pertama atau impor data dari CSV</p>
+                    <div class="mt-6 flex gap-4 justify-center">
+                        <button onclick="openModal('tambahModal')" class="bg-[#1E5631] text-white px-6 py-2.5 rounded-lg hover:bg-[#145128] transition-colors">
+                            <i class="fas fa-user-plus mr-2"></i>Tambah Siswa
+                        </button>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
     </div>
 </div>
 
+<!-- Include Font Awesome -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
+<style>
+.rounded-2xl {
+    border-radius: 1rem;
+}
+
+.transition-all {
+    transition: all 0.3s ease;
+}
+
+.shadow-lg {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+</style>
 <!-- Modal Tambah Siswa -->
 <div id="tambahModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 hidden">
     <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md border border-[#1E5631]/20 animate-scaleIn">
@@ -281,14 +325,26 @@
         </div>
         <form method="POST" action="/admin/siswa/tambah" class="space-y-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">NISN</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">NIS</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fas fa-id-card text-gray-400"></i>
                     </div>
-                    <input type="text" name="nisn" inputmode="numeric" pattern="\d+"
+                    <input type="text" name="nis" inputmode="numeric" pattern="\d+"
                         class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
-                        placeholder="Masukkan NISN" required>
+                        placeholder="Masukkan NIS" required>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">NISM</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-id-card-alt text-gray-400"></i>
+                    </div>
+                    <input type="text" name="nism"
+                        class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
+                        placeholder="Masukkan NISM (opsional)">
                 </div>
             </div>
 
@@ -303,27 +359,40 @@
                         placeholder="Masukkan nama lengkap" required>
                 </div>
             </div>
-            
+
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Kelamin</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="fas fa-school text-gray-400"></i>
+                            <i class="fas fa-venus-mars text-gray-400"></i>
                         </div>
-                        <select name="kelas"
+                        <select name="jk"
                             class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] appearance-none bg-white"
                             required>
-                            <option value="">Pilih Kelas</option>
-                            <option value="10">Kelas 10</option>
-                            <option value="11">Kelas 11</option>
-                            <option value="12">Kelas 12</option>
+                            <option value="">Pilih Jenis Kelamin</option>
+                            <option value="L">Laki-laki</option>
+                            <option value="P">Perempuan</option>
                         </select>
                         <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                             <i class="fas fa-chevron-down text-gray-400"></i>
                         </div>
                     </div>
                 </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-school text-gray-400"></i>
+                        </div>
+                        <input type="text" name="kelas"
+                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
+                            placeholder="Masukkan kelas (contoh: 10.1)" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Jurusan</label>
                     <div class="relative">
@@ -334,8 +403,8 @@
                             class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] appearance-none bg-white"
                             required>
                             <option value="">Pilih Jurusan</option>
-                            <option value="SOSHUM">SOSHUM</option>
                             <option value="SAINTEK">SAINTEK</option>
+                            <option value="SOSHUM">SOSHUM</option>
                             <option value="BAHASA">BAHASA</option>
                         </select>
                         <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -343,8 +412,19 @@
                         </div>
                     </div>
                 </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">No Absen</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-sort-numeric-up text-gray-400"></i>
+                        </div>
+                        <input type="number" name="no_absen" min="1"
+                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
+                            placeholder="Masukkan no absen (opsional)">
+                    </div>
+                </div>
             </div>
-            
+
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Tahun Ajaran</label>
@@ -353,8 +433,7 @@
                             <i class="fas fa-calendar text-gray-400"></i>
                         </div>
                         <input type="text" name="tahun_ajaran" placeholder="2024/2025"
-                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
-                            required>
+                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all">
                     </div>
                 </div>
                 <div>
@@ -368,7 +447,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="flex gap-3 pt-4">
                 <button type="button" onclick="closeModal('tambahModal')"
                     class="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition duration-200 font-medium">
@@ -411,7 +490,6 @@
         }
     });
 </script>
-
 <style>
     @keyframes scaleIn {
         from {

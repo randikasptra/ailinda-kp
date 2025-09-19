@@ -55,4 +55,54 @@ class SiswaController extends BaseController
             ]
         ]);
     }
+
+    public function siswa()
+    {
+        $search = $this->request->getGet('search');
+        $kelas = $this->request->getGet('kelas');
+        $jurusan = $this->request->getGet('jurusan');
+        $tahun = $this->request->getGet('tahun');
+        $jk = $this->request->getGet('jk');
+
+        $builder = $this->siswaModel->builder();
+
+        if (!empty($search)) {
+            $builder->groupStart()
+                ->like('nama', $search)
+                ->orLike('nis', $search)
+                ->orLike('nism', $search)
+                ->groupEnd();
+        }
+        if (!empty($kelas)) {
+            $builder->like('kelas', $kelas);
+        }
+        if (!empty($jurusan)) {
+            $builder->where('jurusan', $jurusan);
+        }
+        if (!empty($tahun)) {
+            $builder->where('tahun_ajaran', $tahun);
+        }
+        if (!empty($jk)) {
+            $builder->where('jk', $jk);
+        }
+
+        $data['siswa'] = $builder->get()->getResultArray();
+
+        // Lempar nilai filter ke view
+        $data['filters'] = [
+            'search'  => $search,
+            'kelas'   => $kelas,
+            'jurusan' => $jurusan,
+            'tahun'   => $tahun,
+            'jk'      => $jk,
+        ];
+
+        return view('pages/admin/siswa', $data);
+    }
+     public function detailSiswa($id)
+    {
+        $model = new \App\Models\SiswaModel();
+        $data['siswa'] = $model->find($id);
+        return view('pages/admin/detail_siswa', $data);
+    }
 }

@@ -156,7 +156,7 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">NISN</label>
-                            <input type="text" name="nisn" value="<?= esc($siswa['nisn'] ?? '') ?>" <?= isset($siswa) ? 'readonly' : '' ?>
+                            <input type="text" name="nis" value="<?= esc($siswa['nis'] ?? '') ?>" <?= isset($siswa) ? 'readonly' : '' ?>
                                 class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-gray-50 focus:outline-none transition-all duration-200" />
                         </div>
                     </div>
@@ -165,11 +165,6 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label>
                             <input type="text" name="kelas" value="<?= esc($siswa['kelas'] ?? '') ?>" readonly
-                                class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-gray-50 focus:outline-none transition-all duration-200" />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Kelamin</label>
-                            <input type="text" name="jk" value="<?= esc($siswa['jk'] ?? '') ?>" readonly
                                 class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-gray-50 focus:outline-none transition-all duration-200" />
                         </div>
                         <div>
@@ -275,7 +270,7 @@
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">NISN</label>
-                <input type="text" name="nisn" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2196F3] focus:border-transparent focus:outline-none transition-all duration-200" required>
+                <input type="text" name="nis" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2196F3] focus:border-transparent focus:outline-none transition-all duration-200" required>
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label>
@@ -371,7 +366,7 @@ printManual.addEventListener('click', () => {
                     </tr>
                     <tr>
                         <td>NISN</td>
-                        <td style="word-break:break-word; white-space:normal;">: ${formData.get('nisn')}</td>
+                        <td style="word-break:break-word; white-space:normal;">: ${formData.get('nis')}</td>
                     </tr>
                     <tr>
                         <td>Kelas</td>
