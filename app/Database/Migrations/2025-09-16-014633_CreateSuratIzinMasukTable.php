@@ -14,9 +14,17 @@ class CreateSuratIzinMasukTable extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'id_siswa' => [
-                'type'     => 'INT',
-                'unsigned' => true,
+            'nama' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '100',
+            ],
+            'nisn' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
+            ],
+            'kelas' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '50',
             ],
             'alasan_terlambat' => [
                 'type' => 'TEXT',
@@ -37,10 +45,6 @@ class CreateSuratIzinMasukTable extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-
-        // 🔗 Foreign key ke tabel siswa
-        $this->forge->addForeignKey('id_siswa', 'siswa', 'id', 'CASCADE', 'CASCADE');
-
         $this->forge->createTable('surat_izin_masuk');
     }
 

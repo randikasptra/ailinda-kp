@@ -6,21 +6,19 @@ use App\Models\SiswaModel;
 use App\Models\SuratIzinMasukModel;
 use CodeIgniter\Controller;
 
-class SuratMasukController extends Controller
+class SuratIzinMasukController extends Controller
 {
     protected $siswaModel;
     protected $izinMasukModel;
-    protected $request;
 
     public function __construct()
     {
         $this->siswaModel = new SiswaModel();
         $this->izinMasukModel = new SuratIzinMasukModel();
-        $this->request = service('request');
     }
 
     // ✅ TAMPILKAN FORM IZIN MASUK
-    public function izin_masuk_form()
+    public function index()
     {
         $keyword = $this->request->getGet('keyword');
         $nisn = $this->request->getGet('nisn');
@@ -40,28 +38,25 @@ class SuratMasukController extends Controller
             $siswa = $siswaList[0];
         }
 
-        return view('piket/izin_masuk_form', [
-            'keyword' => $keyword,
+        return view('pages/piket/izin_masuk_form', [
+            'keyword'   => $keyword,
             'siswaList' => $siswaList,
-            'siswa' => $siswa
+            'siswa'     => $siswa,
         ]);
     }
 
     // ✅ SIMPAN DATA IZIN MASUK
-    public function simpanIzinMasuk()
+    public function simpan()
     {
-        $data = [
-            'nisn' => $this->request->getPost('nisn'),
-            'nama' => $this->request->getPost('nama'),
-            'kelas' => $this->request->getPost('kelas'),
-            'jurusan' => $this->request->getPost('jurusan'),
+        $this->izinMasukModel->insert([
+            'nisn'             => $this->request->getPost('nisn'),
+            'nama'             => $this->request->getPost('nama'),
+            'kelas'            => $this->request->getPost('kelas'),
             'alasan_terlambat' => $this->request->getPost('alasan_terlambat'),
-            'tindak_lanjut' => $this->request->getPost('tindak_lanjut'),
-            'created_at' => date('Y-m-d H:i:s')
-        ];
+            'tindak_lanjut'    => $this->request->getPost('tindak_lanjut'),
+        ]);
 
-        $this->izinMasukModel->insert($data);
-
-        return redirect()->to('/piket/izin_masuk_form')->with('success', 'Surat izin masuk berhasil disimpan!');
+        return redirect()->to(base_url('piket/surat_izin_masuk'))
+            ->with('success', 'Surat izin masuk berhasil disimpan!');
     }
 }

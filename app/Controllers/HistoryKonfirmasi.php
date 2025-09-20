@@ -43,6 +43,7 @@ class HistoryKonfirmasi extends BaseController
                 COALESCE(SUM(p.poin), 0) as total_poin
             ')
             ->join('siswa s', 'hk.nama = s.nama AND hk.kelas = s.kelas', 'left')
+            
             ->join('history_konfirmasi_pelanggaran hkp', 'hk.id = hkp.history_konfirmasi_id', 'left')
             ->join('pelanggaran p', 'hkp.pelanggaran_id = p.id', 'left')
             ->groupBy('hk.id')

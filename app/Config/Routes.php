@@ -112,3 +112,9 @@ $routes->post('piket/simpanIzinMasuk', 'SuratMasukController::simpanIzinMasuk');
 $routes->group('dashboard', function ($routes) {
     $routes->get('rekap_poin', 'Bp::rekapPoin');
 });
+
+
+$routes->get('/piket/surat_izin_masuk', 'SuratIzinMasukController::index');
+$routes->post('/piket/surat_izin_masuk/simpan', 'SuratIzinMasukController::simpan');
+$routes->get('/piket/surat_izin_masuk/edit/(:num)', 'SuratIzinMasukController::edit/$1');
+$routes->get('/piket/surat_izin_masuk/delete/(:num)', 'SuratIzinMasukController::delete/$1');

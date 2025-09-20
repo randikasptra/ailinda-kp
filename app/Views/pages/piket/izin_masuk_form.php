@@ -86,14 +86,14 @@
                     </svg>
                     Pencarian Siswa
                 </h3>
-                <form method="get" action="<?= base_url('piket/izin_masuk_form') ?>" class="flex flex-col md:flex-row gap-3">
+                <form method="get" action="<?= base_url('piket/surat_izin_masuk') ?>" class="flex flex-col md:flex-row gap-3">
                     <div class="relative flex-grow">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
-                        <input type="text" name="keyword" value="<?= esc($keyword ?? '') ?>" placeholder="Cari berdasarkan NISN atau Nama..."
+                        <input type="text" name="keyword" value="<?= esc($keyword ?? '') ?>" placeholder="Cari berdasarkan NIS atau Nama..."
                             class="pl-10 w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#FF9800] focus:border-transparent focus:outline-none transition-all duration-200" />
                     </div>
                     <button type="submit" class="bg-[#FF9800] text-white px-6 py-3 rounded-xl hover:bg-[#e68900] transition-all duration-200 flex items-center justify-center shadow-md hover:shadow-lg">
@@ -123,19 +123,19 @@
                     </button>
                 </div>
 
-                <form id="formSuratIzinMasuk" action="<?= base_url('/piket/simpanIzinMasuk') ?>" method="post" class="space-y-5">
+                <form id="formSuratIzinMasuk" action="<?= base_url('/piket/surat_izin_masuk/simpan') ?>" method="post" class="space-y-5">
                     <?= csrf_field() ?>
 
                     <?php if (!empty($siswaList) && count($siswaList) > 1): ?>
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Siswa</label>
                             <div class="relative">
-                                <select onchange="location.href='<?= base_url('piket/izin_masuk_form?keyword=' . urlencode($keyword)) ?>&nisn=' + this.value"
+                                <select onchange="location.href='<?= base_url('piket/surat_izin_masuk?keyword=' . urlencode($keyword)) ?>&nis=' + this.value"
                                     class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white appearance-none focus:ring-2 focus:ring-[#FF9800] focus:border-transparent focus:outline-none transition-all duration-200 pr-10">
                                     <option value="">-- Pilih salah satu --</option>
                                     <?php foreach ($siswaList as $s): ?>
-                                        <option value="<?= $s['nisn'] ?>" <?= ($siswa['nisn'] ?? '') === $s['nisn'] ? 'selected' : '' ?>>
-                                            <?= esc($s['nama']) ?> (<?= esc($s['nisn']) ?> - <?= esc($s['kelas']) ?>)
+                                        <option value="<?= $s['nis'] ?>" <?= ($siswa['nis'] ?? '') === $s['nis'] ? 'selected' : '' ?>>
+                                            <?= esc($s['nama']) ?> (<?= esc($s['nis']) ?> - <?= esc($s['kelas']) ?>)
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -155,8 +155,8 @@
                                 class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-gray-50 focus:outline-none transition-all duration-200" />
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">NISN</label>
-                            <input type="text" name="nisn" value="<?= esc($siswa['nisn'] ?? '') ?>" <?= isset($siswa) ? 'readonly' : '' ?>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">NIS</label>
+                            <input type="text" name="nis" value="<?= esc($siswa['nis'] ?? '') ?>" <?= isset($siswa) ? 'readonly' : '' ?>
                                 class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-gray-50 focus:outline-none transition-all duration-200" />
                         </div>
                     </div>
@@ -197,6 +197,44 @@
                     </div>
                 </form>
             </div>
+
+            <!-- TABEL SURAT IZIN MASUK -->
+            <?php if (!empty($suratMasukList)): ?>
+                <div class="mt-8 bg-gray-50 p-5 rounded-xl border border-gray-100 overflow-x-auto">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+                        <svg class="w-5 h-5 text-[#FF9800] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        Daftar Surat Izin Masuk
+                    </h3>
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gradient-to-r from-[#FF9800] to-[#FFB300] text-white">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Nama</th>
+                                <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">NIS</th>
+                                <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Kelas</th>
+                                <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Alasan Terlambat</th>
+                                <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Tindak Lanjut</th>
+                                <th class="px-6 py-4 text-right text-sm font-medium uppercase tracking-wider">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <?php foreach ($suratMasukList as $surat): ?>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap"><?= esc($surat['nama']) ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><?= esc($surat['nisn']) ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap"><?= esc($surat['kelas']) ?></td>
+                                    <td class="px-6 py-4 text-sm text-gray-500"><?= esc($surat['alasan_terlambat']) ?></td>
+                                    <td class="px-6 py-4 text-sm text-gray-500"><?= esc($surat['tindak_lanjut']) ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <a href="<?= base_url('piket/surat_izin_masuk/delete/' . $surat['id']) ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus surat ini?')" class="text-red-600 hover:text-red-800">Hapus</a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>
@@ -249,7 +287,7 @@
             <svg class="w-6 h-6 text-[#2196F3] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
-            Tambah Surat Manual
+            Tambah Surat Izin Masuk Manual
         </h2>
 
         <form id="formManual" class="space-y-4">
@@ -258,8 +296,8 @@
                 <input type="text" name="nama" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2196F3] focus:border-transparent focus:outline-none transition-all duration-200" required>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">NISN</label>
-                <input type="text" name="nisn" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2196F3] focus:border-transparent focus:outline-none transition-all duration-200" required>
+                <label class="block text-sm font-medium text-gray-700 mb-2">NIS</label>
+                <input type="text" name="nis" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2196F3] focus:border-transparent focus:outline-none transition-all duration-200" required>
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label>
@@ -279,11 +317,19 @@
             </div>
 
             <div class="flex justify-end gap-3 mt-6">
-                <button type="button" id="printManual" class="px-5 py-2.5 bg-[#2196F3] text-white rounded-xl hover:bg-[#0b7dda] transition-colors duration-200 flex items-center shadow-md hover:shadow-lg">
+                <button type="button" id="printManual" 
+                    class="px-5 py-2.5 bg-[#2196F3] text-white rounded-xl hover:bg-[#0b7dda] transition-colors duration-200 flex items-center shadow-md hover:shadow-lg">
                     <svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2z"></path>
                     </svg>
                     Print
+                </button>
+                <button type="submit" id="saveManual"
+                    class="px-5 py-2.5 bg-[#FF9800] text-white rounded-xl hover:bg-[#e68900] transition-colors duration-200 flex items-center shadow-md hover:shadow-lg">
+                    <svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Simpan ke Database
                 </button>
             </div>
         </form>
@@ -315,35 +361,43 @@ printManual.addEventListener('click', () => {
         <div style="font-size:9px; line-height:1.3;">
             <!-- Kop Surat -->
             <div style="display:flex; align-items:center; border-bottom:1px solid #000; padding-bottom:2px; margin-bottom:4px;">
-                <img src="<?= base_url('assets/img/logo-man1.png') ?>" style="width:28px; height:auto; margin-right:4px;">
-                <div style="flex:1; text-align:center;">
-                    <div style="font-size:9.5px; font-weight:bold;">KEMENTERIAN AGAMA</div>
-                    <div style="font-size:8.5px; font-weight:600;">MAN 1 KOTA TASIKMALAYA</div>
-                    <div style="font-size:6px;">Jl. Letnan Harun No. 30, Kota Tasikmalaya</div>
+                <img src="<?= base_url('assets/img/logo-man1.png') ?>" style="width:28px; height:auto;">
+                <div style="flex:1; margin-left:8px;">
+                    <div style="font-size:11px; font-weight:bold; margin-left:4px">KEMENTERIAN AGAMA</div>
+                    <div style="font-size:10px; font-weight:600;">MAN 1 KOTA TASIKMALAYA</div>
+                    <div style="font-size:7px; margin-left:8px;">Jl. Kh. Busthomi, Awipari Cibeuruem</div>
                 </div>
             </div>
 
-            <div style="text-align:center; font-weight:bold; text-decoration:underline; margin:4px 0; font-size:11px;">
-                SURAT IZIN MASUK (TERLAMBAT)
+            <div style="margin-left:42px; font-weight:bold; text-decoration:underline; font-size:10px;">
+                SURAT IZIN MASUK
             </div>
 
-            <table style="font-size:9px;">
+            <p style="margin:3px 0; font-size:10px">
+                Yang bertanda tangan di bawah ini menerangkan bahwa:
+            </p> <br>
+
+            <table style="font-size:10px; width:100%; border-collapse:collapse;">
                 <tr><td style="width:28%;">Nama</td><td>: ${formData.get('nama')}</td></tr>
-                <tr><td>NISN</td><td>: ${formData.get('nisn')}</td></tr>
+                <tr><td>NIS</td><td>: ${formData.get('nis')}</td></tr>
                 <tr><td>Kelas</td><td>: ${formData.get('kelas')}</td></tr>
                 <tr><td>Jurusan</td><td>: ${formData.get('jurusan')}</td></tr>
                 <tr><td>Alasan Terlambat</td><td>: ${formData.get('alasan_terlambat')}</td></tr>
                 <tr><td>Tindak Lanjut</td><td>: ${formData.get('tindak_lanjut')}</td></tr>
                 <tr><td>Tanggal</td><td>: <?= date('d M Y') ?></td></tr>
-            </table>
+            </table><br>
 
-            <div style="display:flex; justify-content:space-between; margin-top:12px; font-size:9px;">
+            <p style="margin:4px 0; font-size:11px">
+                Diizinkan untuk masuk kelas karena alasan tersebut di atas.<br><br>
+                Demikian surat ini dibuat agar dapat dipergunakan sebagaimana mestinya.
+            </p>
+
+            <div style="display:flex; margin-top:18px; font-size:9px; margin-left:-10px">
                 <div style="text-align:center; width:45%;">
                     <p style="margin-bottom:28px;">Petugas Piket</p>
                     <span>( ......................... )</span>
                 </div>
                 <div style="text-align:center; width:45%;">
-                    <p>Tasikmalaya, <?= date('d M Y') ?></p>
                     <p style="margin-bottom:28px;">Bagian Kesiswaan</p>
                     <span>( ......................... )</span>
                 </div>
@@ -359,7 +413,8 @@ printManual.addEventListener('click', () => {
             <style>
                 @media print {
                     @page { size: 8cm 12cm; margin: 0; }
-                    body { margin:0; padding:0; }
+                    body { margin:0; padding:8px; font-family: Arial, sans-serif; }
+                    table td { vertical-align: top; }
                 }
             </style>
         </head>
@@ -376,7 +431,12 @@ formManual.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(formManual);
 
-    fetch('/surat-izin-masuk/store', {
+    // Pastikan nisn tetap terkirim (fallback ke nis kalau nisn kosong)
+    if (!formData.get('nisn') && formData.get('nis')) {
+        formData.append('nisn', formData.get('nis'));
+    }
+
+    fetch('<?= base_url('/piket/surat_izin_masuk/simpan') ?>', {
         method: 'POST',
         body: formData
     })
@@ -385,7 +445,7 @@ formManual.addEventListener('submit', (e) => {
         if (data.status === 'success') {
             modalManual.classList.add('hidden');
             formManual.reset();
-            window.location.href = '/piket/konfirmasi_kembali';
+            window.location.href = '<?= base_url('/piket/surat_izin_masuk') ?>';
         } else {
             alert(data.message);
         }
@@ -396,6 +456,7 @@ formManual.addEventListener('submit', (e) => {
     });
 });
 
+// --- Form otomatis ---
 const form = document.getElementById('formSuratIzinMasuk');
 const modal = document.getElementById('modalPreview');
 const closeModal = document.getElementById('closeModal');
@@ -406,20 +467,26 @@ const printBtn = document.getElementById('printPreview');
 // Tutup modal
 closeModal.addEventListener('click', () => {
     modal.classList.add('hidden');
+    previewContent.innerHTML = '';
 });
 
 // Kirim ke backend
 confirmSubmit.addEventListener('click', () => {
     const formData = new FormData(form);
 
-    fetch('/surat-izin-masuk/store', {
+    // Fallback nis → nisn
+    if (!formData.get('nisn') && formData.get('nis')) {
+        formData.append('nisn', formData.get('nis'));
+    }
+
+    fetch('<?= base_url('/piket/surat_izin_masuk/simpan') ?>', {
         method: 'POST',
         body: formData
     })
     .then(res => res.json())
     .then(data => {
         if (data.status === 'success') {
-             window.location.href = '/piket/konfirmasi_kembali';
+            window.location.href = '<?= base_url('/piket/surat_izin_masuk') ?>';
         } else {
             alert(data.message);
         }
@@ -430,12 +497,13 @@ confirmSubmit.addEventListener('click', () => {
     });
 });
 
+// Preview sebelum simpan
 form.addEventListener('submit', function(e) {
     e.preventDefault();
     const formData = new FormData(form);
 
-    if (!formData.get('nama') || !formData.get('nisn') || !formData.get('alasan_terlambat') || 
-        !formData.get('tindak_lanjut')) {
+    if (!formData.get('nama') || (!formData.get('nisn') && !formData.get('nis')) || 
+        !formData.get('kelas') || !formData.get('alasan_terlambat') || !formData.get('tindak_lanjut')) {
         alert('Harap lengkapi semua field yang diperlukan!');
         return;
     }
@@ -443,7 +511,7 @@ form.addEventListener('submit', function(e) {
     previewContent.innerHTML = `
         <h2 class="text-lg font-bold text-center mb-2">Preview Surat Izin Masuk</h2>
         <p><b>Nama:</b> ${formData.get('nama')}</p>
-        <p><b>NISN:</b> ${formData.get('nisn')}</p>
+        <p><b>NIS:</b> ${formData.get('nisn') || formData.get('nis')}</p>
         <p><b>Kelas:</b> ${formData.get('kelas')}</p>
         <p><b>Jurusan:</b> ${formData.get('jurusan')}</p>
         <p><b>Alasan Terlambat:</b> ${formData.get('alasan_terlambat')}</p>
@@ -452,57 +520,51 @@ form.addEventListener('submit', function(e) {
     modal.classList.remove('hidden');
 });
 
-closeModal.addEventListener('click', () => {
-    modal.classList.add('hidden');
-    previewContent.innerHTML = '';
-});
-
 // Print versi rapi
 printBtn.addEventListener('click', () => {
     const formData = new FormData(form);
 
     const content = `
-        <div class="print-area" style="font-size:9px; line-height:1.3;">
-           <!-- Kop Surat -->
+        <div style="font-size:9px; line-height:1.3;">
+            <!-- Kop Surat -->
             <div style="display:flex; align-items:center; border-bottom:1px solid #000; padding-bottom:2px; margin-bottom:4px;">
-                <img src="<?= base_url('assets/img/logo-man1.png') ?>" 
-                    alt="Logo" 
-                    style="width:28px; height:auto; margin-right:4px; margin-left:2px;">
-                <div style="flex:1; text-align:center; white-space:normal; word-wrap:break-word;">
-                    <div style="font-size:9.5px; font-weight:bold; line-height:1;">KEMENTERIAN AGAMA</div>
-                    <div style="font-size:8.5px; font-weight:600; line-height:1.2;">MAN 1 KOTA TASIKMALAYA</div>
-                    <div style="font-size:6px; line-height:1.1;">Jl. Letnan Harun No. 30, Kota Tasikmalaya, Jawa Barat 46115</div>
-                    <div style="font-size:6px; line-height:1.1;">Telp: (0265) 331336 – Email: man1kotatasik@gmail.com</div>
+                <img src="<?= base_url('assets/img/logo-man1.png') ?>" style="width:28px; height:auto;">
+                <div style="flex:1; margin-left:8px;">
+                    <div style="font-size:11px; font-weight:bold; margin-left:4px">KEMENTERIAN AGAMA</div>
+                    <div style="font-size:10px; font-weight:600;">MAN 1 KOTA TASIKMALAYA</div>
+                    <div style="font-size:7px; margin-left:8px;">Jl. Kh. Busthomi, Awipari Cibeuruem</div>
                 </div>
             </div>
 
-            <div style="text-align:center; font-weight:bold; text-decoration:underline; margin:4px 0; font-size:11px;">
-                SURAT IZIN MASUK (TERLAMBAT)
+            <div style="margin-left:42px; font-weight:bold; text-decoration:underline; font-size:10px;">
+                SURAT IZIN MASUK
             </div>
 
-            <p style="margin:3px 0;">Yang bertanda tangan di bawah ini menerangkan <br> bahwa:</p>
-            <table style="font-size:9px;">
+            <p style="margin:3px 0; font-size:10px">
+                Yang bertanda tangan di bawah ini menerangkan bahwa:
+            </p> <br>
+
+            <table style="font-size:10px; width:100%; border-collapse:collapse;">
                 <tr><td style="width:28%;">Nama</td><td>: ${formData.get('nama')}</td></tr>
-                <tr><td>NISN</td><td>: ${formData.get('nisn')}</td></tr>
+                <tr><td>NIS</td><td>: ${formData.get('nisn') || formData.get('nis')}</td></tr>
                 <tr><td>Kelas</td><td>: ${formData.get('kelas')}</td></tr>
                 <tr><td>Jurusan</td><td>: ${formData.get('jurusan')}</td></tr>
                 <tr><td>Alasan Terlambat</td><td>: ${formData.get('alasan_terlambat')}</td></tr>
                 <tr><td>Tindak Lanjut</td><td>: ${formData.get('tindak_lanjut')}</td></tr>
                 <tr><td>Tanggal</td><td>: <?= date('d M Y') ?></td></tr>
-            </table>
+            </table><br>
 
-            <p style="margin:4px 0; text-align:justify; font-size:9px;">
-                Surat ini dibuat sebagai bukti bahwa siswa tersebut telah diberikan izin untuk masuk setelah terlambat.<br>
+            <p style="margin:4px 0; font-size:11px">
+                Diizinkan untuk masuk kelas karena alasan tersebut di atas.<br><br>
                 Demikian surat ini dibuat agar dapat dipergunakan sebagaimana mestinya.
             </p>
 
-            <div style="display:flex; justify-content:space-between; margin-top:12px;">
-                <div style="text-align:center; width:45%; font-size:9px;">
+            <div style="display:flex; margin-top:18px; font-size:9px; margin-left:-10px">
+                <div style="text-align:center; width:45%;">
                     <p style="margin-bottom:28px;">Petugas Piket</p>
                     <span>( ......................... )</span>
                 </div>
-                <div style="text-align:center; width:45%; font-size:9px;">
-                    <p>Tasikmalaya, <?= date('d M Y') ?></p>
+                <div style="text-align:center; width:45%;">
                     <p style="margin-bottom:28px;">Bagian Kesiswaan</p>
                     <span>( ......................... )</span>
                 </div>
@@ -518,7 +580,8 @@ printBtn.addEventListener('click', () => {
             <style>
                 @media print {
                     @page { size: 8cm 12cm; margin: 0; }
-                    body { margin:0; padding:0; }
+                    body { margin:0; padding:8px; font-family: Arial, sans-serif; }
+                    table td { vertical-align: top; }
                 }
             </style>
         </head>
