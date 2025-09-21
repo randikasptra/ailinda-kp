@@ -58,13 +58,13 @@ class SiswaController extends BaseController
 
     public function siswa()
     {
-        $search = $this->request->getGet('search');
-        $kelas = $this->request->getGet('kelas');
+        $search  = $this->request->getGet('search');
+        $kelas   = $this->request->getGet('kelas');
         $jurusan = $this->request->getGet('jurusan');
-        $tahun = $this->request->getGet('tahun');
-        $jk = $this->request->getGet('jk');
+        $tahun   = $this->request->getGet('tahun');
+        $jk      = $this->request->getGet('jk');
 
-        $builder = $this->siswaModel->builder();
+        $builder = $this->siswaModel;
 
         if (!empty($search)) {
             $builder->groupStart()
@@ -86,9 +86,9 @@ class SiswaController extends BaseController
             $builder->where('jk', $jk);
         }
 
-        $data['siswa'] = $builder->get()->getResultArray();
-
-        // Lempar nilai filter ke view
+        // ✅ ini kuncinya → paginate(10)
+        $data['siswa']  = $builder->paginate(10);
+        $data['pager']  = $builder->pager;
         $data['filters'] = [
             'search'  => $search,
             'kelas'   => $kelas,
@@ -99,7 +99,9 @@ class SiswaController extends BaseController
 
         return view('pages/admin/siswa', $data);
     }
-     public function detailSiswa($id)
+
+
+    public function detailSiswa($id)
     {
         $model = new \App\Models\SiswaModel();
         $data['siswa'] = $model->find($id);

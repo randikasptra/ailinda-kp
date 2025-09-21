@@ -7,6 +7,8 @@ use App\Models\PelanggaranModel;
 use App\Models\SiswaModel;
 use App\Models\SuratIzinModel;
 use App\Models\HistoryKonfirmasiModel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 
 class Dashboard extends BaseController
 {
@@ -252,62 +254,140 @@ class Dashboard extends BaseController
 
  
 
- public function importCSV()
-{
-    $file = $this->request->getFile('csv_file');
+    public function importCSV()
+    {
+        $file = $this->request->getFile('csv_file');
 
-    if ($file->isValid() && $file->getClientExtension() === 'csv') {
-        $handle = fopen($file->getTempName(), 'r');
-        fgetcsv($handle); // Skip header
+        if (!$file || !$file->isValid()) {
+            session()->setFlashdata('error', 'File tidak valid atau tidak ditemukan.');
+            return redirect()->to('/admin/siswa');
+        }
 
-        $siswaModel = new \App\Models\SiswaModel();
+        $ext = strtolower($file->getClientExtension());
+        $siswaModel = new SiswaModel();
         $dataToInsert = [];
-        $nisnsInCsv = []; // Untuk cek duplikasi di CSV
+        $nisInFile = [];
 
-        while (($row = fgetcsv($handle, 1000, ',')) !== false) {
-            $nisn = $row[0];
+        try {
+            if ($ext === 'csv') {
+                // Baca CSV
+                $handle = fopen($file->getTempName(), 'r');
 
-            // Cek duplikasi di CSV
-            if (in_array($nisn, $nisnsInCsv)) {
-                session()->setFlashdata('error', "Duplikasi NISN '$nisn' ditemukan di file CSV.");
+                // Cari baris header "NO"
+                $headerFound = false;
+                while (($row = fgetcsv($handle, 1000, ',')) !== false) {
+                    if (isset($row[0]) && strtoupper(trim($row[0])) === 'NO') {
+                        $headerFound = true;
+                        break;
+                    }
+                }
+
+                if (!$headerFound) {
+                    session()->setFlashdata('error', 'Header CSV tidak sesuai format.');
+                    return redirect()->to('/admin/siswa');
+                }
+
+                // Loop data setelah header
+                while (($row = fgetcsv($handle, 1000, ',')) !== false) {
+                    $kelas   = trim($row[1] ?? '');
+                    $noAbsen = (int)($row[2] ?? null);
+                    $nama    = trim($row[3] ?? '');
+                    $jk      = trim($row[4] ?? '');
+                    $nis     = trim($row[5] ?? '');
+                    $tahun   = "2025/2026";
+
+                    if (!$nis) continue;
+                    if (in_array($nis, $nisInFile)) continue;
+                    $nisInFile[] = $nis;
+
+                    if ($siswaModel->where('nis', $nis)->first()) continue;
+
+                    $dataToInsert[] = [
+                        'nis'          => $nis,
+                        'nama'         => $nama,
+                        'kelas'        => $kelas,
+                        'no_absen'     => $noAbsen,
+                        'jk'           => $jk,
+                        'jurusan'      => 'SOSHUM',
+                        'tahun_ajaran' => $tahun,
+                        'poin'         => 0,
+                        'created_at'   => date('Y-m-d H:i:s'),
+                        'updated_at'   => date('Y-m-d H:i:s'),
+                    ];
+                }
                 fclose($handle);
-                return redirect()->to('/admin/siswa');
+
+            } else {
+                // Baca Excel pakai PhpSpreadsheet
+                $spreadsheet = IOFactory::load($file->getTempName());
+
+                // Pilih sheet sesuai nama
+                $sheet = $spreadsheet->getSheetByName('DAFTAR SISWA');
+                if (!$sheet) {
+                    $sheet = $spreadsheet->getActiveSheet(); // fallback
+                }
+                $rows = $sheet->toArray();
+
+                // Cari baris header "NO"
+                $startRow = null;
+                foreach ($rows as $i => $row) {
+                    if (isset($row[0]) && strtoupper(trim($row[0])) === 'NO') {
+                        $startRow = $i + 1; // data mulai setelah header
+                        break;
+                    }
+                }
+
+                if ($startRow === null) {
+                    session()->setFlashdata('error', 'Header Excel tidak sesuai format.');
+                    return redirect()->to('/admin/siswa');
+                }
+
+                // Loop data setelah header
+                for ($i = $startRow; $i < count($rows); $i++) {
+                    $row = $rows[$i];
+
+                    $kelas   = trim($row[2] ?? '');   // KELAS
+                    $noAbsen = (int)($row[3] ?? null); // NO ABSEN
+                    $nama    = trim($row[4] ?? '');   // NAMA SISWA
+                    $jk      = trim($row[5] ?? '');   // JK
+                    $nis     = trim($row[6] ?? '');   // NIS
+                    $nism    = trim($row[7] ?? '');   // NISM
+                    $tahun   = "2025/2026";
+
+                    if (!$nis) continue;
+                    if (in_array($nis, $nisInFile)) continue;
+                    $nisInFile[] = $nis;
+
+                    if ($siswaModel->where('nis', $nis)->first()) continue;
+
+                    $dataToInsert[] = [
+                        'nis'          => $nis,
+                        'nism'         => $nism,
+                        'nama'         => $nama,
+                        'kelas'        => $kelas,
+                        'no_absen'     => $noAbsen,
+                        'jk'           => $jk,
+                        'jurusan'      => 'SOSHUM',
+                        'tahun_ajaran' => $tahun,
+                        'poin'         => 0,
+                        'created_at'   => date('Y-m-d H:i:s'),
+                        'updated_at'   => date('Y-m-d H:i:s'),
+                    ];
+                }
             }
 
-            $nisnsInCsv[] = $nisn;
-
-            // Cek duplikasi di database
-            if ($siswaModel->where('nisn', $nisn)->first()) {
-                continue; // Lewati jika sudah ada di database
+            if (!empty($dataToInsert)) {
+                $siswaModel->insertBatch($dataToInsert);
+                session()->setFlashdata('success', count($dataToInsert) . ' data siswa berhasil diimpor.');
+            } else {
+                session()->setFlashdata('warning', 'Tidak ada data baru untuk diimpor.');
             }
-
-            $dataToInsert[] = [
-                'nisn'          => $nisn,
-                'nama'          => $row[1],
-                'kelas'         => (int)$row[2],
-                'tahun_ajaran'  => $row[3],
-                'jurusan'       => strtoupper($row[4]),
-                'poin'          => 0,
-                'created_at'    => date('Y-m-d H:i:s'),
-                'updated_at'    => date('Y-m-d H:i:s'),
-            ];
+        } catch (\Exception $e) {
+            session()->setFlashdata('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
 
-        fclose($handle);
-
-        if (!empty($dataToInsert)) {
-            $siswaModel->insertBatch($dataToInsert);
-            session()->setFlashdata('success', 'Data siswa berhasil diimpor.');
-        } else {
-            session()->setFlashdata('warning', 'Tidak ada data baru untuk diimpor.');
-        }
-    } else {
-        session()->setFlashdata('error', 'File tidak valid atau tidak ditemukan.');
+        return redirect()->to('/admin/siswa');
     }
-
-    return redirect()->to('/admin/siswa');
-}
-
 
 
 

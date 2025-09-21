@@ -47,22 +47,28 @@
         </div>
 
         <!-- Import CSV -->
-        <div class="p-6 border-b border-gray-100 bg-gray-50/50">
-            <form action="<?= base_url('admin/siswa/import_csv'); ?>" method="post" enctype="multipart/form-data" class="flex flex-col md:flex-row items-start md:items-end gap-4">
-                <div class="flex-1">
-                    <label for="csv_file" class="block mb-2 font-medium text-gray-700">Import Siswa dari CSV</label>
-                    <div class="relative">
-                        <input type="file" name="csv_file" id="csv_file" accept=".csv" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#1E5631]/10 file:text-[#1E5631] hover:file:bg-[#1E5631]/20">
-                    </div>
-                </div>
-                <button type="submit"
-                    class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-3 rounded-xl transition-all duration-300 shadow-md group">
-                    <i class="fas fa-file-import group-hover:scale-110 transition-transform"></i>
-                    Upload CSV
-                </button>
-            </form>
+       <div class="p-6 border-b border-gray-100 bg-gray-50/50">
+    <form action="<?= base_url('admin/siswa/import_csv'); ?>" method="post" enctype="multipart/form-data" class="flex flex-col md:flex-row items-start md:items-end gap-4">
+        <div class="flex-1">
+            <label for="csv_file" class="block mb-2 font-medium text-gray-700">
+                Import Siswa dari CSV / Excel
+            </label>
+            <div class="relative">
+                <input type="file" name="csv_file" id="csv_file" accept=".csv,.xls,.xlsx" required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all
+                           file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 
+                           file:text-sm file:font-semibold file:bg-[#1E5631]/10 file:text-[#1E5631] hover:file:bg-[#1E5631]/20">
+            </div>
         </div>
+        
+        <button type="submit"
+            class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-3 rounded-xl transition-all duration-300 shadow-md group">
+            <i class="fas fa-file-import group-hover:scale-110 transition-transform"></i>
+            Upload File
+        </button>
+    </form>
+</div>
+
     </div>
 
     <!-- Alert Notification -->
@@ -204,7 +210,6 @@
                         <tr>
                             <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider w-16">No</th>
                             <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">NIS</th>
-                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">NISM</th>
                             <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Nama</th>
                             <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Jenis Kelamin</th>
                             <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Kelas</th>
@@ -222,9 +227,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="font-medium text-gray-900"><?= esc($s['nis']) ?></div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="font-medium text-gray-900"><?= esc($s['nism'] ?? '-') ?></div>
-                                </td>
+                               
                                 <td class="px-6 py-4">
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0 h-10 w-10 bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] rounded-full flex items-center justify-center text-white font-bold shadow-md mr-3">
@@ -291,6 +294,15 @@
                 </div>
             <?php endif; ?>
         </div>
+        <!-- Pagination -->
+<!-- Pagination -->
+<?php if ($pager): ?>
+    <div class="p-6 border-t border-gray-200 flex justify-center">
+        <?= $pager->links('default', 'tailwind_pagination') ?>
+    </div>
+<?php endif; ?>
+
+
     </div>
 </div>
 
