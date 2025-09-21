@@ -11,14 +11,22 @@ class CreatePelanggaranTable extends Migration
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
-                'auto_increment' => true
+                'auto_increment' => true,
+                'unsigned'       => true,
+            ],
+            'kategori' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 100, // contoh: "Ringan", "Sedang", "Berat"
+                'null'       => false,
             ],
             'jenis_pelanggaran' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
+                'null'       => false,
             ],
             'poin' => [
-                'type' => 'INT',
+                'type'       => 'INT',
+                'null'       => false,
             ],
             'created_at' => [
                 'type' => 'DATETIME',

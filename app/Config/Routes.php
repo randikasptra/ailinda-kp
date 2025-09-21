@@ -71,7 +71,7 @@ $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
     $routes->get('siswa', 'SiswaController::siswa');
     $routes->post('siswa/tambah', 'Dashboard::tambahSiswa');
     $routes->get('siswa/hapus/(:num)', 'Dashboard::hapusSiswa/$1');
-    $routes->get('pelanggaran/edit/(:num)', 'Dashboard::editPelanggaran/$1');
+    $routes->get('pelanggaran/edit/(:num)', 'PelanggaranController::editPelanggaran/$1');
     $routes->post('pelanggaran/update/(:num)', 'Dashboard::updatePelanggaran/$1');
     $routes->post('siswa/update_kelas', 'SiswaController::update_kelas');
     $routes->post('siswa/hapus_lulus', 'Dashboard::hapus_lulus');
@@ -84,10 +84,10 @@ $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
     $routes->post('users/store', 'Admin::storeUser');
     $routes->get('users/edit/(:num)', 'Admin::editUser/$1');
     $routes->post('users/update/(:num)', 'Admin::updateUser/$1');
-    $routes->get('pelanggaran', 'Dashboard::pelanggaran');
-    $routes->post('pelanggaran/tambah', 'Dashboard::tambahPelanggaran');
-    $routes->get('pelanggaran/hapus/(:num)', 'Dashboard::hapusPelanggaran/$1');
-    $routes->get('editUser/(:num)', 'Dashboard::editUser/$1');
+    $routes->get('pelanggaran', 'PelanggaranController::pelanggaran');
+    $routes->post('pelanggaran/tambah', 'PelanggaranController::tambahPelanggaran');
+    $routes->get('pelanggaran/hapus/(:num)', 'PelanggaranController::hapusPelanggaran/$1');
+    $routes->get('editUser/(:num)', 'PelanggaranController::editUser/$1');
     $routes->post('updateUser/(:num)', 'Dashboard::updateUser/$1');
     $routes->post('deleteUser/(:num)', 'Dashboard::deleteUser/$1');
     $routes->get('users/delete/(:num)', 'Dashboard::deleteUser/$1');
@@ -103,11 +103,12 @@ $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
 // =======================
 // LAIN-LAIN
 // =======================
-$routes->get('pelanggaran', 'Pelanggaran::index');
 $routes->get('unauthorized', 'Error::unauthorized');
 // Surat Izin Masuk
 $routes->get('piket/izin_masuk_form', 'SuratMasukController::izin_masuk_form');
 $routes->post('piket/simpanIzinMasuk', 'SuratMasukController::simpanIzinMasuk');
+$routes->post('admin/pelanggaran/updatePelanggaran/(:num)', 'PelanggaranController::updatePelanggaran/$1');
+
 
 $routes->group('dashboard', function ($routes) {
     $routes->get('rekap_poin', 'Bp::rekapPoin');

@@ -162,30 +162,7 @@ class Dashboard extends BaseController
         ]);
     }
 
-    public function editPelanggaran($id)
-    {
-
-        $data['title'] = 'Edit Pelanggaran';
-        $data['pelanggaran'] = $this->pelanggaranModel->find($id);
-
-        if (!$data['pelanggaran']) {
-            return redirect()->to('/admin/pelanggaran')->with('error', 'Data tidak ditemukan.');
-        }
-
-        return view('pages/admin/edit_pelanggaran', $data);
-    }
-
-    public function updatePelanggaran($id)
-    {
-        $data = $this->request->getPost();
-
-        $this->pelanggaranModel->update($id, [
-            'jenis_pelanggaran' => $data['jenis_pelanggaran'],
-            'poin' => $data['poin']
-        ]);
-
-        return redirect()->to('/admin/pelanggaran')->with('success', 'Data pelanggaran berhasil diperbarui.');
-    }
+    
     public function updateUser($id)
     {
         $data = [
@@ -240,15 +217,7 @@ class Dashboard extends BaseController
         return redirect()->back()->with('error', 'Gagal menambahkan user.');
     }
 
-    public function pelanggaran()
-    {
-        $model = new PelanggaranModel();
-        $data = [
-            'title' => 'Kelola Pelanggaran',
-            'pelanggaran' => $model->findAll()
-        ];
-        return view('pages/admin/pelanggaran', $data);
-    }
+
 
     
 
@@ -391,23 +360,5 @@ class Dashboard extends BaseController
 
 
 
-    public function tambahPelanggaran()
-    {
-        $model = new PelanggaranModel();
-        $data = $this->request->getPost();
 
-        if ($data) {
-            $model->save($data);
-            return redirect()->to('/admin/pelanggaran')->with('success', 'Pelanggaran berhasil ditambahkan!');
-        }
-
-        return redirect()->back()->with('error', 'Gagal menambahkan pelanggaran.');
-    }
-
-    public function hapusPelanggaran($id)
-    {
-        $model = new PelanggaranModel();
-        $model->delete($id);
-        return redirect()->to('/admin/pelanggaran')->with('success', 'Pelanggaran berhasil dihapus!');
-    }
 }
