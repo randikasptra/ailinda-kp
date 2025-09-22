@@ -3,14 +3,17 @@
 namespace App\Controllers;
 
 use App\Models\SiswaModel;
+use App\Models\ActivityLogModel;
 
 class SiswaController extends BaseController
 {
     protected $siswaModel;
+    protected $activityLogModel;
 
     public function __construct()
     {
         $this->siswaModel = new SiswaModel();
+        $this->activityLogModel = new ActivityLogModel();
     }
 
     public function dataSiswa()
@@ -43,7 +46,6 @@ class SiswaController extends BaseController
             $builder->where('jk', $filters['jk']);
         }
 
-        // ✅ Ambil semua data siswa tanpa limit
         $siswa = $builder->findAll();
 
         return view('pages/piket/data_siswa', [
@@ -52,7 +54,6 @@ class SiswaController extends BaseController
             'filters' => $filters
         ]);
     }
-
 
     public function siswa()
     {
@@ -89,7 +90,6 @@ class SiswaController extends BaseController
             $builder->where('jk', $filters['jk']);
         }
 
-        // ✅ Ambil semua data tanpa batas
         $siswa = $builder->findAll();
 
         return view('pages/admin/siswa', [
@@ -97,7 +97,6 @@ class SiswaController extends BaseController
             'filters' => $filters
         ]);
     }
-
 
     public function detailSiswa($id)
     {
@@ -137,7 +136,6 @@ class SiswaController extends BaseController
 
         $data = $this->request->getPost();
 
-        // Validasi input
         $validationRules = [
             'nis' => 'required|numeric',
             'nama' => 'required',
@@ -152,6 +150,15 @@ class SiswaController extends BaseController
         }
 
         $this->siswaModel->update($id, $data);
+
+        // Log aktivitas
+        $this->activityLogModel->save([
+            'type' => 'siswa',
+            'description' => 'Data siswa diperbarui: ' . esc($data['nama']),
+            'created_at' => date('Y-m-d H:i:s'),
+            'created_by' => session()->get('user_id')
+        ]);
+
         return redirect()->to('/admin/siswa')->with('success', 'Data siswa berhasil diperbarui!');
     }
 
@@ -172,10 +179,28 @@ class SiswaController extends BaseController
 
                     if ($tingkatKelas === 10) {
                         $this->siswaModel->update($siswa['id'], ['kelas' => '11' . $nomorKelas]);
+                        $this->activityLogModel->save([
+                            'type' => 'siswa',
+                            'description' => 'Kelas siswa diperbarui: ' . esc($siswa['nama']) . ' ke kelas 11',
+                            'created_at' => date('Y-m-d H:i:s'),
+                            'created_by' => session()->get('user_id')
+                        ]);
                     } elseif ($tingkatKelas === 11) {
                         $this->siswaModel->update($siswa['id'], ['kelas' => '12' . $nomorKelas]);
+                        $this->activityLogModel->save([
+                            'type' => 'siswa',
+                            'description' => 'Kelas siswa diperbarui: ' . esc($siswa['nama']) . ' ke kelas 12',
+                            'created_at' => date('Y-m-d H:i:s'),
+                            'created_by' => session()->get('user_id')
+                        ]);
                     } elseif ($tingkatKelas === 12) {
                         $this->siswaModel->update($siswa['id'], ['kelas' => null]);
+                        $this->activityLogModel->save([
+                            'type' => 'siswa',
+                            'description' => 'Kelas siswa dihapus (lulus): ' . esc($siswa['nama']),
+                            'created_at' => date('Y-m-d H:i:s'),
+                            'created_by' => session()->get('user_id')
+                        ]);
                     }
                 }
             }
@@ -195,13 +220,33 @@ class SiswaController extends BaseController
         }
 
         $this->siswaModel->delete($id);
+
+        // Log aktivitas
+        $this->activityLogModel->save([
+            'type' => 'siswa',
+            'description' => 'Siswa dihapus: ' . esc($siswa['nama']),
+            'created_at' => date('Y-m-d H:i:s'),
+            'created_by' => session()->get('user_id')
+        ]);
+
         return redirect()->to('/admin/siswa')->with('success', 'Data siswa berhasil dihapus.');
     }
 
     public function hapus_lulus()
     {
         try {
+            $siswaList = $this->siswaModel->where('kelas LIKE "12%"')->findAll();
             $this->siswaModel->where('kelas LIKE "12%"')->delete();
+
+            foreach ($siswaList as $siswa) {
+                $this->activityLogModel->save([
+                    'type' => 'siswa',
+                    'description' => 'Siswa kelas 12 dihapus: ' . esc($siswa['nama']),
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'created_by' => session()->get('user_id')
+                ]);
+            }
+
             return redirect()->to('/admin/siswa')->with('success', 'Data siswa kelas 12 berhasil dihapus.');
         } catch (\Exception $e) {
             return redirect()->to('/admin/siswa')->with('error', 'Gagal menghapus siswa kelas 12: ' . $e->getMessage());
@@ -212,7 +257,6 @@ class SiswaController extends BaseController
     {
         $data = $this->request->getPost();
 
-        // Validasi input
         $validationRules = [
             'nis' => 'required|numeric|is_unique[siswa.nis]',
             'nama' => 'required',
@@ -227,6 +271,15 @@ class SiswaController extends BaseController
         }
 
         $this->siswaModel->save($data);
+
+        // Log aktivitas
+        $this->activityLogModel->save([
+            'type' => 'siswa',
+            'description' => 'Siswa baru ditambahkan: ' . esc($data['nama']),
+            'created_at' => date('Y-m-d H:i:s'),
+            'created_by' => session()->get('user_id')
+        ]);
+
         return redirect()->to('/admin/siswa')->with('success', 'Data siswa berhasil ditambahkan!');
     }
 
@@ -239,7 +292,7 @@ class SiswaController extends BaseController
         }
 
         $csv = array_map('str_getcsv', file($file->getTempName()));
-        $header = array_shift($csv); // Ambil header
+        $header = array_shift($csv);
 
         $requiredFields = ['nis', 'nama', 'jk', 'kelas', 'jurusan'];
         if (count(array_intersect($requiredFields, $header)) !== count($requiredFields)) {
@@ -250,6 +303,14 @@ class SiswaController extends BaseController
             foreach ($csv as $row) {
                 $data = array_combine($header, $row);
                 $this->siswaModel->save($data);
+
+                // Log aktivitas
+                $this->activityLogModel->save([
+                    'type' => 'siswa',
+                    'description' => 'Siswa baru diimpor: ' . esc($data['nama']),
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'created_by' => session()->get('user_id')
+                ]);
             }
             return redirect()->to('/admin/siswa')->with('success', 'Data siswa dari CSV berhasil diimpor.');
         } catch (\Exception $e) {

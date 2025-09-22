@@ -4,19 +4,21 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\PelanggaranModel;
+use App\Models\ActivityLogModel;
 
 class PelanggaranController extends BaseController
 {
     protected $pelanggaranModel;
+    protected $activityLogModel;
 
     public function __construct()
     {
         $this->pelanggaranModel = new PelanggaranModel();
+        $this->activityLogModel = new ActivityLogModel();
     }
 
     public function pelanggaran()
     {
-        // Ambil filter dari GET
         $filters = [
             'kategori' => $this->request->getGet('kategori') ?? '',
             'poin'     => $this->request->getGet('poin') ?? '',
@@ -25,12 +27,10 @@ class PelanggaranController extends BaseController
 
         $builder = $this->pelanggaranModel;
 
-        // Filter kategori
         if ($filters['kategori']) {
             $builder->where('kategori', $filters['kategori']);
         }
 
-        // Filter poin
         if ($filters['poin']) {
             if ($filters['poin'] === '0-10') {
                 $builder->where('poin >=', 0)->where('poin <=', 10);
@@ -41,20 +41,18 @@ class PelanggaranController extends BaseController
             }
         }
 
-        // Search
         if ($filters['search']) {
             $builder->like('jenis_pelanggaran', $filters['search']);
         }
 
         $data = [
             'title'       => 'Kelola Pelanggaran',
-            'pelanggaran' => $builder->findAll(), // TANPA LIMIT
+            'pelanggaran' => $builder->findAll(),
             'filters'     => $filters
         ];
 
         return view('pages/admin/pelanggaran', $data);
     }
-
 
     public function tambahPelanggaran()
     {
@@ -62,6 +60,15 @@ class PelanggaranController extends BaseController
 
         if ($data) {
             $this->pelanggaranModel->save($data);
+
+            // Log aktivitas
+            $this->activityLogModel->save([
+                'type' => 'pelanggaran',
+                'description' => 'Pelanggaran baru ditambahkan: ' . esc($data['jenis_pelanggaran']),
+                'created_at' => date('Y-m-d H:i:s'),
+                'created_by' => session()->get('user_id')
+            ]);
+
             return redirect()->to('/admin/pelanggaran')->with('success', 'Pelanggaran berhasil ditambahkan!');
         }
 
@@ -70,7 +77,17 @@ class PelanggaranController extends BaseController
 
     public function hapusPelanggaran($id)
     {
+        $pelanggaran = $this->pelanggaranModel->find($id);
         $this->pelanggaranModel->delete($id);
+
+        // Log aktivitas
+        $this->activityLogModel->save([
+            'type' => 'pelanggaran',
+            'description' => 'Pelanggaran dihapus: ' . esc($pelanggaran['jenis_pelanggaran']),
+            'created_at' => date('Y-m-d H:i:s'),
+            'created_by' => session()->get('user_id')
+        ]);
+
         return redirect()->to('/admin/pelanggaran')->with('success', 'Pelanggaran berhasil dihapus!');
     }
 
@@ -94,6 +111,14 @@ class PelanggaranController extends BaseController
             'jenis_pelanggaran' => $data['jenis_pelanggaran'],
             'kategori'          => $data['kategori'] ?? null,
             'poin'              => $data['poin']
+        ]);
+
+        // Log aktivitas
+        $this->activityLogModel->save([
+            'type' => 'pelanggaran',
+            'description' => 'Pelanggaran diperbarui: ' . esc($data['jenis_pelanggaran']),
+            'created_at' => date('Y-m-d H:i:s'),
+            'created_by' => session()->get('user_id')
         ]);
 
         return redirect()->to('/admin/pelanggaran')->with('success', 'Data pelanggaran berhasil diperbarui.');

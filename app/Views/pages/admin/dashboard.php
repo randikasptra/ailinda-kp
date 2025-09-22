@@ -57,7 +57,7 @@
                 <i class="fas fa-exclamation-triangle text-red-600 text-6xl"></i>
             </div>
             <div class="flex items-center gap-4">
-                <div class="p-3 rounded-xl bg-white shadow-sm">
+                <div class="p-2 rounded-xl bg-white shadow-sm">
                     <i class="fas fa-exclamation-triangle text-red-500 text-xl"></i>
                 </div>
                 <div>
@@ -68,6 +68,27 @@
             <div class="mt-4 text-xs text-red-600/70 flex items-center">
                 <i class="fas fa-history mr-1"></i> Data historis pelanggaran
             </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- Pelanggaran by Kategori -->
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-chart-pie text-[#1E5631]"></i>
+                Pelanggaran Berdasarkan Kategori
+            </h2>
+            <canvas id="pelanggaranChart" class="w-full h-64"></canvas>
+        </div>
+
+        <!-- Siswa by Kelas -->
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-chart-bar text-[#1E5631]"></i>
+                Distribusi Siswa Berdasarkan Kelas
+            </h2>
+            <canvas id="siswaChart" class="w-full h-64"></canvas>
         </div>
     </div>
 
@@ -116,48 +137,111 @@
         </h2>
         
         <div class="space-y-4">
-            <div class="flex items-center gap-4 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
-                <div class="p-2 rounded-full bg-green-100 text-green-600">
-                    <i class="fas fa-user-plus text-sm"></i>
+            <?php foreach ($recentActivities as $activity): ?>
+                <div class="flex items-center gap-4 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
+                    <div class="p-2 rounded-full <?= $activity['type'] === 'user' ? 'bg-green-100 text-green-600' : ($activity['type'] === 'siswa' ? 'bg-blue-100 text-blue-600' : 'bg-red-100 text-red-600') ?>">
+                        <i class="fas <?= $activity['type'] === 'user' ? 'fa-user-plus' : ($activity['type'] === 'siswa' ? 'fa-user-graduate' : 'fa-exclamation-triangle') ?> text-sm"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium"><?= esc($activity['description']) ?></p>
+                        <p class="text-sm text-gray-500"><?= date('d M Y H:i', strtotime($activity['created_at'])) ?></p>
+                    </div>
+                    <span class="px-2 py-1 <?= $activity['type'] === 'user' ? 'bg-green-100 text-green-800' : ($activity['type'] === 'siswa' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800') ?> text-xs rounded-full">
+                        <?= ucfirst($activity['type']) ?>
+                    </span>
                 </div>
-                <div class="flex-1">
-                    <p class="font-medium">Admin baru ditambahkan</p>
-                    <p class="text-sm text-gray-500">2 jam yang lalu</p>
-                </div>
-                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">User</span>
-            </div>
-            
-            <div class="flex items-center gap-4 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
-                <div class="p-2 rounded-full bg-blue-100 text-blue-600">
-                    <i class="fas fa-user-graduate text-sm"></i>
-                </div>
-                <div class="flex-1">
-                    <p class="font-medium">Data siswa diperbarui</p>
-                    <p class="text-sm text-gray-500">5 jam yang lalu</p>
-                </div>
-                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">Siswa</span>
-            </div>
-            
-            <div class="flex items-center gap-4 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
-                <div class="p-2 rounded-full bg-red-100 text-red-600">
-                    <i class="fas fa-exclamation-triangle text-sm"></i>
-                </div>
-                <div class="flex-1">
-                    <p class="font-medium">Pelanggaran baru dicatat</p>
-                    <p class="text-sm text-gray-500">8 jam yang lalu</p>
-                </div>
-                <span class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">Pelanggaran</span>
-            </div>
+            <?php endforeach; ?>
         </div>
     </div>
 </div>
 
-<!-- Include Font Awesome -->
+<!-- Include Font Awesome and Chart.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 
 <script>
     window.addEventListener('DOMContentLoaded', () => {
         lucide.createIcons();
+
+        // Pelanggaran Chart
+        const pelanggaranChart = new Chart(document.getElementById('pelanggaranChart'), {
+            type: 'pie',
+            data: {
+                labels: <?= json_encode(array_column($pelanggaranData, 'kategori')) ?>,
+                datasets: [{
+                    data: <?= json_encode(array_column($pelanggaranData, 'jumlah')) ?>,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 206, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(153, 102, 255, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Distribusi Pelanggaran'
+                    }
+                }
+            }
+        });
+
+        // Siswa Chart
+        const siswaChart = new Chart(document.getElementById('siswaChart'), {
+            type: 'bar',
+            data: {
+                labels: <?= json_encode(array_column($siswaData, 'kelas')) ?>,
+                datasets: [{
+                    label: 'Jumlah Siswa',
+                    data: <?= json_encode(array_column($siswaData, 'jumlah')) ?>,
+                    backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Jumlah Siswa'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Kelas'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Distribusi Siswa per Kelas'
+                    }
+                }
+            }
+        });
     });
 </script>
 
