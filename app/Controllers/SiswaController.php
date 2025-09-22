@@ -19,34 +19,76 @@ class SiswaController extends BaseController
     public function dataSiswa()
     {
         $filters = [
-            'search'  => $this->request->getGet('keyword') ?? '',
-            'kelas'   => $this->request->getGet('kelas') ?? '',
-            'jurusan' => $this->request->getGet('jurusan') ?? '',
-            'jk'      => $this->request->getGet('jk') ?? ''
+            'keyword'  => $this->request->getGet('keyword') ?? '',
+            'kelas'    => $this->request->getGet('kelas') ?? '',
+            'jurusan'  => $this->request->getGet('jurusan') ?? '',
+            'jk'       => $this->request->getGet('jk') ?? '',
+            'tahun'    => $this->request->getGet('tahun') ?? '',
+            'poin'     => $this->request->getGet('poin') ?? '',
+            'no_absen' => $this->request->getGet('no_absen') ?? ''
         ];
 
         $builder = $this->siswaModel;
 
-        if ($filters['search']) {
+        // Filter pencarian
+        if ($filters['keyword']) {
             $builder->groupStart()
-                ->like('nama', $filters['search'])
-                ->orLike('nis', $filters['search'])
+                ->like('nama', $filters['keyword'])
+                ->orLike('nis', $filters['keyword'])
+                ->orLike('nism', $filters['keyword'])
                 ->groupEnd();
         }
 
+        // Filter kelas
         if ($filters['kelas']) {
             $builder->like('kelas', $filters['kelas']);
         }
 
+        // Filter jurusan
         if ($filters['jurusan']) {
             $builder->where('jurusan', $filters['jurusan']);
         }
 
+        // Filter jenis kelamin
         if ($filters['jk']) {
             $builder->where('jk', $filters['jk']);
         }
 
-        $siswa = $builder->findAll();
+        // Filter tahun ajaran
+        if ($filters['tahun']) {
+            $builder->where('tahun_ajaran', $filters['tahun']);
+        }
+
+        // Filter poin
+        if ($filters['poin']) {
+            if ($filters['poin'] === '0-50') {
+                $builder->where('poin >=', 0)->where('poin <=', 50);
+            } elseif ($filters['poin'] === '51-100') {
+                $builder->where('poin >=', 51)->where('poin <=', 100);
+            } elseif ($filters['poin'] === '>100') {
+                $builder->where('poin >', 100);
+            }
+        }
+
+        // Filter nomor absen
+        if ($filters['no_absen']) {
+            $builder->where('no_absen', $filters['no_absen']);
+        }
+
+        // Ambil data siswa
+        $siswa = $builder->findAll(); // Batasi ke 100 hasil untuk performa
+
+        // Log aktivitas pencarian/filter
+        if (array_filter($filters)) {
+            $filterDesc = array_filter($filters, fn($value) => !empty($value));
+            $desc = 'Pencarian siswa dengan filter: ' . json_encode($filterDesc);
+            $this->activityLogModel->save([
+                'type' => 'siswa',
+                'description' => $desc,
+                'created_at' => date('Y-m-d H:i:s'),
+                'created_by' => session()->get('user_id') ?? 0
+            ]);
+        }
 
         return view('pages/piket/data_siswa', [
             'title'   => 'Data Siswa',
@@ -58,41 +100,79 @@ class SiswaController extends BaseController
     public function siswa()
     {
         $filters = [
-            'search'  => $this->request->getGet('search') ?? '',
-            'kelas'   => $this->request->getGet('kelas') ?? '',
-            'jurusan' => $this->request->getGet('jurusan') ?? '',
-            'tahun'   => $this->request->getGet('tahun') ?? '',
-            'jk'      => $this->request->getGet('jk') ?? ''
+            'search'   => $this->request->getGet('search') ?? '',
+            'kelas'    => $this->request->getGet('kelas') ?? '',
+            'jurusan'  => $this->request->getGet('jurusan') ?? '',
+            'tahun'    => $this->request->getGet('tahun') ?? '',
+            'jk'       => $this->request->getGet('jk') ?? '',
+            'poin'     => $this->request->getGet('poin') ?? '',
+            'no_absen' => $this->request->getGet('no_absen') ?? ''
         ];
 
         $builder = $this->siswaModel;
 
+        // Filter pencarian
         if ($filters['search']) {
             $builder->groupStart()
                 ->like('nama', $filters['search'])
                 ->orLike('nis', $filters['search'])
+                ->orLike('nism', $filters['search'])
                 ->groupEnd();
         }
 
+        // Filter kelas
         if ($filters['kelas']) {
             $builder->like('kelas', $filters['kelas']);
         }
 
+        // Filter jurusan
         if ($filters['jurusan']) {
             $builder->where('jurusan', $filters['jurusan']);
         }
 
+        // Filter tahun ajaran
         if ($filters['tahun']) {
             $builder->where('tahun_ajaran', $filters['tahun']);
         }
 
+        // Filter jenis kelamin
         if ($filters['jk']) {
             $builder->where('jk', $filters['jk']);
         }
 
-        $siswa = $builder->findAll();
+        // Filter poin
+        if ($filters['poin']) {
+            if ($filters['poin'] === '0-50') {
+                $builder->where('poin >=', 0)->where('poin <=', 50);
+            } elseif ($filters['poin'] === '51-100') {
+                $builder->where('poin >=', 51)->where('poin <=', 100);
+            } elseif ($filters['poin'] === '>100') {
+                $builder->where('poin >', 100);
+            }
+        }
+
+        // Filter nomor absen
+        if ($filters['no_absen']) {
+            $builder->where('no_absen', $filters['no_absen']);
+        }
+
+        // Ambil data siswa
+        $siswa = $builder->findAll(100); // Batasi ke 100 hasil untuk performa
+
+        // Log aktivitas pencarian/filter
+        if (array_filter($filters)) {
+            $filterDesc = array_filter($filters, fn($value) => !empty($value));
+            $desc = 'Pencarian siswa dengan filter: ' . json_encode($filterDesc);
+            $this->activityLogModel->save([
+                'type' => 'siswa',
+                'description' => $desc,
+                'created_at' => date('Y-m-d H:i:s'),
+                'created_by' => session()->get('user_id') ?? 0
+            ]);
+        }
 
         return view('pages/admin/siswa', [
+            'title'   => 'Data Siswa',
             'siswa'   => $siswa,
             'filters' => $filters
         ]);
@@ -105,6 +185,14 @@ class SiswaController extends BaseController
         if (!$siswa) {
             return redirect()->to('/admin/siswa')->with('error', 'Data siswa tidak ditemukan.');
         }
+
+        // Log aktivitas
+        $this->activityLogModel->save([
+            'type' => 'siswa',
+            'description' => 'Melihat detail siswa: ' . esc($siswa['nama']),
+            'created_at' => date('Y-m-d H:i:s'),
+            'created_by' => session()->get('user_id') ?? 0
+        ]);
 
         return view('pages/admin/detail_siswa', [
             'title' => 'Detail Siswa',
@@ -138,11 +226,14 @@ class SiswaController extends BaseController
 
         $validationRules = [
             'nis' => 'required|numeric',
+            'nism' => 'permit_empty',
             'nama' => 'required',
             'jk' => 'required|in_list[L,P]',
             'kelas' => 'required',
             'jurusan' => 'required|in_list[SAINTEK,SOSHUM,BAHASA]',
-            'poin' => 'permit_empty|numeric'
+            'tahun_ajaran' => 'permit_empty',
+            'poin' => 'permit_empty|numeric',
+            'no_absen' => 'permit_empty|numeric'
         ];
 
         if (!$this->validate($validationRules)) {
@@ -156,7 +247,7 @@ class SiswaController extends BaseController
             'type' => 'siswa',
             'description' => 'Data siswa diperbarui: ' . esc($data['nama']),
             'created_at' => date('Y-m-d H:i:s'),
-            'created_by' => session()->get('user_id')
+            'created_by' => session()->get('user_id') ?? 0
         ]);
 
         return redirect()->to('/admin/siswa')->with('success', 'Data siswa berhasil diperbarui!');
@@ -183,7 +274,7 @@ class SiswaController extends BaseController
                             'type' => 'siswa',
                             'description' => 'Kelas siswa diperbarui: ' . esc($siswa['nama']) . ' ke kelas 11',
                             'created_at' => date('Y-m-d H:i:s'),
-                            'created_by' => session()->get('user_id')
+                            'created_by' => session()->get('user_id') ?? 0
                         ]);
                     } elseif ($tingkatKelas === 11) {
                         $this->siswaModel->update($siswa['id'], ['kelas' => '12' . $nomorKelas]);
@@ -191,7 +282,7 @@ class SiswaController extends BaseController
                             'type' => 'siswa',
                             'description' => 'Kelas siswa diperbarui: ' . esc($siswa['nama']) . ' ke kelas 12',
                             'created_at' => date('Y-m-d H:i:s'),
-                            'created_by' => session()->get('user_id')
+                            'created_by' => session()->get('user_id') ?? 0
                         ]);
                     } elseif ($tingkatKelas === 12) {
                         $this->siswaModel->update($siswa['id'], ['kelas' => null]);
@@ -199,7 +290,7 @@ class SiswaController extends BaseController
                             'type' => 'siswa',
                             'description' => 'Kelas siswa dihapus (lulus): ' . esc($siswa['nama']),
                             'created_at' => date('Y-m-d H:i:s'),
-                            'created_by' => session()->get('user_id')
+                            'created_by' => session()->get('user_id') ?? 0
                         ]);
                     }
                 }
@@ -226,7 +317,7 @@ class SiswaController extends BaseController
             'type' => 'siswa',
             'description' => 'Siswa dihapus: ' . esc($siswa['nama']),
             'created_at' => date('Y-m-d H:i:s'),
-            'created_by' => session()->get('user_id')
+            'created_by' => session()->get('user_id') ?? 0
         ]);
 
         return redirect()->to('/admin/siswa')->with('success', 'Data siswa berhasil dihapus.');
@@ -243,7 +334,7 @@ class SiswaController extends BaseController
                     'type' => 'siswa',
                     'description' => 'Siswa kelas 12 dihapus: ' . esc($siswa['nama']),
                     'created_at' => date('Y-m-d H:i:s'),
-                    'created_by' => session()->get('user_id')
+                    'created_by' => session()->get('user_id') ?? 0
                 ]);
             }
 
@@ -259,11 +350,14 @@ class SiswaController extends BaseController
 
         $validationRules = [
             'nis' => 'required|numeric|is_unique[siswa.nis]',
+            'nism' => 'permit_empty',
             'nama' => 'required',
             'jk' => 'required|in_list[L,P]',
             'kelas' => 'required',
             'jurusan' => 'required|in_list[SAINTEK,SOSHUM,BAHASA]',
-            'poin' => 'permit_empty|numeric'
+            'tahun_ajaran' => 'permit_empty',
+            'poin' => 'permit_empty|numeric',
+            'no_absen' => 'permit_empty|numeric'
         ];
 
         if (!$this->validate($validationRules)) {
@@ -277,7 +371,7 @@ class SiswaController extends BaseController
             'type' => 'siswa',
             'description' => 'Siswa baru ditambahkan: ' . esc($data['nama']),
             'created_at' => date('Y-m-d H:i:s'),
-            'created_by' => session()->get('user_id')
+            'created_by' => session()->get('user_id') ?? 0
         ]);
 
         return redirect()->to('/admin/siswa')->with('success', 'Data siswa berhasil ditambahkan!');
@@ -309,7 +403,7 @@ class SiswaController extends BaseController
                     'type' => 'siswa',
                     'description' => 'Siswa baru diimpor: ' . esc($data['nama']),
                     'created_at' => date('Y-m-d H:i:s'),
-                    'created_by' => session()->get('user_id')
+                    'created_by' => session()->get('user_id') ?? 0
                 ]);
             }
             return redirect()->to('/admin/siswa')->with('success', 'Data siswa dari CSV berhasil diimpor.');

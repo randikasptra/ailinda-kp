@@ -6,6 +6,7 @@ use App\Models\HistoryKonfirmasiModel;
 use App\Models\HistoryKonfirmasiPelanggaranModel;
 use App\Models\SiswaModel;
 use App\Models\PelanggaranModel;
+use App\Models\SuratIzinMasukModel; // Tambahkan model untuk surat masuk
 
 class HistoryKonfirmasi extends BaseController
 {
@@ -13,6 +14,7 @@ class HistoryKonfirmasi extends BaseController
     protected $relasiModel;
     protected $siswaModel;
     protected $pelanggaranModel;
+    protected $suratMasukModel; // Model untuk surat masuk
 
     public function __construct()
     {
@@ -20,13 +22,17 @@ class HistoryKonfirmasi extends BaseController
         $this->relasiModel = new HistoryKonfirmasiPelanggaranModel();
         $this->siswaModel = new SiswaModel();
         $this->pelanggaranModel = new PelanggaranModel();
+        $this->suratMasukModel = new SuratIzinMasukModel(); // Inisialisasi model surat masuk
     }
 
-    // 🔹 List History dengan JOIN pelanggaran
+    // 🔹 List History dengan JOIN pelanggaran dan data surat masuk
     public function history()
     {
+        $keyword = $this->request->getGet('keyword') ?? '';
+
         $db = \Config\Database::connect();
 
+        // Query untuk history konfirmasi (surat keluar)
         $builder = $db->table('history_konfirmasi hk')
             ->select('
                 hk.id,
@@ -43,16 +49,38 @@ class HistoryKonfirmasi extends BaseController
                 COALESCE(SUM(p.poin), 0) as total_poin
             ')
             ->join('siswa s', 'hk.nama = s.nama AND hk.kelas = s.kelas', 'left')
-            
             ->join('history_konfirmasi_pelanggaran hkp', 'hk.id = hkp.history_konfirmasi_id', 'left')
             ->join('pelanggaran p', 'hkp.pelanggaran_id = p.id', 'left')
-            ->groupBy('hk.id')
-            ->orderBy('hk.updated_at', 'DESC');
+            ->groupBy('hk.id');
+
+        // Filter pencarian untuk history konfirmasi
+        if ($keyword) {
+            $builder->groupStart()
+                ->like('hk.nama', $keyword)
+                ->orLike('s.nis', $keyword)
+                ->orLike('hk.kelas', $keyword)
+                ->groupEnd();
+        }
+
+        $builder->orderBy('hk.updated_at', 'DESC');
 
         $data = [
             'title' => 'Riwayat Konfirmasi Kembali',
             'historyList' => $builder->get()->getResultArray(),
         ];
+
+        // Query untuk surat masuk
+        $suratMasukBuilder = $this->suratMasukModel;
+
+        if ($keyword) {
+            $suratMasukBuilder->groupStart()
+                ->like('nama', $keyword)
+                ->orLike('nisn', $keyword)
+                ->orLike('kelas', $keyword)
+                ->groupEnd();
+        }
+
+        $data['suratMasukList'] = $suratMasukBuilder->orderBy('created_at', 'DESC')->findAll();
 
         return view('pages/piket/history_konfirmasi', $data);
     }
@@ -92,6 +120,21 @@ class HistoryKonfirmasi extends BaseController
             return redirect()->back()->with('success', 'Semua data konfirmasi hari ini telah dihapus.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal menghapus data konfirmasi: ' . $e->getMessage());
+        }
+    }
+
+    // 🔹 Hapus satu surat masuk
+    public function deleteSuratMasuk($id)
+    {
+        if (!$this->suratMasukModel->find($id)) {
+            return redirect()->back()->with('error', 'Data surat masuk tidak ditemukan.');
+        }
+
+        try {
+            $this->suratMasukModel->delete($id);
+            return redirect()->back()->with('success', 'Data surat masuk berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menghapus data surat masuk: ' . $e->getMessage());
         }
     }
 

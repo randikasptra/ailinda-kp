@@ -25,7 +25,6 @@
 </header>
 
 <!-- Sidebar -->
-<!-- Sidebar -->
 <aside class="w-64 h-screen fixed top-0 left-0 bg-gradient-to-b from-[#1E5631] to-[#0C3A1D] text-white flex flex-col shadow-2xl z-50">
     <!-- Brand Header -->
     <div class="p-6 pb-4 border-b border-green-700/40 flex flex-col items-center">
@@ -54,7 +53,6 @@
         </div>
     </div>
 
-
     <!-- Navigation -->
     <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
         <?php if (session()->get('role') == 'piket'): ?>
@@ -65,20 +63,30 @@
                 <span class="font-medium">Dashboard Piket</span>
                 <i class="fas fa-chevron-right ml-auto text-xs text-gray-400 group-hover:text-[#A4DE02] transition-transform duration-300 group-hover:translate-x-1"></i>
             </a>
-            <a href="/piket/izin_masuk_form" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-[#145128]/90 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/piket/izin_masuk_form') ? 'bg-[#145128] shadow-lg' : '' ?>" aria-current="<?= current_url(true) == base_url('/piket/izin_masuk_form') ? 'page' : 'false' ?>">
-                <div class="p-2 rounded-xl bg-[#A4DE02]/10 group-hover:bg-[#A4DE02]/20 shadow-sm">
-                    <i class="fas fa-envelope-open-text w-5 h-5 text-[#A4DE02]"></i>
+            
+            <!-- Dropdown untuk Input Surat -->
+            <div class="dropdown <?= (current_url(true) == base_url('/piket/izin_masuk_form') || current_url(true) == base_url('/piket/surat_izin')) ? 'open' : '' ?>">
+                <div class="dropdown-toggle flex items-center gap-4 p-4 rounded-2xl hover:bg-[#145128]/90 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= (current_url(true) == base_url('/piket/izin_masuk_form') || current_url(true) == base_url('/piket/surat_izin')) ? 'bg-[#145128] shadow-lg' : '' ?>">
+                    <div class="flex items-center gap-4 flex-1">
+                        <div class="p-2 rounded-xl bg-[#A4DE02]/10 group-hover:bg-[#A4DE02]/20 shadow-sm">
+                            <i class="fas fa-file-alt w-5 h-5 text-[#A4DE02]"></i>
+                        </div>
+                        <span class="font-medium">Input Surat</span>
+                    </div>
+                    <i class="fas fa-chevron-right dropdown-icon text-xs text-gray-400 group-hover:text-[#A4DE02]"></i>
                 </div>
-                <span class="font-medium">Input Surat Izin Masuk</span>
-                <i class="fas fa-chevron-right ml-auto text-xs text-gray-400 group-hover:text-[#A4DE02] transition-transform duration-300 group-hover:translate-x-1"></i>
-            </a>
-            <a href="/piket/surat_izin" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-[#145128]/90 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/piket/surat_izin') ? 'bg-[#145128] shadow-lg' : '' ?>" aria-current="<?= current_url(true) == base_url('/piket/surat_izin') ? 'page' : 'false' ?>">
-                <div class="p-2 rounded-xl bg-[#A4DE02]/10 group-hover:bg-[#A4DE02]/20 shadow-sm">
-                    <i class="fas fa-file-signature w-5 h-5 text-[#A4DE02]"></i>
+                <div class="dropdown-menu <?= (current_url(true) == base_url('/piket/izin_masuk_form') || current_url(true) == base_url('/piket/surat_izin')) ? 'open' : '' ?>">
+                    <a href="/piket/izin_masuk_form" class="dropdown-item <?= current_url(true) == base_url('/piket/izin_masuk_form') ? 'active' : '' ?>">
+                        <i class="fas fa-envelope-open-text dropdown-item-icon"></i>
+                        <span>Surat Izin Masuk</span>
+                    </a>
+                    <a href="/piket/surat_izin" class="dropdown-item <?= current_url(true) == base_url('/piket/surat_izin') ? 'active' : '' ?>">
+                        <i class="fas fa-file-signature dropdown-item-icon"></i>
+                        <span>Surat Izin Keluar</span>
+                    </a>
                 </div>
-                <span class="font-medium">Input Surat Izin Keluar</span>
-                <i class="fas fa-chevron-right ml-auto text-xs text-gray-400 group-hover:text-[#A4DE02] transition-transform duration-300 group-hover:translate-x-1"></i>
-            </a>
+            </div>
+            
             <a href="/piket/konfirmasi_kembali" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-[#145128]/90 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/piket/konfirmasi_kembali') ? 'bg-[#145128] shadow-lg' : '' ?>" aria-current="<?= current_url(true) == base_url('/piket/konfirmasi_kembali') ? 'page' : 'false' ?>">
                 <div class="p-2 rounded-xl bg-[#A4DE02]/10 group-hover:bg-[#A4DE02]/20 shadow-sm">
                     <i class="fas fa-check-circle w-5 h-5 text-[#A4DE02]"></i>
@@ -129,6 +137,7 @@
         </a>
     </div>
 </aside>
+
 <!-- Main Content Area -->
 <main class="pt-20 min-h-screen bg-gradient-to-br from-gray-50/50 to-gray-100/50 pl-64">
     <!-- Your page content goes here -->
@@ -152,6 +161,36 @@
         if (!dropdown.contains(event.target) && !button.contains(event.target)) {
             dropdown.classList.add('hidden');
             button.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    // Dropdown functionality for sidebar
+    document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            const dropdown = this.closest('.dropdown');
+            const menu = dropdown.querySelector('.dropdown-menu');
+            
+            // Close all other dropdowns
+            document.querySelectorAll('.dropdown').forEach(d => {
+                if (d !== dropdown) {
+                    d.classList.remove('open');
+                    d.querySelector('.dropdown-menu').classList.remove('open');
+                }
+            });
+            
+            // Toggle current dropdown
+            dropdown.classList.toggle('open');
+            menu.classList.toggle('open');
+        });
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.dropdown')) {
+            document.querySelectorAll('.dropdown').forEach(dropdown => {
+                dropdown.classList.remove('open');
+                dropdown.querySelector('.dropdown-menu').classList.remove('open');
+            });
         }
     });
 </script>
@@ -205,5 +244,67 @@
         main {
             padding-left: 60px;
         }
+    }
+
+    /* Dropdown styles */
+    .dropdown {
+        position: relative;
+    }
+    
+    .dropdown-toggle {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+    }
+    
+    .dropdown-menu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        background-color: rgba(20, 81, 40, 0.5);
+        border-radius: 0 0 12px 12px;
+        margin-top: -8px;
+        padding: 0 16px;
+    }
+    
+    .dropdown-menu.open {
+        max-height: 200px;
+        padding: 8px 16px 16px;
+    }
+    
+    .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        color: #e2e8f0;
+        text-decoration: none;
+        margin-bottom: 4px;
+        font-size: 14px;
+    }
+    
+    .dropdown-item:hover {
+        background-color: rgba(164, 222, 2, 0.1);
+    }
+    
+    .dropdown-item.active {
+        background-color: rgba(164, 222, 2, 0.2);
+        color: #A4DE02;
+    }
+    
+    .dropdown-icon {
+        transition: transform 0.3s ease;
+    }
+    
+    .dropdown.open .dropdown-icon {
+        transform: rotate(90deg);
+    }
+    
+    .dropdown-item-icon {
+        width: 16px;
+        text-align: center;
     }
 </style>
