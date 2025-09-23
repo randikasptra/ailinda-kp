@@ -1,6 +1,13 @@
 <?php
 $this->extend('layout/dashboard');
 $this->section('content');
+
+// Get current page from URL, default to 1
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+$limit = 10; // Records per page
+$offset = ($page - 1) * $limit;
+$total_records = count($siswa);
+$total_pages = ceil($total_records / $limit);
 ?>
 
 <div class="mt-24 p-6 lg:p-8">
@@ -192,7 +199,7 @@ $this->section('content');
 
         <div class="mt-4 flex justify-between items-center">
             <span class="text-sm text-gray-600">
-                Menampilkan <?= count($siswa) ?> hasil
+                Menampilkan <?= min($limit, count($siswa)) ?> dari <?= $total_records ?> hasil
                 <?php if (!empty($filters['keyword']) || !empty($filters['kelas']) || !empty($filters['jurusan']) || !empty($filters['jk']) || !empty($filters['tahun']) || !empty($filters['poin'])): ?>
                     dengan filter yang dipilih
                 <?php endif; ?>
@@ -208,7 +215,7 @@ $this->section('content');
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <h3 class="text-lg font-semibold text-gray-800">Daftar Siswa</h3>
-                    <p class="text-sm text-gray-600">Total <?= count($siswa) ?> siswa ditemukan</p>
+                    <p class="text-sm text-gray-600">Total <?= $total_records ?> siswa ditemukan</p>
                 </div>
             </div>
         </div>
@@ -301,10 +308,10 @@ $this->section('content');
                             </tr>
                         <?php endif; ?>
                     <?php else: ?>
-                        <?php foreach ($siswa as $index => $s): ?>
+                        <?php foreach (array_slice($siswa, $offset, $limit) as $index => $s): ?>
                             <tr class="hover:bg-gray-50/50 transition-colors duration-200">
                                 <td class="px-4 py-4 whitespace-nowrap">
-                                    <div class="font-medium text-gray-900"><?= $index + 1 ?></div>
+                                    <div class="font-medium text-gray-900"><?= $offset + $index + 1 ?></div>
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap">
                                     <div class="font-medium text-gray-900"><?= esc($s['nis']) ?></div>
@@ -354,6 +361,70 @@ $this->section('content');
                 </tbody>
             </table>
         </div>
+
+        <!-- Pagination Controls -->
+        <?php if ($total_pages > 1): ?>
+            <div class="px-6 py-4 border-t border-gray-200">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div class="text-sm text-gray-600">
+                        Halaman <?= $page ?> dari <?= $total_pages ?>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <?php
+                        // Build query string for filters
+                        $query_string = http_build_query(array_filter([
+                            'keyword' => $filters['keyword'] ?? null,
+                            'kelas' => $filters['kelas'] ?? null,
+                            'jurusan' => $filters['jurusan'] ?? null,
+                            'jk' => $filters['jk'] ?? null,
+                            'tahun' => $filters['tahun'] ?? null,
+                            'poin' => $filters['poin'] ?? null,
+                        ]));
+                        ?>
+
+                        <!-- Previous Button -->
+                        <a href="/piket/data_siswa?page=<?= max(1, $page - 1) ?>&<?= $query_string ?>"
+                           class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 <?= $page <= 1 ? 'opacity-50 cursor-not-allowed' : '' ?>"
+                           <?= $page <= 1 ? 'onclick="return false;"' : '' ?>>
+                            <i class="fas fa-chevron-left mr-2"></i> Sebelumnya
+                        </a>
+
+                        <!-- Page Numbers -->
+                        <div class="flex gap-1">
+                            <?php
+                            $start_page = max(1, $page - 2);
+                            $end_page = min($total_pages, $page + 2);
+                            if ($start_page > 1) {
+                                echo '<a href="/piket/data_siswa?page=1&' . $query_string . '" class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200">1</a>';
+                                if ($start_page > 2) {
+                                    echo '<span class="px-3 py-1.5 text-gray-500">...</span>';
+                                }
+                            }
+                            for ($i = $start_page; $i <= $end_page; $i++): ?>
+                                <a href="/piket/data_siswa?page=<?= $i ?>&<?= $query_string ?>"
+                                   class="px-3 py-1.5 rounded-xl transition-all duration-200 <?= $i == $page ? 'bg-[#1E5631] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' ?>">
+                                    <?= $i ?>
+                                </a>
+                            <?php endfor;
+                            if ($end_page < $total_pages) {
+                                if ($end_page < $total_pages - 1) {
+                                    echo '<span class="px-3 py-1.5 text-gray-500">...</span>';
+                                }
+                                echo '<a href="/piket/data_siswa?page=' . $total_pages . '&' . $query_string . '" class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200">' . $total_pages . '</a>';
+                            }
+                            ?>
+                        </div>
+
+                        <!-- Next Button -->
+                        <a href="/piket/data_siswa?page=<?= min($total_pages, $page + 1) ?>&<?= $query_string ?>"
+                           class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200 <?= $page >= $total_pages ? 'opacity-50 cursor-not-allowed' : '' ?>"
+                           <?= $page >= $total_pages ? 'onclick="return false;"' : '' ?>>
+                            Selanjutnya <i class="fas fa-chevron-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 

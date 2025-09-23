@@ -1,7 +1,7 @@
 <?= $this->extend('layout/dashboard_admin') ?>
 <?= $this->section('content') ?>
 
-<div class="p-6">
+<div class="p-6 mt-24">
     <div class="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
         <div class="flex items-center mb-6">
             <div class="p-3 rounded-xl bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] shadow-lg mr-4">

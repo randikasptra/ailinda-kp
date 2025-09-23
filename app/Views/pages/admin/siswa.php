@@ -1,7 +1,7 @@
 <?= $this->extend('layout/dashboard_admin') ?>
 <?= $this->section('content') ?>
 
-<div class="p-8">
+<div class="p-8 mt-14">
     <!-- Header Section -->
     <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden mb-6">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-6 border-b border-gray-100 gap-4">
@@ -76,7 +76,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-[#1E5631]">Total Siswa</p>
-                    <p class="text-2xl font-bold text-[#14532d]"><?= count($siswa) ?></p>
+                    <p class="text-2xl font-bold text-[#14532d]"><?= $totalRecords ?></p>
                 </div>
                 <div class="p-3 rounded-xl bg-white shadow-sm">
                     <i class="fas fa-users text-[#A4DE02] text-xl"></i>
