@@ -17,6 +17,11 @@
             lucide.createIcons();
         });
     </script>
+
+        <!-- SweetAlert2 CSS & JS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- Alpine.js CDN (wajib ditaruh di <head> atau sebelum penutup </body>) -->
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
@@ -43,6 +48,37 @@
     </main>
 
 
+
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Cek apakah ada flashdata dari CI
+        <?php if(session()->getFlashdata('success')): ?>
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: '<?= session()->getFlashdata('success') ?>',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        <?php endif; ?>
+
+        <?php if(session()->getFlashdata('error')): ?>
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: '<?= session()->getFlashdata('error') ?>',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        <?php endif; ?>
+    });
+</script>
 
 
 

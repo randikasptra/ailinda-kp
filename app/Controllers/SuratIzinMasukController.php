@@ -117,6 +117,6 @@ class SuratIzinMasukController extends Controller
             session()->setFlashdata('error', 'Gagal menghapus surat izin masuk.');
         }
 
-        return redirect()->to(base_url('piket/surat_izin_masuk'));
+        return redirect()->to(base_url('piket/history_konfirmasi'));
     }
 }

@@ -70,20 +70,6 @@
         </div>
     </div>
 
-
-    <!-- Alert Notification -->
-    <?php if (session()->getFlashdata('success')): ?>
-        <div class="flex items-center bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-xl shadow-sm">
-            <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
-            <div>
-                <p class="font-medium"><?= session()->getFlashdata('success') ?></p>
-            </div>
-            <button class="ml-auto text-green-700 hover:text-green-900" onclick="this.parentElement.style.display='none'">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    <?php endif; ?>
-
     <!-- Stats Overview -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div class="bg-gradient-to-br from-[#f0fdf4] to-[#d9f99d] rounded-2xl shadow-lg p-5 border-l-4 border-[#A4DE02]">
@@ -148,7 +134,7 @@
             <form method="get" class="flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <h3 class="text-lg font-semibold text-gray-800">Daftar Siswa</h3>
-                    <p class="text-sm text-gray-600">Total <?= count($siswa) ?> siswa terdaftar</p>
+                    <p class="text-sm text-gray-600">Total <?= $totalRecords ?> siswa terdaftar</p>
                 </div>
                 <div class="flex items-center gap-3">
                     <!-- Filter Kelas -->
@@ -203,7 +189,7 @@
         </div>
 
         <!-- Table -->
-        <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
+        <div class="overflow-x-auto">
             <?php if (!empty($siswa)): ?>
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white sticky top-0 z-10">
@@ -221,7 +207,7 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <?php $no = 1; foreach ($siswa as $s): ?>
+                        <?php $no = ($currentPage - 1) * $perPage + 1; foreach ($siswa as $s): ?>
                             <tr class="hover:bg-gray-50/50 transition-colors duration-200 group">
                                 <td class="px-6 py-4 text-center font-medium text-gray-500"><?= $no++ ?></td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -279,6 +265,38 @@
                         <?php endforeach ?>
                     </tbody>
                 </table>
+
+               <!-- Pagination -->
+<div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
+    <div>
+        <p class="text-sm text-gray-600">
+            Menampilkan <?= ($currentPage - 1) * $perPage + 1 ?> - <?= min($currentPage * $perPage, $totalRecords) ?> dari <?= $totalRecords ?> siswa
+        </p>
+    </div>
+    <div class="flex gap-2">
+        <?php if ($currentPage > 1): ?>
+            <a href="<?= base_url('admin/siswa?page=' . ($currentPage - 1)) . http_build_query($filters) ?>" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">Sebelumnya</a>
+        <?php endif; ?>
+
+        <?php
+        $maxVisiblePages = 10; // Jumlah maksimum tombol halaman yang ditampilkan
+        $startPage = max(1, $currentPage - floor($maxVisiblePages / 2));
+        $endPage = min($totalPages, $startPage + $maxVisiblePages - 1);
+
+        // Jika akhir rentang kurang dari total halaman, sesuaikan startPage
+        if ($endPage - $startPage + 1 < $maxVisiblePages && $startPage > 1) {
+            $startPage = max(1, $endPage - $maxVisiblePages + 1);
+        }
+
+        for ($i = $startPage; $i <= $endPage; $i++): ?>
+            <a href="<?= base_url('admin/siswa?page=' . $i) . http_build_query($filters) ?>" class="px-4 py-2 <?= $i == $currentPage ? 'bg-[#1E5631] text-white' : 'bg-gray-200 text-gray-700' ?> rounded-lg hover:bg-[#174726] hover:text-white transition"><?= $i ?></a>
+        <?php endfor; ?>
+
+        <?php if ($currentPage < $totalPages): ?>
+            <a href="<?= base_url('admin/siswa?page=' . ($currentPage + 1)) . http_build_query($filters) ?>" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">Selanjutnya</a>
+        <?php endif; ?>
+    </div>
+</div>
             <?php else: ?>
                 <!-- Empty State -->
                 <div class="text-center py-16 bg-white rounded-2xl shadow-lg mt-6">
@@ -299,13 +317,86 @@
     <button id="backToTop" class="fixed bottom-8 right-8 bg-[#1E5631] text-white p-3 rounded-full shadow-lg hover:bg-[#174726] transition-all duration-300 hidden">
         <i class="fas fa-arrow-up"></i>
     </button>
+
+    <!-- Tambah Modal -->
+    <div id="tambahModal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center px-4 modal animate-scaleIn">
+        <div @click.away="closeModal('tambahModal')" class="bg-white rounded-xl shadow-xl p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-[#1E5631]">Tambah Siswa Baru</h2>
+                <button @click="closeModal('tambahModal')" class="text-gray-400 hover:text-red-500 text-xl">&times;</button>
+            </div>
+            <form action="<?= base_url('admin/siswa/tambah') ?>" method="post" class="space-y-4">
+                <?= csrf_field() ?>
+                <div>
+                    <label for="nis" class="block text-sm font-medium text-gray-700">NIS</label>
+                    <input type="text" name="nis" id="nis" required
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
+                </div>
+                <div>
+                    <label for="nama" class="block text-sm font-medium text-gray-700">Nama</label>
+                    <input type="text" name="nama" id="nama" required
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
+                </div>
+                <div>
+                    <label for="jk" class="block text-sm font-medium text-gray-700">Jenis Kelamin</label>
+                    <select name="jk" id="jk" required
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
+                        <option value="">Pilih Jenis Kelamin</option>
+                        <option value="L">Laki-laki</option>
+                        <option value="P">Perempuan</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="kelas" class="block text-sm font-medium text-gray-700">Kelas</label>
+                    <select name="kelas" id="kelas" required
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
+                        <option value="">Pilih Kelas</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="no_absen" class="block text-sm font-medium text-gray-700">No Absen</label>
+                    <input type="number" name="no_absen" id="no_absen" required
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
+                </div>
+                <div>
+                    <label for="jurusan" class="block text-sm font-medium text-gray-700">Jurusan</label>
+                    <select name="jurusan" id="jurusan" required
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
+                        <option value="">Pilih Jurusan</option>
+                        <option value="SAINTEK">SAINTEK</option>
+                        <option value="SOSHUM">SOSHUM</option>
+                        <option value="BAHASA">BAHASA</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="tahun_ajaran" class="block text-sm font-medium text-gray-700">Tahun Ajaran</label>
+                    <input type="text" name="tahun_ajaran" id="tahun_ajaran" required
+                        placeholder="Contoh: 2025/2026"
+                        value="<?= date('Y') . '/' . (date('Y') + 1) ?>" 
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]"
+                        pattern="\d{4}/\d{4}" title="Masukkan tahun ajaran dalam format YYYY/YYYY (contoh: 2025/2026)">
+                </div>
+                <div>
+                    <label for="poin" class="block text-sm font-medium text-gray-700">Poin</label>
+                    <input type="number" name="poin" id="poin" value="0" required
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
+                </div>
+                <div class="flex justify-end gap-3">
+                    <button type="button" @click="closeModal('tambahModal')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-[#1E5631] text-white rounded-lg hover:bg-[#174726] transition">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <!-- Include Font Awesome -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
 <script>
-    // Back to Top Button Logic
     const backToTopButton = document.getElementById('backToTop');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 300) {
@@ -329,7 +420,6 @@
         document.body.style.overflow = 'auto';
     }
 
-    // Close modal when clicking outside
     document.querySelectorAll('.modal').forEach(modal => {
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
@@ -338,7 +428,6 @@
         });
     });
 
-    // Initialize icons
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();

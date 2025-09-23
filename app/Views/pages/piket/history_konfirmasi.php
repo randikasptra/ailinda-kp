@@ -141,7 +141,7 @@
     <div class="mb-6">
         <div class="flex space-x-1 bg-white rounded-2xl p-1 shadow-sm border border-gray-100 w-max">
             <button id="tab-konfirmasi" class="tab-button px-6 py-3 rounded-xl font-medium transition-all duration-300 bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-md">
-                <i class="fas fa-sign-out-alt mr-2"></i>Riwayat Konfirmasi
+                <i class="fas fa-sign-out-alt mr-2"></i>Surat Izin Keluar
             </button>
             <button id="tab-surat" class="tab-button px-6 py-3 rounded-xl font-medium text-gray-600 hover:text-gray-900 transition-all duration-300">
                 <i class="fas fa-sign-in-alt mr-2"></i>Surat Izin Masuk

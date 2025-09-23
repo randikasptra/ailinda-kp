@@ -97,86 +97,112 @@ class SiswaController extends BaseController
         ]);
     }
 
-    public function siswa()
-    {
-        $filters = [
-            'search'   => $this->request->getGet('search') ?? '',
-            'kelas'    => $this->request->getGet('kelas') ?? '',
-            'jurusan'  => $this->request->getGet('jurusan') ?? '',
-            'tahun'    => $this->request->getGet('tahun') ?? '',
-            'jk'       => $this->request->getGet('jk') ?? '',
-            'poin'     => $this->request->getGet('poin') ?? '',
-            'no_absen' => $this->request->getGet('no_absen') ?? ''
-        ];
+public function siswa()
+{
+    $filters = [
+        'search'   => $this->request->getGet('search') ?? '',
+        'kelas'    => $this->request->getGet('kelas') ?? '',
+        'jurusan'  => $this->request->getGet('jurusan') ?? '',
+        'tahun'    => $this->request->getGet('tahun') ?? '',
+        'jk'       => $this->request->getGet('jk') ?? '',
+        'poin'     => $this->request->getGet('poin') ?? '',
+        'no_absen' => $this->request->getGet('no_absen') ?? ''
+    ];
 
-        $builder = $this->siswaModel;
+    $perPage = 20; // Jumlah siswa per halaman
+    $page = max(1, (int) $this->request->getGet('page') ?? 1); // Pastikan page minimal 1
 
-        // Filter pencarian
-        if ($filters['search']) {
-            $builder->groupStart()
-                ->like('nama', $filters['search'])
-                ->orLike('nis', $filters['search'])
-                ->orLike('nism', $filters['search'])
-                ->groupEnd();
-        }
+    // Query untuk menghitung total records dengan filter
+    $totalQuery = clone $this->siswaModel;
+    $this->applyFilters($totalQuery, $filters);
+    $totalRecords = $totalQuery->countAllResults();
 
-        // Filter kelas
-        if ($filters['kelas']) {
-            $builder->like('kelas', $filters['kelas']);
-        }
+    // Query untuk data siswa dengan limit dan offset
+    $builder = $this->siswaModel;
+    $this->applyFilters($builder, $filters);
+    $offset = max(0, ($page - 1) * $perPage); // Pastikan offset tidak negatif
+    $siswa = $builder->findAll($perPage, $offset);
 
-        // Filter jurusan
-        if ($filters['jurusan']) {
-            $builder->where('jurusan', $filters['jurusan']);
-        }
+    // Hitung total halaman
+    $totalPages = ceil($totalRecords / $perPage);
 
-        // Filter tahun ajaran
-        if ($filters['tahun']) {
-            $builder->where('tahun_ajaran', $filters['tahun']);
-        }
-
-        // Filter jenis kelamin
-        if ($filters['jk']) {
-            $builder->where('jk', $filters['jk']);
-        }
-
-        // Filter poin
-        if ($filters['poin']) {
-            if ($filters['poin'] === '0-50') {
-                $builder->where('poin >=', 0)->where('poin <=', 50);
-            } elseif ($filters['poin'] === '51-100') {
-                $builder->where('poin >=', 51)->where('poin <=', 100);
-            } elseif ($filters['poin'] === '>100') {
-                $builder->where('poin >', 100);
-            }
-        }
-
-        // Filter nomor absen
-        if ($filters['no_absen']) {
-            $builder->where('no_absen', $filters['no_absen']);
-        }
-
-        // Ambil data siswa
-        $siswa = $builder->findAll(100); // Batasi ke 100 hasil untuk performa
-
-        // Log aktivitas pencarian/filter
-        if (array_filter($filters)) {
-            $filterDesc = array_filter($filters, fn($value) => !empty($value));
-            $desc = 'Pencarian siswa dengan filter: ' . json_encode($filterDesc);
-            $this->activityLogModel->save([
-                'type' => 'siswa',
-                'description' => $desc,
-                'created_at' => date('Y-m-d H:i:s'),
-                'created_by' => session()->get('user_id') ?? 0
-            ]);
-        }
-
-        return view('pages/admin/siswa', [
-            'title'   => 'Data Siswa',
-            'siswa'   => $siswa,
-            'filters' => $filters
+    // Log aktivitas pencarian/filter
+    if (array_filter($filters)) {
+        $filterDesc = array_filter($filters, fn($value) => !empty($value));
+        $desc = 'Pencarian siswa dengan filter: ' . json_encode($filterDesc) . ' (Halaman: ' . $page . ')';
+        $this->activityLogModel->save([
+            'type' => 'siswa',
+            'description' => $desc,
+            'created_at' => date('Y-m-d H:i:s'),
+            'created_by' => session()->get('user_id') ?? 0
         ]);
     }
+
+    return view('pages/admin/siswa', [
+        'title' => 'Data Siswa',
+        'siswa' => $siswa,
+        'filters' => $filters,
+        'currentPage' => $page,
+        'perPage' => $perPage,
+        'totalRecords' => $totalRecords,
+        'totalPages' => $totalPages
+    ]);
+}
+
+// Helper method untuk menerapkan filter
+private function applyFilters($builder, $filters)
+{
+    // Filter pencarian
+    if ($filters['search']) {
+        $builder->groupStart()
+            ->like('nama', $filters['search'])
+            ->orLike('nis', $filters['search'])
+            ->orLike('nism', $filters['search'])
+            ->groupEnd();
+    }
+
+    // Filter kelas
+    if ($filters['kelas']) {
+        $builder->like('kelas', $filters['kelas']);
+    }
+
+    // Filter jurusan
+    if ($filters['jurusan']) {
+        $builder->where('jurusan', $filters['jurusan']);
+    }
+
+    // Filter tahun ajaran
+    if ($filters['tahun']) {
+        $builder->where('tahun_ajaran', $filters['tahun']);
+    }
+
+    // Filter jenis kelamin
+    if ($filters['jk']) {
+        $builder->where('jk', $filters['jk']);
+    }
+
+    // Filter poin
+    if ($filters['poin']) {
+        if ($filters['poin'] === '0-50') {
+            $builder->groupStart()
+                ->where('poin >=', 0)
+                ->where('poin <=', 50)
+                ->groupEnd();
+        } elseif ($filters['poin'] === '51-100') {
+            $builder->groupStart()
+                ->where('poin >=', 51)
+                ->where('poin <=', 100)
+                ->groupEnd();
+        } elseif ($filters['poin'] === '>100') {
+            $builder->where('poin >', 100);
+        }
+    }
+
+    // Filter nomor absen
+    if ($filters['no_absen']) {
+        $builder->where('no_absen', $filters['no_absen']);
+    }
+}
 
     public function detailSiswa($id)
     {
