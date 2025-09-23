@@ -14,6 +14,7 @@ class HistoryKonfirmasi extends BaseController
     protected $relasiModel;
     protected $siswaModel;
     protected $pelanggaranModel;
+    protected $suratIzinMasukModel;
     protected $suratMasukModel; // Model untuk surat masuk
 
     public function __construct()
@@ -23,6 +24,7 @@ class HistoryKonfirmasi extends BaseController
         $this->siswaModel = new SiswaModel();
         $this->pelanggaranModel = new PelanggaranModel();
         $this->suratMasukModel = new SuratIzinMasukModel(); // Inisialisasi model surat masuk
+         $this->suratIzinMasukModel = new \App\Models\SuratIzinMasukModel();
     }
 
     // 🔹 List History dengan JOIN pelanggaran dan data surat masuk
@@ -103,25 +105,36 @@ class HistoryKonfirmasi extends BaseController
     }
 
     // 🔹 Hapus history hari ini
-    public function hapusHariIni()
-    {
-        $today = date('Y-m-d');
-        $histories = $this->historyModel->where('DATE(created_at)', $today)->findAll();
+public function hapusHariIni()
+{
+    $today = date('Y-m-d');
 
-        if (empty($histories)) {
-            return redirect()->back()->with('error', 'Tidak ada data konfirmasi untuk hari ini.');
-        }
+    // ambil data konfirmasi hari ini
+    $histories = $this->historyModel->where('DATE(created_at)', $today)->findAll();
+    // ambil data surat izin masuk hari ini
+    $izinMasuk = $this->suratIzinMasukModel->where('DATE(created_at)', $today)->findAll();
 
-        try {
-            foreach ($histories as $h) {
-                $this->relasiModel->where('history_konfirmasi_id', $h['id'])->delete();
-                $this->historyModel->delete($h['id']);
-            }
-            return redirect()->back()->with('success', 'Semua data konfirmasi hari ini telah dihapus.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menghapus data konfirmasi: ' . $e->getMessage());
-        }
+    if (empty($histories) && empty($izinMasuk)) {
+        return redirect()->back()->with('error', 'Tidak ada data konfirmasi atau izin masuk untuk hari ini.');
     }
+
+    try {
+        // hapus relasi + history
+        foreach ($histories as $h) {
+            $this->relasiModel->where('history_konfirmasi_id', $h['id'])->delete();
+            $this->historyModel->delete($h['id']);
+        }
+
+        // hapus surat izin masuk
+        foreach ($izinMasuk as $izin) {
+            $this->suratIzinMasukModel->delete($izin['id']);
+        }
+
+        return redirect()->back()->with('success', 'Semua data konfirmasi & surat izin masuk hari ini berhasil dihapus.');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+    }
+}
 
     // 🔹 Hapus satu surat masuk
     public function deleteSuratMasuk($id)
