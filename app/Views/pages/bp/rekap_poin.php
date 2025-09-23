@@ -67,7 +67,7 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     <?php foreach ($siswaList as $siswa): ?>
                         <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4 text-sm text-gray-900"><?= esc($siswa['nisn']) ?></td>
+                            <td class="px-6 py-4 text-sm text-gray-900"><?= esc($siswa['nis']) ?></td>
                             <td class="px-6 py-4 font-medium text-gray-900"><?= esc($siswa['nama']) ?></td>
                             <td class="px-6 py-4"><?= esc($siswa['kelas']) ?></td>
                             <td class="px-6 py-4"><?= esc($siswa['jurusan']) ?></td>

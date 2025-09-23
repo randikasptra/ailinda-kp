@@ -104,7 +104,7 @@
         <div class="flex flex-col items-center mb-8 animate-float">
             <!-- Logo Container with enhanced animation -->
             <div class="logo-container mb-4 w-24 h-24 bg-white rounded-2xl flex items-center justify-center shadow-lg transition-all duration-500">
-                <img src="<?= base_url('assets/img/MAN1.png') ?>" alt="MAN 1 Logo" class="w-20 h-20 object-contain" id="school-logo">
+                <img src="<?= base_url('assets/img/logo-man1.png') ?>" alt="MAN 1 Logo" class="w-20 h-20 object-contain" id="school-logo">
             </div>
             <h1 class="text-3xl font-bold bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] bg-clip-text text-transparent tracking-tight">SISTEM SURAT IZIN</h1>
             <p class="text-sm text-gray-500 mt-2 font-medium">MAN 1 Kota Tasikmalaya</p>
