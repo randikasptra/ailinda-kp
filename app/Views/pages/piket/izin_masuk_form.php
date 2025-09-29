@@ -167,11 +167,6 @@
                             <input type="text" name="kelas" value="<?= esc($siswa['kelas'] ?? '') ?>" readonly
                                 class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-gray-50 focus:outline-none transition-all duration-200" />
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Jurusan</label>
-                            <input type="text" name="jurusan" value="<?= esc($siswa['jurusan'] ?? '') ?>" readonly
-                                class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-gray-50 focus:outline-none transition-all duration-200" />
-                        </div>
                     </div>
 
                     <div>
@@ -303,10 +298,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label>
                 <input type="text" name="kelas" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2196F3] focus:border-transparent focus:outline-none transition-all duration-200" required>
             </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Jurusan</label>
-                <input type="text" name="jurusan" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2196F3] focus:border-transparent focus:outline-none transition-all duration-200" required>
-            </div>
+
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Alasan Terlambat</label>
                 <textarea name="alasan_terlambat" rows="2" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2196F3] focus:border-transparent focus:outline-none transition-all duration-200" required></textarea>
@@ -381,7 +373,6 @@ printManual.addEventListener('click', () => {
                 <tr><td style="width:28%;">Nama</td><td>: ${formData.get('nama')}</td></tr>
                 <tr><td>NIS</td><td>: ${formData.get('nis')}</td></tr>
                 <tr><td>Kelas</td><td>: ${formData.get('kelas')}</td></tr>
-                <tr><td>Jurusan</td><td>: ${formData.get('jurusan')}</td></tr>
                 <tr><td>Alasan Terlambat</td><td>: ${formData.get('alasan_terlambat')}</td></tr>
                 <tr><td>Tindak Lanjut</td><td>: ${formData.get('tindak_lanjut')}</td></tr>
                 <tr><td>Tanggal</td><td>: <?= date('d M Y') ?></td></tr>
@@ -513,7 +504,6 @@ form.addEventListener('submit', function(e) {
         <p><b>Nama:</b> ${formData.get('nama')}</p>
         <p><b>NIS:</b> ${formData.get('nisn') || formData.get('nis')}</p>
         <p><b>Kelas:</b> ${formData.get('kelas')}</p>
-        <p><b>Jurusan:</b> ${formData.get('jurusan')}</p>
         <p><b>Alasan Terlambat:</b> ${formData.get('alasan_terlambat')}</p>
         <p><b>Tindak Lanjut:</b> ${formData.get('tindak_lanjut')}</p>
     `;
@@ -548,7 +538,6 @@ printBtn.addEventListener('click', () => {
                 <tr><td style="width:28%;">Nama</td><td>: ${formData.get('nama')}</td></tr>
                 <tr><td>NIS</td><td>: ${formData.get('nisn') || formData.get('nis')}</td></tr>
                 <tr><td>Kelas</td><td>: ${formData.get('kelas')}</td></tr>
-                <tr><td>Jurusan</td><td>: ${formData.get('jurusan')}</td></tr>
                 <tr><td>Alasan Terlambat</td><td>: ${formData.get('alasan_terlambat')}</td></tr>
                 <tr><td>Tindak Lanjut</td><td>: ${formData.get('tindak_lanjut')}</td></tr>
                 <tr><td>Tanggal</td><td>: <?= date('d M Y') ?></td></tr>
