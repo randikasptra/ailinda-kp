@@ -118,23 +118,7 @@ $total_pages = ceil($total_records / $limit);
                 </div>
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Jurusan</label>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-book text-gray-400"></i>
-                    </div>
-                    <select name="jurusan" class="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] appearance-none bg-white">
-                        <option value="">Semua Jurusan</option>
-                        <option value="SAINTEK" <?= ($filters['jurusan'] == 'SAINTEK' ? 'selected' : '') ?>>SAINTEK</option>
-                        <option value="SOSHUM" <?= ($filters['jurusan'] == 'SOSHUM' ? 'selected' : '') ?>>SOSHUM</option>
-                        <option value="BAHASA" <?= ($filters['jurusan'] == 'BAHASA' ? 'selected' : '') ?>>BAHASA</option>
-                    </select>
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                        <i class="fas fa-chevron-down text-gray-400"></i>
-                    </div>
-                </div>
-            </div>
+  
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Kelamin</label>
@@ -200,7 +184,7 @@ $total_pages = ceil($total_records / $limit);
         <div class="mt-4 flex justify-between items-center">
             <span class="text-sm text-gray-600">
                 Menampilkan <?= min($limit, count($siswa)) ?> dari <?= $total_records ?> hasil
-                <?php if (!empty($filters['keyword']) || !empty($filters['kelas']) || !empty($filters['jurusan']) || !empty($filters['jk']) || !empty($filters['tahun']) || !empty($filters['poin'])): ?>
+                <?php if (!empty($filters['keyword']) || !empty($filters['kelas']) ||  !empty($filters['jk']) || !empty($filters['tahun']) || !empty($filters['poin'])): ?>
                     dengan filter yang dipilih
                 <?php endif; ?>
             </span>
@@ -258,12 +242,6 @@ $total_pages = ceil($total_records / $limit);
                             <div class="flex items-center">
                                 <i class="fas fa-sort-numeric-up mr-2"></i>
                                 No Absen
-                            </div>
-                        </th>
-                        <th class="w-28 px-4 py-4 text-left text-sm font-medium uppercase tracking-wider">
-                            <div class="flex items-center">
-                                <i class="fas fa-book mr-2"></i>
-                                Jurusan
                             </div>
                         </th>
                         <th class="w-28 px-4 py-4 text-left text-sm font-medium uppercase tracking-wider">
@@ -340,11 +318,6 @@ $total_pages = ceil($total_records / $limit);
                                     </span>
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1.5 inline-flex text-xs font-semibold rounded-full bg-purple-100 text-purple-800 border border-purple-200">
-                                        <?= esc($s['jurusan']) ?>
-                                    </span>
-                                </td>
-                                <td class="px-4 py-4 whitespace-nowrap">
                                     <span class="px-3 py-1.5 inline-flex text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 border border-yellow-200">
                                         <?= esc($s['tahun_ajaran'] ?? '-') ?>
                                     </span>
@@ -375,7 +348,6 @@ $total_pages = ceil($total_records / $limit);
                         $query_string = http_build_query(array_filter([
                             'keyword' => $filters['keyword'] ?? null,
                             'kelas' => $filters['kelas'] ?? null,
-                            'jurusan' => $filters['jurusan'] ?? null,
                             'jk' => $filters['jk'] ?? null,
                             'tahun' => $filters['tahun'] ?? null,
                             'poin' => $filters['poin'] ?? null,

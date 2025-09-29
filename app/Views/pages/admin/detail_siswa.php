@@ -63,14 +63,6 @@
             </div>
             <div class="flex items-center">
                 <span class="font-semibold text-gray-700 w-32 flex items-center">
-                    <i class="fas fa-book text-[#1E5631] mr-2"></i> Jurusan:
-                </span>
-                <span class="px-3 py-1.5 inline-flex text-xs font-semibold rounded-full bg-purple-100 text-purple-800 border border-purple-200">
-                    <?= esc($siswa['jurusan']) ?>
-                </span>
-            </div>
-            <div class="flex items-center">
-                <span class="font-semibold text-gray-700 w-32 flex items-center">
                     <i class="fas fa-calendar-alt text-[#1E5631] mr-2"></i> Tahun Ajaran:
                 </span>
                 <span class="px-3 py-1.5 inline-flex text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 border border-yellow-200">

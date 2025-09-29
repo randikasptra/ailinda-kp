@@ -192,28 +192,7 @@
                             
                             <div class="space-y-4">
                                 <!-- Jurusan -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                                        <i class="fas fa-book-open text-gray-400 text-xs"></i>
-                                        Jurusan
-                                    </label>
-                                    <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <i class="fas fa-book text-gray-400"></i>
-                                        </div>
-                                        <select name="jurusan" id="jurusan" 
-                                            class="w-full pl-10 pr-10 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 appearance-none bg-white transition-all duration-300"
-                                            required>
-                                            <option value="" <?= !old('jurusan', $siswa['jurusan']) ? 'selected' : '' ?>>Pilih Jurusan</option>
-                                            <option value="SOSHUM" <?= old('jurusan', $siswa['jurusan']) === 'SOSHUM' ? 'selected' : '' ?>>SOSHUM</option>
-                                            <option value="SAINTEK" <?= old('jurusan', $siswa['jurusan']) === 'SAINTEK' ? 'selected' : '' ?>>SAINTEK</option>
-                                            <option value="BAHASA" <?= old('jurusan', $siswa['jurusan']) === 'BAHASA' ? 'selected' : '' ?>>BAHASA</option>
-                                        </select>
-                                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                            <i class="fas fa-chevron-down text-gray-400"></i>
-                                        </div>
-                                    </div>
-                                </div>
+                                
 
                                 <!-- Tahun Ajaran -->
                                 <div>

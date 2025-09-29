@@ -145,13 +145,7 @@
                         <option value="12" <?= ($filters['kelas'] == '12') ? 'selected' : '' ?>>Kelas 12</option>
                     </select>
 
-                    <!-- Filter Jurusan -->
-                    <select name="jurusan" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
-                        <option value="">Semua Jurusan</option>
-                        <option value="SAINTEK" <?= ($filters['jurusan'] == 'SAINTEK') ? 'selected' : '' ?>>SAINTEK</option>
-                        <option value="SOSHUM" <?= ($filters['jurusan'] == 'SOSHUM') ? 'selected' : '' ?>>SOSHUM</option>
-                        <option value="BAHASA" <?= ($filters['jurusan'] == 'BAHASA') ? 'selected' : '' ?>>BAHASA</option>
-                    </select>
+                    
 
                     <!-- Filter Jenis Kelamin -->
                     <select name="jk" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
@@ -200,7 +194,6 @@
                             <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Jenis Kelamin</th>
                             <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Kelas</th>
                             <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">No Absen</th>
-                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Jurusan</th>
                             <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Tahun Ajaran</th>
                             <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Poin</th>
                             <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Aksi</th>
@@ -234,11 +227,6 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-3 py-1.5 inline-flex text-xs font-semibold rounded-full bg-gray-100 text-gray-800 border border-gray-200">
                                         <?= esc($s['no_absen'] ?? '-') ?>
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1.5 inline-flex text-xs font-semibold rounded-full bg-purple-100 text-purple-800 border border-purple-200">
-                                        <?= esc($s['jurusan']) ?>
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= esc($s['tahun_ajaran'] ?? '-') ?></td>
@@ -361,16 +349,7 @@
                     <input type="number" name="no_absen" id="no_absen" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
                 </div>
-                <div>
-                    <label for="jurusan" class="block text-sm font-medium text-gray-700">Jurusan</label>
-                    <select name="jurusan" id="jurusan" required
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
-                        <option value="">Pilih Jurusan</option>
-                        <option value="SAINTEK">SAINTEK</option>
-                        <option value="SOSHUM">SOSHUM</option>
-                        <option value="BAHASA">BAHASA</option>
-                    </select>
-                </div>
+                
                 <div>
                     <label for="tahun_ajaran" class="block text-sm font-medium text-gray-700">Tahun Ajaran</label>
                     <input type="text" name="tahun_ajaran" id="tahun_ajaran" required
