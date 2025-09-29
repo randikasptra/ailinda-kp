@@ -175,7 +175,7 @@
 
                                 <!-- Kolom Waktu Kembali Siswa -->
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <form action="<?= base_url('piket/catat-pelanggaran') ?>" method="post" class="flex flex-col gap-2" id="form-<?= $izin['id'] ?>">
+                                    <form action="<?= base_url('piket/history_konfirmasi') ?>" method="post" class="flex flex-col gap-2" id="form-<?= $izin['id'] ?>">
                                         <?= csrf_field() ?>
                                         <input type="hidden" name="izin_id" value="<?= esc($izin['id']) ?>">
 

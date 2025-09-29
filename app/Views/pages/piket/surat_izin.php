@@ -468,7 +468,7 @@
         .then(res => res.json())
         .then(data => {
             if (data.status === 'success') {
-                window.location.href = '/piket/poin_pelanggaran';
+                window.location.href = '/piket/konfirmasi_kembali';
             } else {
                 alert(data.message);
             }
