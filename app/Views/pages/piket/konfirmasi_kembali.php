@@ -112,12 +112,12 @@
                                     Jam Kembali
                                 </div>
                             </th>
-                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
+                            <!-- <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
                                 <div class="flex items-center">
                                     <i class="fas fa-clock mr-2"></i>
                                     Waktu Kembali
                                 </div>
-                            </th>
+                            </th> -->
                             <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
                                 <div class="flex items-center">
                                     <i class="fas fa-exclamation-triangle mr-2"></i>
@@ -174,8 +174,8 @@
                                 </td>
 
                                 <!-- Kolom Waktu Kembali Siswa -->
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <form action="<?= base_url('piket/history_konfirmasi') ?>" method="post" class="flex flex-col gap-2" id="form-<?= $izin['id'] ?>">
+                                <!-- <td class="px-6 py-4 whitespace-nowrap">
+                                    <form action="<?= base_url('piket/catat-pelanggaran') ?>" method="post" class="flex flex-col gap-2" id="form-<?= $izin['id'] ?>">
                                         <?= csrf_field() ?>
                                         <input type="hidden" name="izin_id" value="<?= esc($izin['id']) ?>">
 
@@ -183,7 +183,7 @@
                                             <input type="time" name="waktu_kembali_siswa" required
                                                 class="pl-10 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] w-full">
                                         </div>
-                                </td>
+                                </td> -->
 
                                 <!-- Kolom Sanksi -->
                                 <td class="px-6 py-4 whitespace-nowrap">

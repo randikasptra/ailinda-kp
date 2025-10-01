@@ -73,7 +73,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Manajemen Surat Izin</h2>
+                    <h2 class="text-2xl font-bold text-gray-800">Formulir Surat Izin Keluar</h2>
                     <p class="text-gray-600">Keluar masuk siswa selama jam sekolah</p>
                 </div>
             </div>
@@ -167,11 +167,7 @@
                             <input type="text" name="kelas" value="<?= esc($siswa['kelas'] ?? '') ?>" readonly
                                 class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-gray-50 focus:outline-none transition-all duration-200" />
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Poin Pelanggaran</label>
-                            <input type="text" name="poin" value="<?= esc($siswa['poin'] ?? '') ?>" readonly
-                                class="w-full border border-gray-300 rounded-xl px-4 py-3 bg-gray-50 focus:outline-none transition-all duration-200" />
-                        </div>
+                        
                     </div>
 
                     <div>
@@ -427,7 +423,7 @@
             if (data.status === 'success') {
                 modalManual.classList.add('hidden');
                 formManual.reset();
-                window.location.href = '/piket/poin_pelanggaran';
+                window.location.href = '/piket/surat_izin_rekapan';
             } else {
                 alert(data.message);
             }
@@ -468,7 +464,7 @@
         .then(res => res.json())
         .then(data => {
             if (data.status === 'success') {
-                window.location.href = '/piket/konfirmasi_kembali';
+                window.location.href = '/piket/surat_izin_rekapan';
             } else {
                 alert(data.message);
             }

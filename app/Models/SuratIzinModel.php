@@ -15,8 +15,8 @@ class SuratIzinModel extends Model
     'alasan',
     'waktu_keluar',
     'waktu_kembali',
-    'waktu_kembali_siswa',  // tambahkan ini
-    'status',
+    // 'waktu_kembali_siswa',  
+    // 'status',
     'poin_pelanggaran'
 ];
 

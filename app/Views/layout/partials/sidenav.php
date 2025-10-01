@@ -86,13 +86,13 @@
                 </div>
             </div>
 
-            <a href="/piket/konfirmasi_kembali" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-[#145128]/90 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/piket/pelanggaran') ? 'bg-[#145128] shadow-lg' : '' ?>" aria-current="<?= current_url(true) == base_url('/piket/pelanggaran') ? 'page' : 'false' ?>">
+            <!-- <a href="/piket/konfirmasi_kembali" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-[#145128]/90 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/piket/pelanggaran') ? 'bg-[#145128] shadow-lg' : '' ?>" aria-current="<?= current_url(true) == base_url('/piket/pelanggaran') ? 'page' : 'false' ?>">
                 <div class="p-2 rounded-xl bg-[#A4DE02]/10 group-hover:bg-[#A4DE02]/20 shadow-sm">
                     <i class="fas fa-exclamation-triangle w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
                 </div>
                 <span class="font-medium">Pelanggaran</span>
                 <i class="fas fa-chevron-right ml-auto text-xs text-gray-400 group-hover:text-[#A4DE02] transition-transform duration-300 group-hover:translate-x-1"></i>
-            </a>
+            </a> -->
 
             <!-- <a href="/piket/konfirmasi_kembali" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-[#145128]/90 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/piket/konfirmasi_kembali') ? 'bg-[#145128] shadow-lg' : '' ?>" aria-current="<?= current_url(true) == base_url('/piket/konfirmasi_kembali') ? 'page' : 'false' ?>">
                 <div class="p-2 rounded-xl bg-[#A4DE02]/10 group-hover:bg-[#A4DE02]/20 shadow-sm">
@@ -102,14 +102,21 @@
                 <i class="fas fa-chevron-right ml-auto text-xs text-gray-400 group-hover:text-[#A4DE02] transition-transform duration-300 group-hover:translate-x-1"></i>
             </a> -->
 
-            <a href="/piket/history_konfirmasi" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-[#145128]/90 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/piket/history_konfirmasi') ? 'bg-[#145128] shadow-lg' : '' ?>" aria-current="<?= current_url(true) == base_url('/piket/history_konfirmasi') ? 'page' : 'false' ?>">
+            <a href="/piket/surat_izin_rekapan" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-[#145128]/90 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/piket/history_konfirmasi') ? 'bg-[#145128] shadow-lg' : '' ?>" aria-current="<?= current_url(true) == base_url('/piket/history_konfirmasi') ? 'page' : 'false' ?>">
                 <div class="p-2 rounded-xl bg-[#A4DE02]/10 group-hover:bg-[#A4DE02]/20 shadow-sm">
                     <i class="fas fa-history w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
                 </div>
-                <span class="font-medium">Riwayat Konfirmasi</span>
+                <span class="font-medium">Tambah Pelanggaran</span>
                 <i class="fas fa-chevron-right ml-auto text-xs text-gray-400 group-hover:text-[#A4DE02] transition-transform duration-300 group-hover:translate-x-1"></i>
             </a>
 
+            <!-- <a href="/piket/history_konfirmasi" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-[#145128]/90 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/piket/data_siswa') ? 'bg-[#145128] shadow-lg' : '' ?>" aria-current="<?= current_url(true) == base_url('/piket/data_siswa') ? 'page' : 'false' ?>">
+                <div class="p-2 rounded-xl bg-[#A4DE02]/10 group-hover:bg-[#A4DE02]/20 shadow-sm">
+                    <i class="fas fa-users w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
+                </div>
+                <span class="font-medium">Data Rekapan</span>
+                <i class="fas fa-chevron-right ml-auto text-xs text-gray-400 group-hover:text-[#A4DE02] transition-transform duration-300 group-hover:translate-x-1"></i>
+            </a> -->
             <a href="/piket/data_siswa" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-[#145128]/90 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/piket/data_siswa') ? 'bg-[#145128] shadow-lg' : '' ?>" aria-current="<?= current_url(true) == base_url('/piket/data_siswa') ? 'page' : 'false' ?>">
                 <div class="p-2 rounded-xl bg-[#A4DE02]/10 group-hover:bg-[#A4DE02]/20 shadow-sm">
                     <i class="fas fa-users w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
@@ -117,6 +124,13 @@
                 <span class="font-medium">Data Siswa</span>
                 <i class="fas fa-chevron-right ml-auto text-xs text-gray-400 group-hover:text-[#A4DE02] transition-transform duration-300 group-hover:translate-x-1"></i>
             </a>
+            <!-- <a href="/piket/izin" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-[#145128]/90 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/piket/data_siswa') ? 'bg-[#145128] shadow-lg' : '' ?>" aria-current="<?= current_url(true) == base_url('/piket/data_siswa') ? 'page' : 'false' ?>">
+                <div class="p-2 rounded-xl bg-[#A4DE02]/10 group-hover:bg-[#A4DE02]/20 shadow-sm">
+                    <i class="fas fa-users w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
+                </div>
+                <span class="font-medium">Data Rekapan 2</span>
+                <i class="fas fa-chevron-right ml-auto text-xs text-gray-400 group-hover:text-[#A4DE02] transition-transform duration-300 group-hover:translate-x-1"></i>
+            </a> -->
         <?php else: ?>
             <a href="/dashboard/bp" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-[#145128]/90 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/dashboard/bp') ? 'bg-[#145128] shadow-lg' : '' ?>" aria-current="<?= current_url(true) == base_url('/dashboard/bp') ? 'page' : 'false' ?>">
                 <div class="p-2 rounded-xl bg-[#A4DE02]/10 group-hover:bg-[#A4DE02]/20 shadow-sm">

@@ -73,7 +73,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Manajemen Surat Izin Masuk</h2>
+                    <h2 class="text-2xl font-bold text-gray-800">Formulir Surat Izin Masuk</h2>
                     <p class="text-gray-600">Siswa terlambat masuk sekolah</p>
                 </div>
             </div>
@@ -193,43 +193,6 @@
                 </form>
             </div>
 
-            <!-- TABEL SURAT IZIN MASUK -->
-            <?php if (!empty($suratMasukList)): ?>
-                <div class="mt-8 bg-gray-50 p-5 rounded-xl border border-gray-100 overflow-x-auto">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
-                        <svg class="w-5 h-5 text-[#FF9800] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                        </svg>
-                        Daftar Surat Izin Masuk
-                    </h3>
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gradient-to-r from-[#FF9800] to-[#FFB300] text-white">
-                            <tr>
-                                <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Nama</th>
-                                <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">NIS</th>
-                                <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Kelas</th>
-                                <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Alasan Terlambat</th>
-                                <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">Tindak Lanjut</th>
-                                <th class="px-6 py-4 text-right text-sm font-medium uppercase tracking-wider">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <?php foreach ($suratMasukList as $surat): ?>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap"><?= esc($surat['nama']) ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap"><?= esc($surat['nisn']) ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap"><?= esc($surat['kelas']) ?></td>
-                                    <td class="px-6 py-4 text-sm text-gray-500"><?= esc($surat['alasan_terlambat']) ?></td>
-                                    <td class="px-6 py-4 text-sm text-gray-500"><?= esc($surat['tindak_lanjut']) ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="<?= base_url('piket/surat_izin_masuk/delete/' . $surat['id']) ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus surat ini?')" class="text-red-600 hover:text-red-800">Hapus</a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php endif; ?>
         </div>
     </div>
 </div>

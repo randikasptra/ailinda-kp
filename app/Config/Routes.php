@@ -28,12 +28,12 @@ $routes->group('dashboard', function ($routes) {
 // PIKET
 // =======================
 $routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
-    // Surat Izin Keluar
+    // Surat Izin
     $routes->get('surat_izin', 'Piket::formIzin');
     $routes->post('surat_izin', 'Piket::simpanIzin');
     $routes->get('izin_cetak/(:num)', 'Piket::cetakIzin/$1');
     $routes->get('konfirmasi_kembali', 'Piket::konfirmasiKembali');
-
+    
     // Surat Izin Masuk
     $routes->get('izin_masuk_form', 'Piket::izinMasukForm');
     $routes->post('izin_masuk/submit', 'Piket::submitIzinMasuk');
@@ -41,22 +41,31 @@ $routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
     $routes->post('surat_izin_masuk/simpan', 'SuratIzinMasukController::simpan');
     $routes->get('surat_izin_masuk/edit/(:num)', 'SuratIzinMasukController::edit/$1');
     $routes->get('surat_izin_masuk/delete/(:num)', 'SuratIzinMasukController::delete/$1');
-
-    // Pelanggaran (oleh Piket)
+    
+    // Pelanggaran
     $routes->get('pelanggaran', 'PelanggaranController::pelanggaranPiket');
     $routes->post('pelanggaran/tambah', 'PelanggaranController::tambahPelanggaranPiket');
     $routes->get('pelanggaran/edit/(:num)', 'PelanggaranController::editPelanggaranPiket/$1');
     $routes->post('pelanggaran/update/(:num)', 'PelanggaranController::updatePelanggaranPiket/$1');
     $routes->get('pelanggaran/hapus/(:num)', 'PelanggaranController::hapusPelanggaranPiket/$1');
-
+    
     // Surat Izin Rekapan
     $routes->get('surat_izin_rekapan', 'SuratIzinRekapanController::index');
     $routes->post('surat_izin_pelanggaran/(:num)', 'SuratIzinRekapanController::savePelanggaran/$1');
-
+    
     // Data Siswa
     $routes->get('data_siswa', 'SiswaController::dataSiswa');
-    $routes->get('data_siswa/laporan', 'LaporanIzinController::index');
+    $routes->get('tambah_poin_pelanggaran/tambah/(:num)', 'RekapPelanggaranController::tambah/$1');
+    
+    
+    
+    $routes->get('rekap-pelanggaran/create/(:num)', 'RekapPelanggaranController::create/$1');
+    $routes->post('siswa-pelanggaran/store', 'RekapPelanggaranController::store');
 
+
+    $routes->post('surat-izin-pelanggaran/(:num)/store', 'SuratIzinRekapanController::storePelanggaran/$1');
+
+    
     // History Konfirmasi
     $routes->get('history_konfirmasi', 'HistoryKonfirmasi::history');
     $routes->get('history_konfirmasi/edit/(:num)', 'HistoryKonfirmasi::edit/$1');
@@ -64,6 +73,12 @@ $routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
     $routes->get('history_konfirmasi/delete/(:num)', 'HistoryKonfirmasi::delete/$1');
     $routes->post('history_konfirmasi/hapus_hari_ini', 'HistoryKonfirmasi::hapusHariIni');
 });
+
+
+$routes->post('rekapan/delete-izin/(:num)', 'SuratIzinRekapanController::deleteIzin/$1');
+$routes->post('rekapan/delete-pelanggaran/(:num)', 'SuratIzinRekapanController::deletePelanggaran/$1');
+$routes->post('rekapan/delete-izin-masuk/(:num)', 'SuratIzinRekapanController::deleteIzinMasuk/$1');
+$routes->post('rekapan/delete-pelanggaran/(:num)', 'SuratIzinRekapanController::deletePelanggaran/$1');
 
 // =======================
 // BP
@@ -79,25 +94,25 @@ $routes->group('bp', ['filter' => 'role:bp'], function ($routes) {
 // =======================
 $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
     $routes->get('dashboard', 'Admin::dashboard');
-
+    
     // Siswa
     $routes->get('siswa', 'SiswaController::siswa');
-    $routes->get('siswa/detail/(:num)', 'SiswaController::detailSiswa/$1');
-    $routes->get('siswa/edit/(:num)', 'SiswaController::editSiswa/$1');
+    $routes->get('siswa/detail_siswa/(:num)', 'SiswaController::detailSiswa/$1');
+    $routes->get('siswa/edit_siswa/(:num)', 'SiswaController::editSiswa/$1');
     $routes->post('siswa/update/(:num)', 'SiswaController::updateSiswa/$1');
     $routes->post('siswa/tambah', 'Dashboard::tambahSiswa');
     $routes->get('siswa/hapus/(:num)', 'Dashboard::hapusSiswa/$1');
     $routes->post('siswa/update_kelas', 'SiswaController::update_kelas');
     $routes->post('siswa/hapus_lulus', 'Dashboard::hapus_lulus');
     $routes->post('siswa/import_csv', 'Dashboard::importCSV');
-
+    
     // Pelanggaran
     $routes->get('pelanggaran', 'PelanggaranController::pelanggaran');
     $routes->post('pelanggaran/tambah', 'PelanggaranController::tambahPelanggaran');
     $routes->get('pelanggaran/edit/(:num)', 'PelanggaranController::editPelanggaran/$1');
     $routes->post('pelanggaran/update/(:num)', 'PelanggaranController::updatePelanggaran/$1');
     $routes->get('pelanggaran/hapus/(:num)', 'PelanggaranController::hapusPelanggaran/$1');
-
+    
     // User Management
     $routes->get('users', 'Dashboard::users');
     $routes->get('users/tambah', 'Dashboard::tambahUser');
@@ -113,7 +128,7 @@ $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
 $routes->get('suratizin', 'SuratIzinController::index');
 $routes->get('suratizin/search', 'SuratIzinController::search');
 $routes->post('suratizin/simpan', 'SuratIzinController::simpan');
-$routes->post('suratizin/store', 'SuratIzinController::store');
+$routes->post('surat-izin/store', 'SuratIzinController::store');
 
 // =======================
 // ERROR

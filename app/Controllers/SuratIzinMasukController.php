@@ -57,7 +57,7 @@ class SuratIzinMasukController extends Controller
             'nama' => 'required',
             'nis' => 'required',
             'kelas' => 'required',
-            'jurusan' => 'required',
+            // 'jurusan' => 'required',
             'alasan_terlambat' => 'required',
             'tindak_lanjut' => 'required',
         ])) {
@@ -71,7 +71,7 @@ class SuratIzinMasukController extends Controller
             'nama' => $this->request->getPost('nama'),
             'nisn' => $this->request->getPost('nis'), // Map nis to nisn
             'kelas' => $this->request->getPost('kelas'),
-            'jurusan' => $this->request->getPost('jurusan'),
+            // 'jurusan' => $this->request->getPost('jurusan'),
             'alasan_terlambat' => $this->request->getPost('alasan_terlambat'),
             'tindak_lanjut' => $this->request->getPost('tindak_lanjut'),
             'created_at' => date('Y-m-d H:i:s'),
