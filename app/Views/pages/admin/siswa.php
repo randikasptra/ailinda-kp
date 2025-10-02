@@ -25,24 +25,24 @@
                 </button>
 
                 <!-- Naikkan Kelas -->
-                <form action="<?= base_url('admin/siswa/update_kelas') ?>" method="post"
+                <!-- <form action="<?= base_url('admin/siswa/update_kelas') ?>" method="post"
                     onsubmit="return confirm('Yakin ingin naikkan semua kelas siswa?')" class="inline">
                     <button type="submit"
                         class="flex items-center gap-2 px-5 py-3 border border-[#1E5631] text-[#1E5631] hover:bg-[#1E5631] hover:text-white rounded-xl transition-all duration-300 shadow-sm group">
                         <i class="fas fa-arrow-up group-hover:scale-110 transition-transform"></i>
                         Naikkan Kelas
                     </button>
-                </form>
+                </form> -->
 
                 <!-- Hapus Siswa Lulus -->
-                <form action="<?= base_url('admin/siswa/hapus_lulus') ?>" method="post"
+                <!-- <form action="<?= base_url('admin/siswa/hapus_lulus') ?>" method="post"
                     onsubmit="return confirm('Hapus semua siswa yang sudah lulus?')" class="inline">
                     <button type="submit"
                         class="flex items-center gap-2 px-5 py-3 border border-red-600 text-red-600 hover:bg-red-600 hover:text-white rounded-xl transition-all duration-300 shadow-sm group">
                         <i class="fas fa-trash-alt group-hover:scale-110 transition-transform"></i>
                         Hapus Lulus
                     </button>
-                </form>
+                </form> -->
             </div>
         </div>
 

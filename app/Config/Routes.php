@@ -76,9 +76,9 @@ $routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
 
 
 $routes->post('rekapan/delete-izin/(:num)', 'SuratIzinRekapanController::deleteIzin/$1');
-$routes->post('rekapan/delete-pelanggaran/(:num)', 'SuratIzinRekapanController::deletePelanggaran/$1');
+$routes->post('rekapan/delete-all-pelanggaran/(:num)', 'SuratIzinRekapanController::deleteAllPelanggaran/$1');
 $routes->post('rekapan/delete-izin-masuk/(:num)', 'SuratIzinRekapanController::deleteIzinMasuk/$1');
-$routes->post('rekapan/delete-pelanggaran/(:num)', 'SuratIzinRekapanController::deletePelanggaran/$1');
+// $routes->post('rekapan/delete-pelanggaran/(:num)', 'SuratIzinRekapanController::deletePelanggaran/$1');
 
 // =======================
 // BP

@@ -159,47 +159,59 @@ class SuratIzinRekapanController extends BaseController
         return redirect()->back()->with('error', 'Data tidak ditemukan');
     }
 
-    public function deletePelanggaran($id)
-    {
-        $db = \Config\Database::connect();
-        $db->transStart();
+    
+public function deleteAllPelanggaran($izinId)
+{
+    $db = \Config\Database::connect();
+    $db->transStart();
 
-        $pelanggaranData = $this->suratIzinPelanggaranModel
-            ->select('surat_izin_pelanggaran.*, pelanggaran.poin, 
-                     surat_izin.nisn as nisn_keluar, surat_izin_masuk.nisn as nisn_masuk')
-            ->join('pelanggaran', 'pelanggaran.id = surat_izin_pelanggaran.pelanggaran_id', 'left')
-            ->join('surat_izin', 'surat_izin.id = surat_izin_pelanggaran.surat_izin_id', 'left')
-            ->join('surat_izin_masuk', 'surat_izin_masuk.id = surat_izin_pelanggaran.surat_masuk_id', 'left')
-            ->where('surat_izin_pelanggaran.id', $id)
-            ->first();
+    // Ambil semua pelanggaran dari surat izin
+    $pelanggaranList = $this->suratIzinPelanggaranModel
+        ->select('surat_izin_pelanggaran.*, pelanggaran.poin, 
+                 surat_izin.nisn as nisn_keluar, surat_izin_masuk.nisn as nisn_masuk')
+        ->join('pelanggaran', 'pelanggaran.id = surat_izin_pelanggaran.pelanggaran_id', 'left')
+        ->join('surat_izin', 'surat_izin.id = surat_izin_pelanggaran.surat_izin_id', 'left')
+        ->join('surat_izin_masuk', 'surat_izin_masuk.id = surat_izin_pelanggaran.surat_masuk_id', 'left')
+        ->where('surat_izin_pelanggaran.surat_izin_id', $izinId)
+        ->orWhere('surat_izin_pelanggaran.surat_masuk_id', $izinId)
+        ->findAll();
 
-        if (!$pelanggaranData) {
-            return redirect()->back()->with('error', 'Data pelanggaran tidak ditemukan.');
-        }
-
-        $poin = (int) ($pelanggaranData['poin'] ?? 0);
-        $nisn = $pelanggaranData['nisn_keluar'] ?? $pelanggaranData['nisn_masuk'];
-
-        // Hapus data pelanggaran
-        $this->suratIzinPelanggaranModel->delete($id);
-
-        // Kurangi poin siswa (jangan sampai minus)
-        if ($nisn && $poin > 0) {
-            $siswa = $this->siswaModel->where('nis', $nisn)->first();
-            if ($siswa) {
-                $newPoin = max(0, ($siswa['poin'] ?? 0) - $poin);
-                $this->siswaModel->where('nis', $nisn)->set('poin', $newPoin)->update();
-            }
-        }
-
-        $db->transComplete();
-
-        if ($db->transStatus() === false) {
-            return redirect()->back()->with('error', 'Gagal menghapus pelanggaran.');
-        }
-
-        return redirect()->back()->with('success', 'Pelanggaran berhasil dihapus dan poin siswa dikurangi.');
+    if (empty($pelanggaranList)) {
+        return redirect()->back()->with('error', 'Tidak ada pelanggaran untuk dihapus.');
     }
+
+    // Total poin yang harus dikurangi
+    $totalPoin = 0;
+    $nisn = null;
+
+    foreach ($pelanggaranList as $p) {
+        $totalPoin += (int) ($p['poin'] ?? 0);
+        $nisn = $p['nisn_keluar'] ?? $p['nisn_masuk'];
+    }
+
+    // Hapus semua pelanggaran
+    $this->suratIzinPelanggaranModel
+        ->where('surat_izin_id', $izinId)
+        ->orWhere('surat_masuk_id', $izinId)
+        ->delete();
+
+    // Update poin siswa
+    if ($nisn && $totalPoin > 0) {
+        $siswa = $this->siswaModel->where('nis', $nisn)->first();
+        if ($siswa) {
+            $newPoin = max(0, ($siswa['poin'] ?? 0) - $totalPoin);
+            $this->siswaModel->where('nis', $nisn)->set('poin', $newPoin)->update();
+        }
+    }
+
+    $db->transComplete();
+
+    if ($db->transStatus() === false) {
+        return redirect()->back()->with('error', 'Gagal menghapus semua pelanggaran.');
+    }
+
+    return redirect()->back()->with('success', 'Semua pelanggaran berhasil dihapus.');
+}
 
     
 }

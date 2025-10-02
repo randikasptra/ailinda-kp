@@ -9,7 +9,7 @@
                 <i class="fas fa-file-alt text-white text-2xl"></i>
             </div>
             <div>
-                <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Rekapan Surat Izin Siswa</h1>
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800">List Rekap Surat Izin Siswa</h1>
                 <p class="text-gray-600 mt-1 text-sm md:text-base">Lihat rekapan surat izin keluar dan masuk siswa</p>
             </div>
         </div>
@@ -30,25 +30,6 @@
         </div>
     </div>
 
-    <!-- Flash Message -->
-    <?php if (session()->getFlashdata('success')): ?>
-        <div class="flex items-center bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-xl shadow-sm">
-            <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
-            <p class="font-medium"><?= esc(session()->getFlashdata('success')) ?></p>
-            <button class="ml-auto text-green-700 hover:text-green-900" onclick="this.parentElement.style.display='none'">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    <?php endif; ?>
-    <?php if (session()->getFlashdata('error')): ?>
-        <div class="flex items-center bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-xl shadow-sm">
-            <i class="fas fa-exclamation-circle text-red-500 text-xl mr-3"></i>
-            <p class="font-medium"><?= esc(session()->getFlashdata('error')) ?></p>
-            <button class="ml-auto text-red-700 hover:text-red-900" onclick="this.parentElement.style.display='none'">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    <?php endif; ?>
 
     <!-- Grid Layout -->
     <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
@@ -91,91 +72,117 @@
                     </div>
 
                     <!-- Table -->
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full">
-                            <thead>
-                                <tr class="border-b border-gray-200">
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Siswa</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Waktu</th>
-                                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200">
-                                <?php foreach ($surat_izin as $izin): ?>
-                                    <tr class="hover:bg-gray-50 transition-colors">
-                                        <td class="px-4 py-3">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
-                                                    <span class="text-blue-600 font-medium"><?= strtoupper(substr(esc($izin['nama']), 0, 1)) ?></span>
-                                                </div>
-                                                <div class="ml-3">
-                                                    <div class="text-sm font-medium text-gray-900"><?= esc($izin['nama']) ?></div>
-                                                    <div class="text-xs text-gray-500"><?= esc($izin['kelas']) ?> • <?= esc($izin['nisn']) ?></div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-4 py-3">
-                                            <div class="text-sm text-gray-900 space-y-1">
+                    <!-- Table -->
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full">
+                                <thead>
+                                    <tr class="border-b border-gray-200">
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Siswa</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Waktu</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pelanggaran</th>
+                                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <?php foreach ($surat_izin as $izin): ?>
+                                        <tr class="hover:bg-gray-50 transition-colors">
+                                            <!-- siswa -->
+                                            <td class="px-4 py-3">
                                                 <div class="flex items-center">
-                                                    <i class="fas fa-sign-out-alt w-4 h-4 mr-2 text-blue-500"></i>
-                                                    <?= date('H:i', strtotime($izin['waktu_keluar'])) ?>
+                                                    <div class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                                        <span class="text-blue-600 font-medium"><?= strtoupper(substr(esc($izin['nama']), 0, 1)) ?></span>
+                                                    </div>
+                                                    <div class="ml-3">
+                                                        <div class="text-sm font-medium text-gray-900"><?= esc($izin['nama']) ?></div>
+                                                        <div class="text-xs text-gray-500"><?= esc($izin['kelas']) ?> • <?= esc($izin['nisn']) ?></div>
+                                                    </div>
                                                 </div>
-                                                <div class="flex items-center">
-                                                    <i class="fas fa-sign-in-alt w-4 h-4 mr-2 text-green-500"></i>
-                                                    <?= date('H:i', strtotime($izin['waktu_kembali'])) ?>
+                                            </td>
+
+                                            <!-- tanggal (format: 02 Oktober 2025) -->
+                                            <td class="px-4 py-3">
+                                                <div class="text-sm text-gray-900">
+                                                    <?= date('d F Y', strtotime($izin['waktu_keluar'])) ?>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-4 py-3 text-right">
-                                            <div class="flex items-center justify-end gap-2">
-                                                <!-- tombol detail -->
-                                                <button type="button"
-                                                    class="btn-detail text-xs bg-gray-100 text-gray-700 font-medium px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-200 transition"
-                                                    data-izin='<?= json_encode($izin) ?>'>
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
+                                            </td>
 
-                                                <!-- tombol tambah pelanggaran -->
-                                                <button type="button" 
-                                                        class="btn-tambah-pelanggaran text-xs bg-yellow-100 text-yellow-700 font-medium px-3 py-2 rounded-lg border border-yellow-200 hover:bg-yellow-200 transition"
-                                                        data-izin-id="<?= $izin['id'] ?>" 
-                                                        data-type="masuk">
-                                                    <i class="fas fa-exclamation-triangle"></i>
-                                                </button>
+                                            <!-- waktu keluar & kembali -->
+                                            <td class="px-4 py-3">
+                                                <div class="text-sm text-gray-900 space-y-1">
+                                                    <div class="flex items-center">
+                                                        <i class="fas fa-sign-out-alt w-4 h-4 mr-2 text-blue-500"></i>
+                                                        <?= date('H:i', strtotime($izin['waktu_keluar'])) ?>
+                                                    </div>
+                                                    <div class="flex items-center">
+                                                        <i class="fas fa-sign-in-alt w-4 h-4 mr-2 text-green-500"></i>
+                                                        <?= date('H:i', strtotime($izin['waktu_kembali'])) ?>
+                                                    </div>
+                                                </div>
+                                            </td>
 
-                                                <!-- tombol hapus list (izin masuk) -->
-                                                <form action="<?= base_url('rekapan/delete-izin-masuk/' . $izin['id']) ?>" method="post" onsubmit="return confirm('Yakin mau hapus surat izin masuk ini?')">
-                                                    <?= csrf_field() ?>
-                                                    <button type="submit" 
-                                                            class="text-xs bg-red-100 text-red-700 font-medium px-3 py-2 rounded-lg border border-red-200 hover:bg-red-200 transition">
-                                                        <i class="fas fa-trash"></i>
+                                            <!-- pelanggaran -->
+                                            <td class="px-4 py-3">
+                                                <?php if (!empty($izin['pelanggaran'])): ?>
+                                                    <ul class="list-disc list-inside text-sm text-red-600 space-y-1">
+                                                        <?php foreach ($izin['pelanggaran'] as $p): ?>
+                                                            <li>
+                                                                <?= esc($p['jenis_pelanggaran']) ?> 
+                                                                <span class="text-xs text-gray-500">(<?= $p['poin'] ?> poin)</span>
+                                                            </li>
+                                                        <?php endforeach; ?>
+                                                    </ul>
+                                                <?php else: ?>
+                                                    <span class="text-xs text-gray-500 italic">Tidak ada pelanggaran</span>
+                                                <?php endif; ?>
+                                            </td>
+
+                                            <!-- aksi -->
+                                            <td class="px-4 py-3 text-right">
+                                                <div class="flex items-center justify-end gap-2">
+                                                    <!-- tombol detail -->
+                                                    <button type="button"
+                                                        class="btn-detail text-xs bg-gray-100 text-gray-700 font-medium px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-200 transition"
+                                                        data-izin='<?= json_encode($izin) ?>'>
+                                                        <i class="fas fa-eye"></i>
                                                     </button>
-                                                </form>
-                                            </div>
 
-                                            <!-- tombol hapus pelanggaran -->
-                                            <?php if (!empty($izin['pelanggaran'])): ?>
-                                                <div class="mt-2 flex flex-wrap gap-1 justify-end">
-                                                    <?php foreach ($izin['pelanggaran'] as $pel): ?>
-                                                        <form action="<?= base_url('rekapan/delete-pelanggaran/' . $pel['pivot_id']) ?>" method="post" onsubmit="return confirm('Yakin mau hapus pelanggaran ini?')">
+                                                    <!-- tombol tambah pelanggaran -->
+                                                    <button type="button" 
+                                                            class="btn-tambah-pelanggaran text-xs bg-yellow-100 text-yellow-700 font-medium px-3 py-2 rounded-lg border border-yellow-200 hover:bg-yellow-200 transition"
+                                                            data-izin-id="<?= $izin['id'] ?>" 
+                                                            data-type="keluar">
+                                                        <i class="fas fa-exclamation-triangle"></i>
+                                                    </button>
+
+                                                    <!-- tombol hapus list (izin keluar) -->
+                                                    <form action="<?= base_url('rekapan/delete-izin/' . $izin['id']) ?>" method="post" onsubmit="return confirm('Yakin mau hapus surat izin keluar ini?')">
+                                                        <?= csrf_field() ?>
+                                                        <button type="submit" 
+                                                                class="text-xs bg-red-100 text-red-700 font-medium px-3 py-2 rounded-lg border border-red-200 hover:bg-red-200 transition">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
+
+                                                </div>
+                                                <?php if (!empty($izin['pelanggaran'])): ?>
+                                                    <div class="mt-2 flex justify-end">
+                                                        <form action="<?= base_url('rekapan/delete-all-pelanggaran/' . $izin['id']) ?>" method="post" onsubmit="return confirm('Yakin mau hapus semua pelanggaran siswa ini?')">
                                                             <?= csrf_field() ?>
                                                             <button type="submit" 
-                                                                    class="text-xs bg-red-50 text-red-700 font-medium px-2 py-1 rounded-lg border border-red-200 hover:bg-red-200 transition">
-                                                                <i class="fas fa-ban"></i>
+                                                                    class="text-xs bg-red-50 text-red-700 font-medium px-3 py-2 rounded-lg border border-red-200 hover:bg-red-200 transition">
+                                                                <i class="fas fa-ban"></i> Hapus Semua Pelanggaran
                                                             </button>
                                                         </form>
-                                                    <?php endforeach; ?>
-                                                </div>
-                                            <?php else: ?>
-                                                <div class="text-xs text-gray-500 italic mt-1 text-right">Tidak ada pelanggaran</div>
-                                            <?php endif; ?>
-                                        </td>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
 
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
                 <?php endif; ?>
             </div>
         </div>
@@ -219,18 +226,21 @@
                     </div>
 
                     <!-- Table -->
-                    <div class="overflow-x-auto">
+                   <div class="overflow-x-auto">
                         <table class="min-w-full">
                             <thead>
                                 <tr class="border-b border-gray-200">
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Siswa</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
                                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alasan</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pelanggaran</th>
                                     <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
                                 <?php foreach ($surat_izin_masuk as $izin): ?>
                                     <tr class="hover:bg-gray-50 transition-colors">
+                                        <!-- siswa -->
                                         <td class="px-4 py-3">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 h-10 w-10 bg-orange-100 rounded-full flex items-center justify-center">
@@ -242,6 +252,15 @@
                                                 </div>
                                             </div>
                                         </td>
+
+                                        <!-- tanggal -->
+                                        <td class="px-4 py-3">
+                                            <div class="text-sm text-gray-900">
+                                                <?= date('d F Y', strtotime($izin['created_at'] ?? $izin['waktu_masuk'] ?? 'now')) ?>
+                                            </div>
+                                        </td>
+
+                                        <!-- alasan -->
                                         <td class="px-4 py-3">
                                             <div class="text-sm text-gray-900">
                                                 <div class="font-medium mb-1"><?= esc($izin['alasan_terlambat']) ?: 'Tidak ada alasan' ?></div>
@@ -250,6 +269,24 @@
                                                 <?php endif; ?>
                                             </div>
                                         </td>
+
+                                        <!-- pelanggaran -->
+                                        <td class="px-4 py-3">
+                                            <?php if (!empty($izin['pelanggaran'])): ?>
+                                                <ul class="list-disc list-inside text-sm text-red-600 space-y-1">
+                                                    <?php foreach ($izin['pelanggaran'] as $p): ?>
+                                                        <li>
+                                                            <?= esc($p['jenis_pelanggaran']) ?> 
+                                                            <span class="text-xs text-gray-500">(<?= $p['poin'] ?> poin)</span>
+                                                        </li>
+                                                    <?php endforeach; ?>
+                                                </ul>
+                                            <?php else: ?>
+                                                <span class="text-xs text-gray-500 italic">Tidak ada pelanggaran</span>
+                                            <?php endif; ?>
+                                        </td>
+
+                                        <!-- aksi -->
                                         <td class="px-4 py-3 text-right">
                                             <div class="flex items-center justify-end gap-2">
                                                 <!-- tombol detail -->
@@ -267,7 +304,7 @@
                                                     <i class="fas fa-exclamation-triangle"></i>
                                                 </button>
 
-                                                <!-- tombol hapus list (izin masuk) -->
+                                                <!-- tombol hapus izin masuk -->
                                                 <form action="<?= base_url('rekapan/delete-izin-masuk/' . $izin['id']) ?>" method="post" onsubmit="return confirm('Yakin mau hapus surat izin masuk ini?')">
                                                     <?= csrf_field() ?>
                                                     <button type="submit" 
@@ -277,21 +314,17 @@
                                                 </form>
                                             </div>
 
-                                            <!-- tombol hapus pelanggaran -->
+                                            <!-- hapus pelanggaran -->
                                             <?php if (!empty($izin['pelanggaran'])): ?>
-                                                <div class="mt-2 flex flex-wrap gap-1 justify-end">
-                                                    <?php foreach ($izin['pelanggaran'] as $pel): ?>
-                                                        <form action="<?= base_url('rekapan/delete-pelanggaran/' . $pel['pivot_id']) ?>" method="post" onsubmit="return confirm('Yakin mau hapus pelanggaran ini?')">
-                                                            <?= csrf_field() ?>
-                                                            <button type="submit" 
-                                                                    class="text-xs bg-red-50 text-red-700 font-medium px-2 py-1 rounded-lg border border-red-200 hover:bg-red-200 transition">
-                                                                <i class="fas fa-ban"></i>
-                                                            </button>
-                                                        </form>
-                                                    <?php endforeach; ?>
+                                                <div class="mt-2 flex justify-end">
+                                                    <form action="<?= base_url('rekapan/delete-all-pelanggaran/' . $izin['id']) ?>" method="post" onsubmit="return confirm('Yakin mau hapus semua pelanggaran siswa ini?')">
+                                                        <?= csrf_field() ?>
+                                                        <button type="submit" 
+                                                                class="text-xs bg-red-50 text-red-700 font-medium px-3 py-2 rounded-lg border border-red-200 hover:bg-red-200 transition">
+                                                            <i class="fas fa-ban"></i> Hapus Semua Pelanggaran
+                                                        </button>
+                                                    </form>
                                                 </div>
-                                            <?php else: ?>
-                                                <div class="text-xs text-gray-500 italic mt-1 text-right">Tidak ada pelanggaran</div>
                                             <?php endif; ?>
                                         </td>
                                     </tr>
@@ -299,6 +332,7 @@
                             </tbody>
                         </table>
                     </div>
+
                 <?php endif; ?>
             </div>
         </div>
@@ -361,13 +395,22 @@
                               class="w-full p-2 border border-gray-300 rounded-md" rows="3"></textarea>
                 </div>
 
+                <!-- 🔎 Search box -->
+                <div class="mb-3">
+                    <input type="text" id="searchPelanggaran" 
+                           placeholder="Cari jenis pelanggaran..." 
+                           class="w-full p-2 border border-gray-300 rounded-md">
+                </div>
+
                 <!-- Checkbox list pelanggaran -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-60 overflow-y-auto border p-3 rounded">
+                <div id="pelanggaranListContainer" 
+                     class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-60 overflow-y-auto border p-3 rounded">
                     <?php foreach ($pelanggaranList as $p): ?>
-                        <label class="flex items-center space-x-2">
+                        <label class="flex items-center space-x-2 pelanggaran-item">
                             <input type="checkbox" name="pelanggaran_ids[]" value="<?= $p['id'] ?>" 
                                    class="form-checkbox h-4 w-4 text-blue-600">
-                            <span><?= esc($p['jenis_pelanggaran']) ?> 
+                            <span>
+                                <?= esc($p['jenis_pelanggaran']) ?> 
                                 <small class="text-gray-500">(<?= esc($p['kategori']) ?>, <?= $p['poin'] ?> poin)</small>
                             </span>
                         </label>
@@ -383,6 +426,8 @@
         </div>
     </div>
 </div>
+
+
 
 <!-- Modal Detail -->
 <div id="modalDetail" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center">
@@ -446,6 +491,21 @@
     background: #a8a8a8;
 }
 </style>
+
+
+
+<script>
+    // JS untuk filter search pelanggaran
+    document.getElementById('searchPelanggaran').addEventListener('keyup', function() {
+        let keyword = this.value.toLowerCase();
+        let items = document.querySelectorAll('#pelanggaranListContainer .pelanggaran-item');
+        
+        items.forEach(item => {
+            let text = item.innerText.toLowerCase();
+            item.style.display = text.includes(keyword) ? '' : 'none';
+        });
+    });
+</script>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
