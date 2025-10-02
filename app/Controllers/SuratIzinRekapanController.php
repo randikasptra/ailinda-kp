@@ -38,7 +38,7 @@ class SuratIzinRekapanController extends BaseController
 
         foreach ($suratIzin as &$izin) {
             $izin['pelanggaran'] = $this->suratIzinPelanggaranModel
-                ->select('surat_izin_pelanggaran.id as pivot_id, pelanggaran.jenis_pelanggaran, pelanggaran.poin, surat_izin_pelanggaran.catatan')
+                ->select('surat_izin_pelanggaran.id as pivot_id, pelanggaran.jenis_pelanggaran, pelanggaran.poin, pelanggaran.id as pelanggaran_id, surat_izin_pelanggaran.catatan')
                 ->join('pelanggaran', 'pelanggaran.id = surat_izin_pelanggaran.pelanggaran_id', 'left')
                 ->where('surat_izin_pelanggaran.surat_izin_id', $izin['id'])
                 ->findAll();
@@ -51,7 +51,7 @@ class SuratIzinRekapanController extends BaseController
 
         foreach ($suratIzinMasuk as &$masuk) {
             $masuk['pelanggaran'] = $this->suratIzinPelanggaranModel
-                ->select('surat_izin_pelanggaran.id as pivot_id, pelanggaran.jenis_pelanggaran, pelanggaran.poin, surat_izin_pelanggaran.catatan')
+                ->select('surat_izin_pelanggaran.id as pivot_id, pelanggaran.jenis_pelanggaran, pelanggaran.poin, pelanggaran.id as pelanggaran_id, surat_izin_pelanggaran.catatan')
                 ->join('pelanggaran', 'pelanggaran.id = surat_izin_pelanggaran.pelanggaran_id', 'left')
                 ->where('surat_izin_pelanggaran.surat_masuk_id', $masuk['id'])
                 ->findAll();
@@ -72,6 +72,7 @@ class SuratIzinRekapanController extends BaseController
         $type            = $this->request->getPost('type');
         $pelanggaranIds  = $this->request->getPost('pelanggaran_ids');
         $catatan         = $this->request->getPost('keterangan');
+        $mode            = $this->request->getPost('mode') ?? 'add';
 
         if (!$suratIzinId || empty($pelanggaranIds) || !$type) {
             return redirect()->back()->with('error', 'Data tidak lengkap!');
@@ -90,6 +91,12 @@ class SuratIzinRekapanController extends BaseController
         }
 
         $nisn = $izin['nisn'] ?? null;
+
+        if ($mode === 'edit') {
+            // Hapus semua pelanggaran lama dulu (kurangi poin)
+            $this->deleteAllPelanggaran($suratIzinId);
+        }
+
         $totalTambahPoin = 0;
 
         foreach ($pelanggaranIds as $pid) {
@@ -126,10 +133,11 @@ class SuratIzinRekapanController extends BaseController
         $db->transComplete();
 
         if ($db->transStatus() === false) {
-            return redirect()->back()->with('error', 'Gagal menambahkan pelanggaran.');
+            return redirect()->back()->with('error', 'Gagal menyimpan pelanggaran.');
         }
 
-        return redirect()->back()->with('success', 'Pelanggaran berhasil ditambahkan dan poin siswa terupdate.');
+        $msg = $mode === 'edit' ? 'Pelanggaran berhasil diupdate dan poin siswa terupdate.' : 'Pelanggaran berhasil ditambahkan dan poin siswa terupdate.';
+        return redirect()->back()->with('success', $msg);
     }
 
 

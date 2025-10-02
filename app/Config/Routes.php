@@ -51,7 +51,6 @@ $routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
     
     // Surat Izin Rekapan
     $routes->get('surat_izin_rekapan', 'SuratIzinRekapanController::index');
-    $routes->post('surat_izin_pelanggaran/(:num)', 'SuratIzinRekapanController::savePelanggaran/$1');
     
     // Data Siswa
     $routes->get('data_siswa', 'SiswaController::dataSiswa');
@@ -63,9 +62,6 @@ $routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
     $routes->post('siswa-pelanggaran/store', 'RekapPelanggaranController::store');
 
 
-    $routes->post('surat-izin-pelanggaran/(:num)/store', 'SuratIzinRekapanController::storePelanggaran/$1');
-
-    
     // History Konfirmasi
     $routes->get('history_konfirmasi', 'HistoryKonfirmasi::history');
     $routes->get('history_konfirmasi/edit/(:num)', 'HistoryKonfirmasi::edit/$1');
@@ -74,11 +70,25 @@ $routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
     $routes->post('history_konfirmasi/hapus_hari_ini', 'HistoryKonfirmasi::hapusHariIni');
 });
 
-
-$routes->post('rekapan/delete-izin/(:num)', 'SuratIzinRekapanController::deleteIzin/$1');
-$routes->post('rekapan/delete-all-pelanggaran/(:num)', 'SuratIzinRekapanController::deleteAllPelanggaran/$1');
-$routes->post('rekapan/delete-izin-masuk/(:num)', 'SuratIzinRekapanController::deleteIzinMasuk/$1');
-// $routes->post('rekapan/delete-pelanggaran/(:num)', 'SuratIzinRekapanController::deletePelanggaran/$1');
+// =======================
+// REKAPAN
+// =======================
+$routes->group('rekapan', ['filter' => 'role:piket'], function($routes) {
+    // Index (GET /rekapan)
+    $routes->get('/', 'SuratIzinRekapanController::index');
+    
+    // Store Pelanggaran (POST /rekapan/store-pelanggaran)
+    $routes->post('store-pelanggaran', 'SuratIzinRekapanController::storePelanggaran');
+    
+    // Delete Izin Keluar (POST /rekapan/delete-izin/{id})
+    $routes->post('delete-izin/(:num)', 'SuratIzinRekapanController::deleteIzin/$1');
+    
+    // Delete Izin Masuk (POST /rekapan/delete-izin-masuk/{id})
+    $routes->post('delete-izin-masuk/(:num)', 'SuratIzinRekapanController::deleteIzinMasuk/$1');
+    
+    // Delete All Pelanggaran (POST /rekapan/delete-all-pelanggaran/{id})
+    $routes->post('delete-all-pelanggaran/(:num)', 'SuratIzinRekapanController::deleteAllPelanggaran/$1');
+});
 
 // =======================
 // BP
