@@ -57,6 +57,16 @@
                 <i data-lucide="chevron-right" class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-[#A4DE02]"></i>
             </a>
             
+            <a href="/admin/laporan" 
+                class="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 
+                <?= current_url(true) == base_url('/admin/laporan') ? 'bg-white/10 shadow-lg' : '' ?>">
+                    <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
+                        <i data-lucide="file-text" class="w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <span class="font-medium">Laporan</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-[#A4DE02]"></i>
+            </a>
+
             <a href="/admin/siswa" class="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/admin/siswa') ? 'bg-white/10 shadow-lg' : '' ?>">
                 <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
                     <i data-lucide="graduation-cap" class="w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
@@ -64,6 +74,7 @@
                 <span class="font-medium">Kelola Siswa</span>
                 <i data-lucide="chevron-right" class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-[#A4DE02]"></i>
             </a>
+
         <?php endif; ?>
     </nav>
 
