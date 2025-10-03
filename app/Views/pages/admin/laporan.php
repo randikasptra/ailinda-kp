@@ -22,7 +22,7 @@
                class="border px-2 py-1 rounded">
     </div>
     <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded mt-4">Filter</button>
-    <a href="<?= base_url('laporan-admin') ?>" class="bg-gray-500 text-white px-3 py-1 rounded mt-4">Reset</a>
+    <a href="<?= base_url('admin/laporan') ?>" class="bg-gray-500 text-white px-3 py-1 rounded mt-4">Reset</a>
 </form>
 
 

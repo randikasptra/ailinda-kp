@@ -21,7 +21,6 @@ class SiswaController extends BaseController
         $filters = [
             'keyword'  => $this->request->getGet('keyword') ?? '',
             'kelas'    => $this->request->getGet('kelas') ?? '',
-            'jurusan'  => $this->request->getGet('jurusan') ?? '',
             'jk'       => $this->request->getGet('jk') ?? '',
             'tahun'    => $this->request->getGet('tahun') ?? '',
             'poin'     => $this->request->getGet('poin') ?? '',
@@ -256,7 +255,6 @@ private function applyFilters($builder, $filters)
             'nama' => 'required',
             'jk' => 'required|in_list[L,P]',
             'kelas' => 'required',
-            'jurusan' => 'required|in_list[SAINTEK,SOSHUM,BAHASA]',
             'tahun_ajaran' => 'permit_empty',
             'poin' => 'permit_empty|numeric',
             'no_absen' => 'permit_empty|numeric'
@@ -380,7 +378,6 @@ private function applyFilters($builder, $filters)
             'nama' => 'required',
             'jk' => 'required|in_list[L,P]',
             'kelas' => 'required',
-            'jurusan' => 'required|in_list[SAINTEK,SOSHUM,BAHASA]',
             'tahun_ajaran' => 'permit_empty',
             'poin' => 'permit_empty|numeric',
             'no_absen' => 'permit_empty|numeric'
@@ -414,7 +411,7 @@ private function applyFilters($builder, $filters)
         $csv = array_map('str_getcsv', file($file->getTempName()));
         $header = array_shift($csv);
 
-        $requiredFields = ['nis', 'nama', 'jk', 'kelas', 'jurusan'];
+        $requiredFields = ['nis', 'nama', 'jk', 'kelas'];
         if (count(array_intersect($requiredFields, $header)) !== count($requiredFields)) {
             return redirect()->to('/admin/siswa')->with('error', 'Format CSV tidak valid. Harus mengandung kolom: ' . implode(', ', $requiredFields));
         }
