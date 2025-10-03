@@ -130,6 +130,11 @@ $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
     $routes->get('users/edit/(:num)', 'Admin::editUser/$1');
     $routes->post('users/update/(:num)', 'Admin::updateUser/$1');
     $routes->get('users/delete/(:num)', 'Dashboard::deleteUser/$1');
+    
+    
+    // Laporan
+    $routes->get('laporan', 'LaporanAdminController::index');
+
 });
 
 // =======================
