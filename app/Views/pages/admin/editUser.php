@@ -13,7 +13,7 @@
             </a>
         </div>
 
-        <form method="POST" action="<?= site_url('admin/updateUser/' . $user['id']) ?>">
+        <form method="POST" action="<?= site_url('admin/users/update/' . $user['id']) ?>">
             <?= csrf_field() ?>
             
             <div class="space-y-5">

@@ -135,14 +135,14 @@
                                     </button>
 
                                     <!-- Tombol Edit -->
-                                    <a href="<?= site_url('admin/editUser/' . $user['id']) ?>"
+                                    <a href="<?= site_url('admin/users/edit/' . $user['id']) ?>"
                                         class="p-2.5 text-blue-600 bg-blue-100 rounded-xl hover:bg-blue-600 hover:text-white transition-all duration-300 group/btn"
                                         title="Edit">
                                         <i class="fas fa-pencil-alt group-hover/btn:scale-110 transition-transform"></i>
                                     </a>
 
                                     <!-- Tombol Hapus -->
-                                    <form action="<?= site_url('admin/deleteUser/' . $user['id']) ?>" method="post"
+                                    <form action="<?= site_url('admin/users/delete/' . $user['id']) ?>" method="post"
                                         onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">
                                         <?= csrf_field() ?>
                                         <button type="submit" title="Hapus"
@@ -185,7 +185,7 @@
                 <i class="fas fa-times text-lg"></i>
             </button>
         </div>
-        <form method="POST" action="<?= site_url('admin/tambahUser') ?>" class="space-y-4">
+        <form method="POST" action="<?= site_url('admin/users/tambah') ?>" class="space-y-4">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
                 <div class="relative">

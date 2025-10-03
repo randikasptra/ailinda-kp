@@ -126,10 +126,11 @@ $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
     // User Management
     $routes->get('users', 'Dashboard::users');
     $routes->get('users/tambah', 'Dashboard::tambahUser');
-    $routes->post('users/store', 'Admin::storeUser');
-    $routes->get('users/edit/(:num)', 'Admin::editUser/$1');
-    $routes->post('users/update/(:num)', 'Admin::updateUser/$1');
-    $routes->get('users/delete/(:num)', 'Dashboard::deleteUser/$1');
+    $routes->post('users/tambah', 'Dashboard::tambahUser');
+    // $routes->post('users/store', 'Admin::storeUser');
+    $routes->get('users/edit/(:num)', 'Dashboard::editUser/$1');
+    $routes->post('users/update/(:num)', 'Dashboard::updateUser/$1');
+    $routes->post('users/delete/(:num)', 'Dashboard::deleteUser/$1');
     
     
     // Laporan
