@@ -5,6 +5,27 @@
     <h1 class="text-2xl font-bold mb-6">Laporan Rekap Surat Izin</h1>
 
     <!-- Rekap Izin Keluar -->
+     <div class="mt-24 px-8">
+    <h1 class="text-2xl font-bold mb-6">Laporan Rekap Surat Izin</h1>
+
+<form method="get" class="mb-6 flex items-center gap-3">
+    <div>
+        <label for="start_date" class="text-sm">Dari</label>
+        <input type="date" name="start_date" id="start_date" 
+               value="<?= esc(service('request')->getGet('start_date')) ?>" 
+               class="border px-2 py-1 rounded">
+    </div>
+    <div>
+        <label for="end_date" class="text-sm">Sampai</label>
+        <input type="date" name="end_date" id="end_date" 
+               value="<?= esc(service('request')->getGet('end_date')) ?>" 
+               class="border px-2 py-1 rounded">
+    </div>
+    <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded mt-4">Filter</button>
+    <a href="<?= base_url('laporan-admin') ?>" class="bg-gray-500 text-white px-3 py-1 rounded mt-4">Reset</a>
+</form>
+
+
     <h2 class="text-xl font-semibold mb-3">Izin Keluar</h2>
     <table class="table-auto w-full border border-gray-300 mb-8">
         <thead class="bg-gray-100">
