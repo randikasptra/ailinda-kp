@@ -4,28 +4,43 @@
 <div class="mt-24 px-8">
     <h1 class="text-2xl font-bold mb-6">Laporan Rekap Surat Izin</h1>
 
+    <form method="get" class="mb-6 flex items-center gap-3 flex-wrap">
+        <div>
+            <label for="start_date" class="text-sm">Dari</label>
+            <input type="date" name="start_date" id="start_date" 
+                   value="<?= esc(service('request')->getGet('start_date')) ?>" 
+                   class="border px-2 py-1 rounded">
+        </div>
+        <div>
+            <label for="end_date" class="text-sm">Sampai</label>
+            <input type="date" name="end_date" id="end_date" 
+                   value="<?= esc(service('request')->getGet('end_date')) ?>" 
+                   class="border px-2 py-1 rounded">
+        </div>
+        <div>
+            <label for="jenis" class="text-sm">Jenis Surat</label>
+            <select name="jenis" id="jenis" class="border px-2 py-1 rounded">
+                <option value="all" <?= ($jenis ?? 'all') == 'all' ? 'selected' : '' ?>>Semua</option>
+                <option value="keluar" <?= ($jenis ?? 'all') == 'keluar' ? 'selected' : '' ?>>Surat Keluar</option>
+                <option value="masuk" <?= ($jenis ?? 'all') == 'masuk' ? 'selected' : '' ?>>Surat Masuk</option>
+            </select>
+        </div>
+        <div>
+            <label for="search_nama" class="text-sm">Cari Nama</label>
+            <input type="text" name="search_nama" id="search_nama" 
+                   value="<?= esc(service('request')->getGet('search_nama')) ?>" 
+                   placeholder="Masukkan nama siswa" 
+                   class="border px-2 py-1 rounded">
+        </div>
+        <div class="flex gap-2 mt-6">
+            <button type="submit" name="filter" value="1" class="bg-blue-600 text-white px-3 py-1 rounded">Filter</button>
+            <button type="submit" name="export" value="1" class="bg-green-600 text-white px-3 py-1 rounded">Export Excel</button>
+            <a href="<?= base_url('admin/laporan') ?>" class="bg-gray-500 text-white px-3 py-1 rounded">Reset</a>
+        </div>
+    </form>
+
     <!-- Rekap Izin Keluar -->
-     <div class="mt-24 px-8">
-    <h1 class="text-2xl font-bold mb-6">Laporan Rekap Surat Izin</h1>
-
-<form method="get" class="mb-6 flex items-center gap-3">
-    <div>
-        <label for="start_date" class="text-sm">Dari</label>
-        <input type="date" name="start_date" id="start_date" 
-               value="<?= esc(service('request')->getGet('start_date')) ?>" 
-               class="border px-2 py-1 rounded">
-    </div>
-    <div>
-        <label for="end_date" class="text-sm">Sampai</label>
-        <input type="date" name="end_date" id="end_date" 
-               value="<?= esc(service('request')->getGet('end_date')) ?>" 
-               class="border px-2 py-1 rounded">
-    </div>
-    <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded mt-4">Filter</button>
-    <a href="<?= base_url('admin/laporan') ?>" class="bg-gray-500 text-white px-3 py-1 rounded mt-4">Reset</a>
-</form>
-
-
+    <?php if (empty($jenis) || $jenis == 'all' || $jenis == 'keluar'): ?>
     <h2 class="text-xl font-semibold mb-3">Izin Keluar</h2>
     <table class="table-auto w-full border border-gray-300 mb-8">
         <thead class="bg-gray-100">
@@ -43,28 +58,36 @@
             </tr>
         </thead>
         <tbody>
-            <?php $no = 1; foreach ($izinKeluar as $izin): ?>
+            <?php $no = 1; if (!empty($izinKeluar)): ?>
+                <?php foreach ($izinKeluar as $izin): ?>
+                    <tr>
+                        <td class="border px-2 py-2"><?= $no++ ?></td>
+                        <td class="border px-2 py-2"><?= esc($izin['nama']) ?></td>
+                        <td class="border px-2 py-2"><?= esc($izin['nisn']) ?></td>
+                        <td class="border px-2 py-2"><?= esc($izin['kelas']) ?></td>
+                        <td class="border px-2 py-2"><?= date('d-m-Y', strtotime($izin['created_at'])) ?></td>
+                        <td class="border px-2 py-2"><?= esc($izin['waktu_keluar']) ?></td>
+                        <td class="border px-2 py-2"><?= esc($izin['waktu_kembali']) ?></td>
+                        <td class="border px-2 py-2"><?= esc($izin['alasan']) ?></td>
+                        <td class="border px-2 py-2">
+                            <?= $izin['pelanggaran_list'] ?: '-' ?>
+                        </td>
+                        <td class="border px-2 py-2 text-center">
+                            <?= $izin['total_poin'] ?: 0 ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
                 <tr>
-                    <td class="border px-2 py-2"><?= $no++ ?></td>
-                    <td class="border px-2 py-2"><?= esc($izin['nama']) ?></td>
-                    <td class="border px-2 py-2"><?= esc($izin['nisn']) ?></td>
-                    <td class="border px-2 py-2"><?= esc($izin['kelas']) ?></td>
-                    <td class="border px-2 py-2"><?= date('d-m-Y', strtotime($izin['created_at'])) ?></td>
-                    <td class="border px-2 py-2"><?= esc($izin['waktu_keluar']) ?></td>
-                    <td class="border px-2 py-2"><?= esc($izin['waktu_kembali']) ?></td>
-                    <td class="border px-2 py-2"><?= esc($izin['alasan']) ?></td>
-                    <td class="border px-2 py-2">
-                        <?= $izin['pelanggaran_list'] ?: '-' ?>
-                    </td>
-                    <td class="border px-2 py-2 text-center">
-                        <?= $izin['total_poin'] ?: 0 ?>
-                    </td>
+                    <td colspan="10" class="border px-2 py-2 text-center">Tidak ada data</td>
                 </tr>
-            <?php endforeach; ?>
+            <?php endif; ?>
         </tbody>
     </table>
+    <?php endif; ?>
 
     <!-- Rekap Izin Masuk -->
+    <?php if (empty($jenis) || $jenis == 'all' || $jenis == 'masuk'): ?>
     <h2 class="text-xl font-semibold mb-3">Izin Masuk</h2>
     <table class="table-auto w-full border border-gray-300 mb-8">
         <thead class="bg-gray-100">
@@ -81,25 +104,33 @@
             </tr>
         </thead>
         <tbody>
-            <?php $no = 1; foreach ($izinMasuk as $izin): ?>
+            <?php $no = 1; if (!empty($izinMasuk)): ?>
+                <?php foreach ($izinMasuk as $izin): ?>
+                    <tr>
+                        <td class="border px-2 py-2"><?= $no++ ?></td>
+                        <td class="border px-2 py-2"><?= esc($izin['nama']) ?></td>
+                        <td class="border px-2 py-2"><?= esc($izin['nisn']) ?></td>
+                        <td class="border px-2 py-2"><?= esc($izin['kelas']) ?></td>
+                        <td class="border px-2 py-2"><?= date('d-m-Y', strtotime($izin['created_at'])) ?></td>
+                        <td class="border px-2 py-2"><?= esc($izin['alasan_terlambat']) ?></td>
+                        <td class="border px-2 py-2"><?= esc($izin['tindak_lanjut']) ?></td>
+                        <td class="border px-2 py-2">
+                            <?= $izin['pelanggaran_list'] ?: '-' ?>
+                        </td>
+                        <td class="border px-2 py-2 text-center">
+                            <?= $izin['total_poin'] ?: 0 ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
                 <tr>
-                    <td class="border px-2 py-2"><?= $no++ ?></td>
-                    <td class="border px-2 py-2"><?= esc($izin['nama']) ?></td>
-                    <td class="border px-2 py-2"><?= esc($izin['nisn']) ?></td>
-                    <td class="border px-2 py-2"><?= esc($izin['kelas']) ?></td>
-                    <td class="border px-2 py-2"><?= date('d-m-Y', strtotime($izin['created_at'])) ?></td>
-                    <td class="border px-2 py-2"><?= esc($izin['alasan_terlambat']) ?></td>
-                    <td class="border px-2 py-2"><?= esc($izin['tindak_lanjut']) ?></td>
-                    <td class="border px-2 py-2">
-                        <?= $izin['pelanggaran_list'] ?: '-' ?>
-                    </td>
-                    <td class="border px-2 py-2 text-center">
-                        <?= $izin['total_poin'] ?: 0 ?>
-                    </td>
+                    <td colspan="9" class="border px-2 py-2 text-center">Tidak ada data</td>
                 </tr>
-            <?php endforeach; ?>
+            <?php endif; ?>
         </tbody>
     </table>
+    <?php endif; ?>
+
 </div>
 
 <?= $this->endSection() ?>

@@ -1,602 +1,533 @@
-<?= $this->extend('layout/dashboard') ?>
+<?= $this->extend('layout/dashboard_admin') ?>
 <?= $this->section('content') ?>
 
-<div class="mt-24 px-4 md:px-8">
-    <!-- Page Header -->
+<div class="p-8 mt-14">
+    <!-- Header Section -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div class="flex items-center">
             <div class="p-3 rounded-xl bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] shadow-lg mr-4">
-                <i class="fas fa-file-alt text-white text-2xl"></i>
+                <i class="fas fa-exclamation-triangle text-white text-2xl"></i>
             </div>
             <div>
-                <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Rekapan Surat Izin Siswa</h1>
-                <p class="text-gray-600 mt-1 text-sm md:text-base">Lihat rekapan surat izin keluar dan masuk siswa</p>
+                <h1 class="text-3xl font-bold text-gray-800">Kelola Pelanggaran</h1>
+                <p class="text-gray-600 mt-1">Manajemen data jenis pelanggaran dan poin</p>
             </div>
         </div>
-        
-        <!-- Stats Overview -->
-        <div class="flex items-center gap-4">
-            <div class="bg-white rounded-xl shadow-sm p-3 border border-gray-200">
-                <div class="flex items-center gap-2">
-                    <div class="p-2 rounded-lg bg-green-100 text-green-600">
-                        <i class="fas fa-file-alt text-sm"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-600">Total Izin</p>
-                        <p class="font-semibold text-gray-800"><?= count($surat_izin) + count($surat_izin_masuk) ?> Data</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <button onclick="openModal('modalTambah')"
+            class="flex items-center bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white px-6 py-3 rounded-xl hover:shadow-xl transition-all duration-300 shadow-md group">
+            <i class="fas fa-plus-circle mr-3 group-hover:scale-110 transition-transform"></i>
+            Tambah Pelanggaran
+        </button>
     </div>
 
-    <!-- Flash Message -->
+    <!-- Alert Notification -->
     <?php if (session()->getFlashdata('success')): ?>
         <div class="flex items-center bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-xl shadow-sm">
             <i class="fas fa-check-circle text-green-500 text-xl mr-3"></i>
-            <p class="font-medium"><?= esc(session()->getFlashdata('success')) ?></p>
+            <div>
+                <p class="font-medium"><?= session()->getFlashdata('success') ?></p>
+            </div>
             <button class="ml-auto text-green-700 hover:text-green-900" onclick="this.parentElement.style.display='none'">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-    <?php endif; ?>
-    <?php if (session()->getFlashdata('error')): ?>
+    <?php elseif (session()->getFlashdata('error')): ?>
         <div class="flex items-center bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-xl shadow-sm">
             <i class="fas fa-exclamation-circle text-red-500 text-xl mr-3"></i>
-            <p class="font-medium"><?= esc(session()->getFlashdata('error')) ?></p>
+            <div>
+                <p class="font-medium"><?= session()->getFlashdata('error') ?></p>
+            </div>
             <button class="ml-auto text-red-700 hover:text-red-900" onclick="this.parentElement.style.display='none'">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    <?php elseif (session()->getFlashdata('warning')): ?>
+        <div class="flex items-center bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded-xl shadow-sm">
+            <i class="fas fa-exclamation-triangle text-yellow-500 text-xl mr-3"></i>
+            <div>
+                <p class="font-medium"><?= session()->getFlashdata('warning') ?></p>
+            </div>
+            <button class="ml-auto text-yellow-700 hover:text-yellow-900" onclick="this.parentElement.style.display='none'">
                 <i class="fas fa-times"></i>
             </button>
         </div>
     <?php endif; ?>
 
-    <!-- Tab Navigation -->
-    <ul class="flex border-b border-gray-200 mb-6" role="tablist">
-        <li class="mr-1">
-            <a class="inline-block px-4 py-2 text-sm font-medium text-gray-600 bg-white border-t border-x border-gray-200 rounded-t-lg active:bg-gray-50 active:text-[#1E5631]" 
-               id="keluar-tab" data-toggle="tab" href="#keluar" role="tab">Surat Izin Keluar</a>
-        </li>
-        <li class="mr-1">
-            <a class="inline-block px-4 py-2 text-sm font-medium text-gray-600 bg-white border-t border-x border-gray-200 rounded-t-lg active:bg-gray-50 active:text-[#1E5631]" 
-               id="masuk-tab" data-toggle="tab" href="#masuk" role="tab">Surat Izin Masuk</a>
-        </li>
-    </ul>
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-gradient-to-br from-[#f0fdf4] to-[#d9f99d] rounded-2xl shadow-lg p-5 border-l-4 border-[#A4DE02]">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-[#1E5631]">Total Jenis Pelanggaran</p>
+                    <p class="text-2xl font-bold text-[#14532d]"><?= count($pelanggaran) ?></p>
+                </div>
+                <div class="p-3 rounded-xl bg-white shadow-sm">
+                    <i class="fas fa-list-ol text-[#A4DE02] text-xl"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-gradient-to-br from-[#f0f9ff] to-[#e0f2fe] rounded-2xl shadow-lg p-5 border-l-4 border-blue-400">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-blue-900">Poin Tertinggi</p>
+                    <p class="text-2xl font-bold text-blue-800">
+                        <?= !empty($pelanggaran) ? max(array_column($pelanggaran, 'poin')) : '0' ?>
+                    </p>
+                </div>
+                <div class="p-3 rounded-xl bg-white shadow-sm">
+                    <i class="fas fa-arrow-up text-blue-500 text-xl"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-gradient-to-br from-[#fef2f2] to-[#fecaca] rounded-2xl shadow-lg p-5 border-l-4 border-red-400">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-red-700">Poin Terendah</p>
+                    <p class="text-2xl font-bold text-red-600">
+                        <?= !empty($pelanggaran) ? min(array_column($pelanggaran, 'poin')) : '0' ?>
+                    </p>
+                </div>
+                <div class="p-3 rounded-xl bg-white shadow-sm">
+                    <i class="fas fa-arrow-down text-red-500 text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <!-- Tab Content -->
-    <div class="tab-content" id="izinTabContent">
-        <!-- Surat Izin Keluar -->
-        <div class="tab-pane fade show active" id="keluar" role="tabpanel">
-            <?php if (empty($surat_izin)): ?>
-                <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12 text-center">
-                    <div class="mx-auto w-24 h-24 bg-green-50 rounded-full flex items-center justify-center mb-6">
-                        <i class="fas fa-check-circle text-green-500 text-4xl"></i>
-                    </div>
-                    <h3 class="text-lg md:text-xl font-semibold text-gray-800 mb-2">Tidak ada data surat izin keluar</h3>
-                    <p class="text-gray-500 text-sm md:text-base mb-6">Belum ada siswa yang mengajukan izin keluar saat ini</p>
+    <!-- Table Container -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+        <!-- Table Header with Stats and Filters -->
+        <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+            <form method="get" class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800">Daftar Jenis Pelanggaran</h3>
+                    <p class="text-sm text-gray-600">Total <?= count($pelanggaran) ?> jenis pelanggaran</p>
                 </div>
-            <?php else: ?>
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
-                    <!-- Table Header -->
-                    <div class="bg-gray-50 px-4 md:px-6 py-4 border-b border-gray-200">
-                        <div class="flex flex-wrap items-center justify-between gap-4">
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-800">Daftar Surat Izin Keluar</h3>
-                                <p class="text-sm text-gray-600">Total <?= count($surat_izin) ?> data</p>
-                            </div>
-                            <div class="relative w-full md:w-auto">
-                                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                                <input type="text" placeholder="Cari siswa..." 
-                                       class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] w-full md:w-64">
-                            </div>
-                        </div>
+                <div class="flex items-center gap-3">
+                    <!-- Filter Kategori -->
+                    <select name="kategori" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
+                        <option value="">Semua Kategori</option>
+                        <option value="Ringan" <?= ($filters['kategori'] ?? '') == 'Ringan' ? 'selected' : '' ?>>Ringan</option>
+                        <option value="Sedang" <?= ($filters['kategori'] ?? '') == 'Sedang' ? 'selected' : '' ?>>Sedang</option>
+                        <option value="Berat" <?= ($filters['kategori'] ?? '') == 'Berat' ? 'selected' : '' ?>>Berat</option>
+                    </select>
+
+                    <!-- Filter Poin -->
+                    <select name="poin" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
+                        <option value="">Semua Poin</option>
+                        <option value="0-10" <?= ($filters['poin'] ?? '') == '0-10' ? 'selected' : '' ?>>0-10 Poin</option>
+                        <option value="11-20" <?= ($filters['poin'] ?? '') == '11-20' ? 'selected' : '' ?>>11-20 Poin</option>
+                        <option value=">20" <?= ($filters['poin'] ?? '') == '>20' ? 'selected' : '' ?>>>20 Poin</option>
+                    </select>
+
+                    <!-- Search -->
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" name="search" placeholder="Cari jenis pelanggaran..." 
+                            value="<?= esc($filters['search'] ?? '') ?>"
+                            class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
                     </div>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white">
-                                <tr>
-                                    <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium uppercase tracking-wider">Nama Siswa</th>
-                                    <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium uppercase tracking-wider">NISN</th>
-                                    <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium uppercase tracking-wider">Kelas</th>
-                                    <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium uppercase tracking-wider">Alasan</th>
-                                    <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium uppercase tracking-wider">Waktu Keluar</th>
-                                    <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium uppercase tracking-wider">Waktu Kembali</th>
-                                    <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium uppercase tracking-wider">Pelanggaran</th>
-                                    <th class="px-4 md:px-6 py-3 md:py-4 text-right text-xs md:text-sm font-medium uppercase tracking-wider">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <?php foreach ($surat_izin as $izin): ?>
-                                    <tr x-data="pelanggaranModal(<?= json_encode($pelanggarans ?? [], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>, <?= json_encode($izin['pelanggaran'] ?? [], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)">
-                                        <td class="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0 h-10 w-10 bg-[#1E5631]/10 rounded-full flex items-center justify-center">
-                                                    <span class="text-[#1E5631] font-medium"><?= strtoupper(substr(esc($izin['nama']), 0, 1)) ?></span>
-                                                </div>
-                                                <div class="ml-3 md:ml-4">
-                                                    <div class="text-sm font-medium text-gray-900"><?= esc($izin['nama']) ?></div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                                            <span class="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full"><?= esc($izin['nisn']) ?></span>
-                                        </td>
-                                        <td class="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                                            <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full"><?= esc($izin['kelas']) ?></span>
-                                        </td>
-                                        <td class="px-4 md:px-6 py-3 md:py-4 whitespace-normal text-sm text-gray-500">
-                                            <?= esc($izin['alasan']) ?>
-                                        </td>
-                                        <td class="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <div class="flex items-center">
-                                                <i class="fas fa-clock w-4 h-4 mr-1 text-gray-400"></i>
-                                                <?= esc($izin['waktu_keluar']) ?>
-                                            </div>
-                                        </td>
-                                        <td class="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <div class="flex items-center">
-                                                <i class="fas fa-clock w-4 h-4 mr-1 text-gray-400"></i>
-                                                <?= esc($izin['waktu_kembali']) ?: '-' ?>
-                                            </div>
-                                        </td>
-                                        <td class="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                                            <div class="mt-1 flex flex-wrap gap-2">
-                                                <template x-for="(item, index) in selected" :key="item.id">
-                                                    <span class="inline-flex items-center bg-[#1E5631] text-white text-xs font-medium rounded-full px-2 py-1">
-                                                        <span x-text="item.jenis_pelanggaran"></span>
-                                                        <button type="button" @click="remove(index)" class="ml-1 hover:text-gray-200">&times;</button>
-                                                    </span>
-                                                </template>
-                                                <?php if (empty($izin['pelanggaran']) && !isset($selected) || empty($selected)): ?>
-                                                    <span class="text-gray-500 text-sm">Tidak ada pelanggaran</span>
-                                                <?php endif; ?>
-                                            </div>
-                                        </td>
-                                        <td class="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap text-right">
-                                            <form action="<?= base_url('piket/surat_izin_pelanggaran/' . $izin['id']) ?>" method="post" id="form-<?= $izin['id'] ?>">
-                                                <?= csrf_field() ?>
-                                                <div class="flex items-center gap-2">
-                                                    <!-- Aksi Detail -->
-                                                    <button type="button" 
-                                                            @click="openDetailModal(<?= htmlspecialchars(json_encode($izin), ENT_QUOTES, 'UTF-8') ?>)"
-                                                            class="text-xs bg-blue-100 text-blue-600 font-medium px-2 py-1 rounded-lg border border-blue-200 hover:bg-blue-200 transition">
-                                                        <i class="fas fa-eye mr-1"></i> Detail
-                                                    </button>
-                                                    
-                                                    <!-- Aksi Edit -->
-                                                    <a href="<?= base_url('piket/surat_izin/edit/' . $izin['id']) ?>"
-                                                       class="text-xs bg-yellow-100 text-yellow-600 font-medium px-2 py-1 rounded-lg border border-yellow-200 hover:bg-yellow-200 transition">
-                                                        <i class="fas fa-edit mr-1"></i> Edit
-                                                    </a>
-                                                    
-                                                    <!-- Aksi Hapus -->
-                                                    <button type="button" 
-                                                            @click="openDeleteModal(<?= $izin['id'] ?>, '<?= esc($izin['nama']) ?>')"
-                                                            class="text-xs bg-red-100 text-red-600 font-medium px-2 py-1 rounded-lg border border-red-200 hover:bg-red-200 transition">
-                                                        <i class="fas fa-trash mr-1"></i> Hapus
-                                                    </button>
-                                                </div>
-                                                <div class="mt-1">
-                                                    <template x-for="s in selected" :key="s.id">
-                                                        <input type="hidden" name="pelanggaran_id[]" :value="s.id" form="form-<?= $izin['id'] ?>">
-                                                    </template>
-                                                    <button type="submit"
-                                                            class="mt-1 inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-[#1E5631] to-[#2E7D32] hover:from-[#145128] hover:to-[#1B5E20] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1E5631]/50 transition-all">
-                                                        <i class="fas fa-check-circle w-3 h-3 mr-1"></i> Simpan
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                    </div>
+
+                    <!-- Tombol Filter -->
+                    <button type="submit" class="px-4 py-2 bg-[#1E5631] text-white rounded-lg hover:bg-[#174726] transition">
+                        <i class="fas fa-filter mr-1"></i> Filter
+                    </button>
+
+                    <!-- Tombol Reset -->
+                    <a href="/admin/pelanggaran" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                        <i class="fas fa-undo mr-1"></i> Reset
+                    </a>
                 </div>
-            <?php endif; ?>
+            </form>
         </div>
 
-        <!-- Surat Izin Masuk -->
-        <div class="tab-pane fade" id="masuk" role="tabpanel">
-            <?php if (empty($surat_izin_masuk)): ?>
-                <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12 text-center">
-                    <div class="mx-auto w-24 h-24 bg-green-50 rounded-full flex items-center justify-center mb-6">
-                        <i class="fas fa-check-circle text-green-500 text-4xl"></i>
-                    </div>
-                    <h3 class="text-lg md:text-xl font-semibold text-gray-800 mb-2">Tidak ada data surat izin masuk</h3>
-                    <p class="text-gray-500 text-sm md:text-base mb-6">Belum ada siswa yang mengajukan izin masuk saat ini</p>
-                </div>
-            <?php else: ?>
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
-                    <!-- Table Header -->
-                    <div class="bg-gray-50 px-4 md:px-6 py-4 border-b border-gray-200">
-                        <div class="flex flex-wrap items-center justify-between gap-4">
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-800">Daftar Surat Izin Masuk</h3>
-                                <p class="text-sm text-gray-600">Total <?= count($surat_izin_masuk) ?> data</p>
-                            </div>
-                            <div class="relative w-full md:w-auto">
-                                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                                <input type="text" placeholder="Cari siswa..." 
-                                       class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] w-full md:w-64">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white">
-                                <tr>
-                                    <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium uppercase tracking-wider">Nama Siswa</th>
-                                    <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium uppercase tracking-wider">NISN</th>
-                                    <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium uppercase tracking-wider">Kelas</th>
-                                    <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium uppercase tracking-wider">Alasan Terlambat</th>
-                                    <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium uppercase tracking-wider">Tindak Lanjut</th>
-                                    <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium uppercase tracking-wider">Pelanggaran</th>
-                                    <th class="px-4 md:px-6 py-3 md:py-4 text-right text-xs md:text-sm font-medium uppercase tracking-wider">Aksi</th>
-                                    <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs md:text-sm font-medium uppercase tracking-wider">Tanggal Dibuat</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <?php foreach ($surat_izin_masuk as $izin): ?>
-                                    <tr x-data="pelanggaranModal(<?= json_encode($pelanggarans ?? [], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>, <?= json_encode($izin['pelanggaran'] ?? [], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>)">
-                                        <td class="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0 h-10 w-10 bg-[#1E5631]/10 rounded-full flex items-center justify-center">
-                                                    <span class="text-[#1E5631] font-medium"><?= strtoupper(substr(esc($izin['nama']), 0, 1)) ?></span>
-                                                </div>
-                                                <div class="ml-3 md:ml-4">
-                                                    <div class="text-sm font-medium text-gray-900"><?= esc($izin['nama']) ?></div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                                            <span class="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full"><?= esc($izin['nisn']) ?></span>
-                                        </td>
-                                        <td class="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                                            <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full"><?= esc($izin['kelas']) ?></span>
-                                        </td>
-                                        <td class="px-4 md:px-6 py-3 md:py-4 whitespace-normal text-sm text-gray-500">
-                                            <?= esc($izin['alasan_terlambat']) ?: '-' ?>
-                                        </td>
-                                        <td class="px-4 md:px-6 py-3 md:py-4 whitespace-normal text-sm text-gray-500">
-                                            <?= esc($izin['tindak_lanjut']) ?: '-' ?>
-                                        </td>
-                                        <td class="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                                            <div class="mt-1 flex flex-wrap gap-2">
-                                                <template x-for="(item, index) in selected" :key="item.id">
-                                                    <span class="inline-flex items-center bg-[#1E5631] text-white text-xs font-medium rounded-full px-2 py-1">
-                                                        <span x-text="item.jenis_pelanggaran"></span>
-                                                        <button type="button" @click="remove(index)" class="ml-1 hover:text-gray-200">&times;</button>
-                                                    </span>
-                                                </template>
-                                                <?php if (empty($izin['pelanggaran']) && !isset($selected) || empty($selected)): ?>
-                                                    <span class="text-gray-500 text-sm">Tidak ada pelanggaran</span>
-                                                <?php endif; ?>
-                                            </div>
-                                        </td>
-                                        <td class="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap text-right">
-                                            <form action="<?= base_url('piket/surat_izin_masuk_pelanggaran/' . $izin['id']) ?>" method="post" id="form-masuk-<?= $izin['id'] ?>">
-                                                <?= csrf_field() ?>
-                                                <div class="flex items-center gap-2">
-                                                    <!-- Aksi Detail -->
-                                                    <button type="button" 
-                                                            @click="openDetailModal(<?= htmlspecialchars(json_encode($izin), ENT_QUOTES, 'UTF-8') ?>)"
-                                                            class="text-xs bg-blue-100 text-blue-600 font-medium px-2 py-1 rounded-lg border border-blue-200 hover:bg-blue-200 transition">
-                                                        <i class="fas fa-eye mr-1"></i> Detail
-                                                    </button>
-                                                    
-                                                    <!-- Aksi Edit -->
-                                                    <a href="<?= base_url('piket/surat_izin_masuk/edit/' . $izin['id']) ?>"
-                                                       class="text-xs bg-yellow-100 text-yellow-600 font-medium px-2 py-1 rounded-lg border border-yellow-200 hover:bg-yellow-200 transition">
-                                                        <i class="fas fa-edit mr-1"></i> Edit
-                                                    </a>
-                                                    
-                                                    
-                                                    <!-- Aksi Hapus -->
-                                                    <button type="button" 
-                                                            @click="openDeleteModal(<?= $izin['id'] ?>, '<?= esc($izin['nama']) ?>', 'masuk')"
-                                                            class="text-xs bg-red-100 text-red-600 font-medium px-2 py-1 rounded-lg border border-red-200 hover:bg-red-200 transition">
-                                                        <i class="fas fa-trash mr-1"></i> Hapus
-                                                    </button>
-                                                </div>
-                                                <div class="mt-1">
-                                                    <template x-for="s in selected" :key="s.id">
-                                                        <input type="hidden" name="pelanggaran_id[]" :value="s.id" form="form-masuk-<?= $izin['id'] ?>">
-                                                    </template>
-                                                    <button type="submit"
-                                                            class="mt-1 inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-[#1E5631] to-[#2E7D32] hover:from-[#145128] hover:to-[#1B5E20] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1E5631]/50 transition-all">
-                                                        <i class="fas fa-check-circle w-3 h-3 mr-1"></i> Simpan
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </td>
-                                        <td class="px-4 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <div class="flex items-center">
-                                                <i class="fas fa-calendar w-4 h-4 mr-1 text-gray-400"></i>
-                                                <?= date('d-m-Y H:i', strtotime($izin['created_at'])) ?>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                            <!-- Modal Pilih Pelanggaran -->
-                            <div x-show="open" x-cloak
-                                 class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center px-2"
-                                 x-transition>
-                                <div @click.away="open = false"
-                                     class="bg-white rounded-lg shadow-xl w-full max-w-lg max-h-[70vh] overflow-y-auto p-4">
-                                    <!-- Header -->
-                                    <div class="flex justify-between items-center mb-2">
-                                        <h2 class="text-base font-semibold text-[#1E5631]">Pilih Pelanggaran</h2>
-                                        <button @click="open = false" 
-                                                class="text-gray-400 hover:text-red-500 text-lg">&times;</button>
-                                    </div>
-                                    <!-- List Pelanggaran -->
-                                    <div class="grid grid-cols-1 gap-2">
-                                        <template x-for="p in list" :key="p.id">
-                                            <div @click="toggle(p)"
-                                                 class="p-2 border rounded-md hover:bg-[#f4fdf6] cursor-pointer transition shadow-sm flex flex-col justify-between h-full"
-                                                 :class="{'bg-green-50 border-green-400': isSelected(p)}">
-                                                <div class="text-xs font-medium text-gray-800 break-words whitespace-normal leading-tight">
-                                                    <span x-text="p.jenis_pelanggaran"></span>
-                                                </div>
-                                                <div class="flex justify-between items-center mt-1">
-                                                    <span class="text-xs text-gray-500" 
-                                                          x-text="p.kategori + ' - ' + p.poin + ' poin'"></span>
-                                                    <template x-if="isSelected(p)">
-                                                        <i class="text-green-500 font-bold text-sm">&#10003;</i>
-                                                    </template>
-                                                </div>
-                                            </div>
-                                        </template>
-                                    </div>
+        <!-- Table -->
+        <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
+            <?php if (!empty($pelanggaran)): ?>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white sticky top-0 z-10">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider w-16">
+                                No
+                            </th>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <i class="fas fa-exclamation-circle mr-2"></i>
+                                    Jenis Pelanggaran
                                 </div>
-                            </div>
-                    </div>
+                            </th>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <i class="fas fa-tags mr-2"></i>
+                                    Kategori
+                                </div>
+                            </th>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <i class="fas fa-star mr-2"></i>
+                                    Poin
+                                </div>
+                            </th>
+                            <th class="px-6 py-4 text-left text-sm font-medium uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <i class="fas fa-cog mr-2"></i>
+                                    Aksi
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <?php foreach ($pelanggaran as $index => $row): ?>
+                            <tr class="hover:bg-gray-50/50 transition-colors duration-200 group">
+                                <td class="px-6 py-4 text-center font-medium text-gray-500">
+                                    <?= $index + 1 ?>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="p-2 rounded-xl bg-red-100 text-red-600 mr-3">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                        <div class="font-semibold text-gray-900">
+                                            <?= esc($row['jenis_pelanggaran']) ?>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-gray-700">
+                                    <?= !empty($row['kategori']) ? esc($row['kategori']) : '<span class="text-gray-400 italic">Tidak ada</span>' ?>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="px-3 py-1.5 inline-flex items-center text-sm font-semibold rounded-full bg-[#A4DE02]/20 text-[#1E5631] border border-[#A4DE02]/30">
+                                        <i class="fas fa-star text-[#A4DE02] mr-1.5 text-xs"></i>
+                                        <?= esc($row['poin']) ?> Poin
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-2">
+                                        <!-- Tombol Detail -->
+                                        <button
+                                            onclick="showDetailModal('<?= esc($row['jenis_pelanggaran']) ?>', <?= $row['poin'] ?>, '<?= esc($row['kategori'] ?? '') ?>')"
+                                            class="p-2.5 text-gray-600 bg-gray-100 rounded-xl hover:bg-[#1E5631] hover:text-white transition-all duration-300 group/btn"
+                                            title="Detail">
+                                            <i class="fas fa-eye group-hover/btn:scale-110 transition-transform"></i>
+                                        </button>
+
+                                        <!-- Tombol Edit (sekarang modal) -->
+                                        <button
+                                            onclick="showEditModal(<?= $row['id'] ?>, '<?= esc($row['jenis_pelanggaran']) ?>', '<?= esc($row['kategori'] ?? '') ?>', <?= $row['poin'] ?>)"
+                                            class="p-2.5 text-blue-600 bg-blue-100 rounded-xl hover:bg-blue-600 hover:text-white transition-all duration-300 group/btn"
+                                            title="Edit">
+                                            <i class="fas fa-pencil-alt group-hover/btn:scale-110 transition-transform"></i>
+                                        </button>
+
+                                        <!-- Tombol Hapus -->
+                                        <a href="/admin/pelanggaran/hapus/<?= $row['id'] ?>"
+                                            onclick="return confirm('Apakah Anda yakin ingin menghapus pelanggaran ini?')"
+                                            class="p-2.5 text-red-600 bg-red-100 rounded-xl hover:bg-red-600 hover:text-white transition-all duration-300 group/btn"
+                                            title="Hapus">
+                                            <i class="fas fa-trash-alt group-hover/btn:scale-110 transition-transform"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <!-- Empty State -->
+                <div class="text-center py-16 bg-white rounded-2xl shadow-lg mt-6">
+                    <i class="fas fa-exclamation-triangle text-4xl text-gray-300 mb-4"></i>
+                    <h3 class="text-lg font-semibold text-gray-700">Belum ada data pelanggaran</h3>
+                    <p class="text-gray-500 mt-1">Tambahkan jenis pelanggaran pertama untuk memulai</p>
+                    <button onclick="openModal('modalTambah')" class="mt-4 bg-[#1E5631] text-white px-6 py-2.5 rounded-lg hover:bg-[#145128] transition-colors">
+                        <i class="fas fa-plus-circle mr-2"></i>Tambah Pelanggaran
+                    </button>
                 </div>
             <?php endif; ?>
         </div>
+
+
+        <!-- Back to Top Button -->
+        <button id="backToTop" class="fixed bottom-8 right-8 bg-[#1E5631] text-white p-3 rounded-full shadow-lg hover:bg-[#174726] transition-all duration-300 hidden">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+    </div>
+
+    <!-- MODAL EDIT -->
+<div id="modalEdit" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 hidden">
+    <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md border border-[#1E5631]/20 animate-scaleIn">
+        <div class="flex justify-between items-center mb-5">
+            <h2 class="text-xl font-bold text-[#1E5631] flex items-center">
+                <i class="fas fa-pencil-alt mr-2"></i>
+                Edit Pelanggaran
+            </h2>
+            <button onclick="closeModal('modalEdit')"
+                class="text-gray-400 hover:text-gray-600 transition duration-200 p-1 rounded-full hover:bg-gray-100">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+        </div>
+        <form id="editForm" action="" method="POST" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Pelanggaran</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-exclamation-triangle text-gray-400"></i>
+                    </div>
+                    <input type="text" name="jenis_pelanggaran" id="editJenis"
+                        class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
+                        placeholder="Masukkan jenis pelanggaran" required>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-tag text-gray-400"></i>
+                    </div>
+                    <select name="kategori" id="editKategori"
+                        class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] appearance-none bg-white">
+                        <option value="">Pilih Kategori</option>
+                        <option value="Ringan">Ringan</option>
+                        <option value="Sedang">Sedang</option>
+                        <option value="Berat">Berat</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <i class="fas fa-chevron-down text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Poin</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-star text-gray-400"></i>
+                    </div>
+                    <input type="number" name="poin" id="editPoin" min="1"
+                        class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
+                        placeholder="Masukkan poin" required>
+                </div>
+            </div>
+            <div class="flex gap-3 pt-4">
+                <button type="button" onclick="closeModal('modalEdit')"
+                    class="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition duration-200 font-medium">
+                    Batal
+                </button>
+                <button type="submit"
+                    class="flex-1 px-4 py-3 bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white rounded-xl hover:shadow-lg transition duration-200 font-medium shadow-md">
+                    Simpan
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
-<!-- Modal Detail -->
-<div x-data="{ detailModal: false, selectedIzin: null }" x-cloak>
-    <!-- Modal Overlay -->
-    <div x-show="detailModal" 
-         class="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center px-4 transition-opacity duration-300"
-         x-transition:enter="ease-out duration-300"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100"
-         x-transition:leave="ease-in duration-200"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
-             @click.away="detailModal = false"
-             x-show="detailModal"
-             x-transition:enter="ease-out duration-300"
-             x-transition:enter-start="opacity-0 scale-95"
-             x-transition:enter-end="opacity-100 scale-100"
-             x-transition:leave="ease-in duration-200"
-             x-transition:leave-start="opacity-100 scale-100"
-             x-transition:leave-end="opacity-0 scale-95">
-            
-            <!-- Header -->
-            <div class="bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white p-6 rounded-t-2xl">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h2 class="text-xl font-bold">Detail Surat Izin</h2>
-                        <p class="text-green-100 mt-1" x-text="selectedIzin ? (selectedIzin.alasan_terlambat ? 'Izin Masuk' : 'Izin Keluar') : ''"></p>
+    <!-- MODAL TAMBAH -->
+    <div id="modalTambah" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 hidden">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md border border-[#1E5631]/20 animate-scaleIn">
+            <div class="flex justify-between items-center mb-5">
+                <h2 class="text-xl font-bold text-[#1E5631] flex items-center">
+                    <i class="fas fa-plus-circle mr-2"></i>
+                    Tambah Pelanggaran
+                </h2>
+                <button onclick="closeModal('modalTambah')"
+                    class="text-gray-400 hover:text-gray-600 transition duration-200 p-1 rounded-full hover:bg-gray-100">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+            <form action="/admin/pelanggaran/tambah" method="POST" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Pelanggaran</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-exclamation-triangle text-gray-400"></i>
+                        </div>
+                        <input type="text" name="jenis_pelanggaran"
+                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
+                            placeholder="Masukkan jenis pelanggaran" required>
                     </div>
-                    <button @click="detailModal = false" class="text-white hover:text-green-200 text-2xl">
-                        <i class="fas fa-times"></i>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-tag text-gray-400"></i>
+                        </div>
+                        <select name="kategori"
+                            class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] appearance-none bg-white">
+                            <option value="">Pilih Kategori</option>
+                            <option value="Ringan">Ringan</option>
+                            <option value="Sedang">Sedang</option>
+                            <option value="Berat">Berat</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Poin</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-star text-gray-400"></i>
+                        </div>
+                        <input type="number" name="poin" min="1"
+                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
+                            placeholder="Masukkan poin" required>
+                    </div>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="button" onclick="closeModal('modalTambah')"
+                        class="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition duration-200 font-medium">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="flex-1 px-4 py-3 bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white rounded-xl hover:shadow-lg transition duration-200 font-medium shadow-md">
+                        Simpan
                     </button>
                 </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DETAIL -->
+    <div id="modalDetail" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 hidden">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md border border-[#1E5631]/20 animate-scaleIn">
+            <div class="flex justify-between items-center mb-5">
+                <h2 class="text-xl font-bold text-[#1E5631] flex items-center">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    Detail Pelanggaran
+                </h2>
+                <button onclick="closeModal('modalDetail')"
+                    class="text-gray-400 hover:text-gray-600 transition duration-200 p-1 rounded-full hover:bg-gray-100">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
             </div>
-
-            <!-- Content -->
-            <div class="p-6" x-show="selectedIzin">
-                <!-- Info Siswa -->
-                <div class="mb-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                        <i class="fas fa-user-graduate text-[#1E5631] mr-2"></i>
-                        Informasi Siswa
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-sm font-medium text-gray-600">Nama Lengkap</label>
-                            <p class="text-gray-800 font-medium" x-text="selectedIzin.nama"></p>
-                        </div>
-                        <div>
-                            <label class="text-sm font-medium text-gray-600">NISN</label>
-                            <p class="text-gray-800 font-medium" x-text="selectedIzin.nisn"></p>
-                        </div>
-                        <div>
-                            <label class="text-sm font-medium text-gray-600">Kelas</label>
-                            <p class="text-gray-800 font-medium" x-text="selectedIzin.kelas"></p>
-                        </div>
-                        <div>
-                            <label class="text-sm font-medium text-gray-600">Tanggal Dibuat</label>
-                            <p class="text-gray-800 font-medium" x-text="formatDate(selectedIzin.created_at)"></p>
-                        </div>
+            <div class="space-y-4">
+                <div class="flex items-center justify-center mb-4">
+                    <div class="w-16 h-16 bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] rounded-xl flex items-center justify-center text-white text-2xl shadow-lg">
+                        <i class="fas fa-exclamation-triangle"></i>
                     </div>
                 </div>
-
-                <!-- Detail Izin -->
-                <div class="mb-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                        <i class="fas fa-file-alt text-[#1E5631] mr-2"></i>
-                        Detail Izin
-                    </h3>
-                    <div class="space-y-4">
-                        <!-- Untuk Izin Keluar -->
-                        <template x-if="!selectedIzin.alasan_terlambat">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="text-sm font-medium text-gray-600">Alasan Izin</label>
-                                    <p class="text-gray-800" x-text="selectedIzin.alasan || '-'"></p>
-                                </div>
-                                <div>
-                                    <label class="text-sm font-medium text-gray-600">Waktu Keluar</label>
-                                    <p class="text-gray-800" x-text="selectedIzin.waktu_keluar || '-'"></p>
-                                </div>
-                                <div>
-                                    <label class="text-sm font-medium text-gray-600">Waktu Kembali</label>
-                                    <p class="text-gray-800" x-text="selectedIzin.waktu_kembali || '-'"></p>
-                                </div>
-                            </div>
-                        </template>
-
-                        <!-- Untuk Izin Masuk -->
-                        <template x-if="selectedIzin.alasan_terlambat">
-                            <div class="grid grid-cols-1 gap-4">
-                                <div>
-                                    <label class="text-sm font-medium text-gray-600">Alasan Terlambat</label>
-                                    <p class="text-gray-800" x-text="selectedIzin.alasan_terlambat || '-'"></p>
-                                </div>
-                                <div>
-                                    <label class="text-sm font-medium text-gray-600">Tindak Lanjut</label>
-                                    <p class="text-gray-800" x-text="selectedIzin.tindak_lanjut || '-'"></p>
-                                </div>
-                            </div>
-                        </template>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Jenis Pelanggaran</label>
+                        <p id="detailJenis" class="text-gray-800 font-semibold"></p>
                     </div>
-                </div>
-
-                <!-- Pelanggaran -->
-                <div class="mb-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                        <i class="fas fa-exclamation-triangle text-[#1E5631] mr-2"></i>
-                        Pelanggaran
-                    </h3>
-                    <div x-show="selectedIzin.pelanggaran && selectedIzin.pelanggaran.length > 0">
-                        <div class="space-y-2">
-                            <template x-for="pelanggaran in selectedIzin.pelanggaran" :key="pelanggaran.id">
-                                <div class="flex items-center justify-between p-3 bg-red-50 border border-red-200 rounded-lg">
-                                    <div>
-                                        <p class="font-medium text-red-800" x-text="pelanggaran.jenis_pelanggaran"></p>
-                                        <p class="text-sm text-red-600" x-text="pelanggaran.kategori + ' - ' + pelanggaran.poin + ' poin'"></p>
-                                    </div>
-                                </div>
-                            </template>
-                        </div>
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Kategori</label>
+                        <p id="detailKategori" class="text-gray-800 font-semibold"></p>
                     </div>
-                    <div x-show="!selectedIzin.pelanggaran || selectedIzin.pelanggaran.length === 0" class="text-center py-4">
-                        <i class="fas fa-check-circle text-green-500 text-2xl mb-2"></i>
-                        <p class="text-gray-500">Tidak ada pelanggaran</p>
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <label class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Poin</label>
+                        <p id="detailPoin" class="text-gray-800 font-semibold"></p>
                     </div>
                 </div>
             </div>
-
-            <!-- Footer -->
-            <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 rounded-b-2xl flex justify-end">
-                <button @click="detailModal = false" 
-                        class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium">
+            <div class="mt-6">
+                <button type="button" onclick="closeModal('modalDetail')"
+                    class="w-full px-4 py-3 bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white rounded-xl hover:shadow-lg transition duration-200 font-medium shadow-md">
                     Tutup
                 </button>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal Hapus -->
-<div x-data="{ deleteModal: false, deleteId: null, deleteName: '', deleteType: 'keluar' }" x-cloak>
-    <div x-show="deleteModal" 
-         class="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center px-4 transition-opacity duration-300">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md"
-             @click.away="deleteModal = false"
-             x-show="deleteModal"
-             x-transition:enter="ease-out duration-300"
-             x-transition:enter-start="opacity-0 scale-95"
-             x-transition:enter-end="opacity-100 scale-100"
-             x-transition:leave="ease-in duration-200"
-             x-transition:leave-start="opacity-100 scale-100"
-             x-transition:leave-end="opacity-0 scale-95">
-            
-            <!-- Header -->
-            <div class="p-6 border-b border-gray-200">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                        <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
-                    </div>
-                    <div class="ml-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Hapus Surat Izin</h3>
-                        <p class="text-gray-600 text-sm mt-1">Anda yakin ingin menghapus data ini?</p>
-                    </div>
-                </div>
-            </div>
+    <!-- Include Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
-            <!-- Content -->
-            <div class="p-6">
-                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
-                    <div class="flex items-center">
-                        <i class="fas fa-user text-red-600 mr-3"></i>
-                        <div>
-                            <p class="font-medium text-red-800" x-text="deleteName"></p>
-                            <p class="text-sm text-red-600 mt-1" x-text="deleteType === 'keluar' ? 'Surat Izin Keluar' : 'Surat Izin Masuk'"></p>
-                        </div>
-                    </div>
-                </div>
-                <p class="text-gray-600 text-sm mt-4">
-                    Data yang sudah dihapus tidak dapat dikembalikan. Pastikan data yang akan dihapus sudah benar.
-                </p>
-            </div>
+    <!-- Script Modal and Back to Top -->
+    <script>
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
 
-            <!-- Footer -->
-            <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 rounded-b-2xl flex justify-end gap-3">
-                <button @click="deleteModal = false" 
-                        class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium">
-                    Batal
-                </button>
-                <form :action="getDeleteUrl()" method="POST" class="inline">
-                    <?= csrf_field() ?>
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit" 
-                            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium">
-                        <i class="fas fa-trash mr-2"></i> Hapus
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
 
-<!-- Font Awesome for Icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        function showDetailModal(jenis, poin, kategori) {
+            document.getElementById('detailJenis').textContent = jenis;
+            document.getElementById('detailKategori').textContent = kategori || 'Tidak ada kategori';
+            document.getElementById('detailPoin').textContent = poin + ' Poin';
+            openModal('modalDetail');
+        }
 
-<!-- Alpine.js for Modal -->
-<script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal(modal.id);
+                }
+            });
+        });
 
-<!-- Bootstrap JS for Tabs -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        // Back to Top Button Logic
+        const backToTopButton = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.remove('hidden');
+            } else {
+                backToTopButton.classList.add('hidden');
+            }
+        });
 
-<style>
-[x-cloak] {
-    display: none !important;
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Initialize icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+
+    <script>
+        function showEditModal(id, jenis, kategori, poin) {
+    document.getElementById('editForm').action = '/admin/pelanggaran/updatePelanggaran/' + id;
+    document.getElementById('editJenis').value = jenis;
+    document.getElementById('editKategori').value = kategori;
+    document.getElementById('editPoin').value = poin;
+    openModal('modalEdit');
 }
+    </script>
 
-.shadow-lg {
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
+    <style>
+        .rounded-2xl {
+            border-radius: 1rem;
+        }
 
-.rounded-2xl {
-    border-radius: 1rem;
-}
+        .transition-all {
+            transition: all 0.3s ease;
+        }
 
-.transition-all {
-    transition: all 0.3s ease;
-}
+        .shadow-lg {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
 
-.tab-pane {
-    display: none;
-}
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .animate-scaleIn {
+            animation: scaleIn 0.2s ease-out;
+        }
+        
+        .modal {
+            backdrop-filter: blur(4px);
+        }
+    </style>
 
-.tab-pane.show.active {
-    display: block;
-}
-</style>
-
-
-
-<?= $this->endSection() ?>
+    <?= $this->endSection() ?>

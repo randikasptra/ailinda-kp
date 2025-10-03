@@ -130,7 +130,7 @@
     </div>
 
     <!-- Recent Activity -->
-    <div class="bg-white rounded-2xl shadow-lg p-6">
+    <!-- <div class="bg-white rounded-2xl shadow-lg p-6">
         <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
             <i class="fas fa-history text-[#1E5631]"></i>
             Aktivitas Terbaru
@@ -152,7 +152,7 @@
                 </div>
             <?php endforeach; ?>
         </div>
-    </div>
+    </div> -->
 </div>
 
 <!-- Include Font Awesome and Chart.js -->

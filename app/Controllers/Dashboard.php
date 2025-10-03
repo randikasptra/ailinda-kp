@@ -9,6 +9,8 @@ use App\Models\SuratIzinModel;
 use App\Models\HistoryKonfirmasiModel;
 use App\Models\ActivityLogModel; // Tambahkan model baru
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use App\Models\SuratIzinMasukModel;
+use App\Models\SuratIzinPelanggaranModel;
 
 class Dashboard extends BaseController
 {
@@ -18,6 +20,12 @@ class Dashboard extends BaseController
     protected $historyModel;
     protected $siswaModel;
     protected $activityLogModel;
+    protected $suratIzinMasukModel;
+    protected $suratIzinModel;
+    protected $suratIzinPelanggaranModel;
+
+
+
 
     public function __construct()
     {
@@ -26,6 +34,10 @@ class Dashboard extends BaseController
         $this->pelanggaranModel = new PelanggaranModel();
         $this->historyModel = new HistoryKonfirmasiModel();
         $this->siswaModel = new SiswaModel();
+        $this->suratIzinModel = new SuratIzinModel();
+        $this->suratIzinMasukModel = new SuratIzinMasukModel();
+        $this->pelanggaranModel = new PelanggaranModel();
+        $this->suratIzinPelanggaranModel = new SuratIzinPelanggaranModel();
         $this->activityLogModel = new ActivityLogModel(); // Inisialisasi model baru
     }
 
@@ -67,40 +79,120 @@ class Dashboard extends BaseController
     }
 
     // DASHBOARD PIKET
-    public function piket()
+    // public function piket()
+    // {
+    //     $today = date('Y-m-d');
+
+    //     $izinHariIni = $this->izinModel
+    //         ->like('created_at', $today)
+    //         ->countAllResults();
+
+    //     $historyHariIni = $this->historyModel
+    //         ->like('updated_at', $today)
+    //         ->countAllResults();
+
+    //     $totalIzinHariIni = $izinHariIni + $historyHariIni;
+
+    //     $belumKembali = $this->izinModel
+    //         ->where('status', 'belum kembali')
+    //         ->countAllResults();
+
+    //     $pelanggaranHariIni = $this->pelanggaranModel
+    //         ->like('created_at', $today)
+    //         ->countAllResults();
+
+    //     $izinTerbaru = $this->izinModel
+    //         ->orderBy('created_at', 'DESC')
+    //         ->limit(5)
+    //         ->findAll();
+
+    //     return view('pages/piket/piket', [
+    //         'title' => 'Dashboard Piket',
+    //         'totalIzinHariIni' => $totalIzinHariIni,
+    //         'belumKembali' => $belumKembali,
+    //         'pelanggaranHariIni' => $pelanggaranHariIni,
+    //         'izinTerbaru' => $izinTerbaru
+    //     ]);
+    // }
+        public function piket()
     {
+        $page_keluar = $this->request->getGet('page_keluar') ?? 1;
+        $page_masuk  = $this->request->getGet('page_masuk') ?? 1;
+
         $today = date('Y-m-d');
+        $kemarin = date('Y-m-d', strtotime('-1 day'));
 
-        $izinHariIni = $this->izinModel
-            ->like('created_at', $today)
-            ->countAllResults();
+        // --- Surat Izin Keluar Hari Ini ---
+        $suratIzin = $this->suratIzinModel
+            ->where('DATE(created_at)', $today)
+            ->paginate(5, 'keluar', $page_keluar);
+        $pager_keluar = $this->suratIzinModel->pager;
+        $total_izin_keluar = $this->suratIzinModel->pager->getTotal('keluar');
 
-        $historyHariIni = $this->historyModel
-            ->like('updated_at', $today)
-            ->countAllResults();
+        foreach ($suratIzin as &$izin) {
+            $izin['pelanggaran'] = $this->suratIzinPelanggaranModel
+                ->select('surat_izin_pelanggaran.id as pivot_id, pelanggaran.jenis_pelanggaran, pelanggaran.poin, pelanggaran.id as pelanggaran_id, surat_izin_pelanggaran.catatan')
+                ->join('pelanggaran', 'pelanggaran.id = surat_izin_pelanggaran.pelanggaran_id', 'left')
+                ->where('surat_izin_pelanggaran.surat_izin_id', $izin['id'])
+                ->findAll();
+        }
 
-        $totalIzinHariIni = $izinHariIni + $historyHariIni;
+        // --- Surat Izin Masuk Hari Ini ---
+        $suratIzinMasuk = $this->suratIzinMasukModel
+            ->where('DATE(created_at)', $today)
+            ->paginate(5, 'masuk', $page_masuk);
+        $pager_masuk = $this->suratIzinMasukModel->pager;
+        $total_izin_masuk = $this->suratIzinMasukModel->pager->getTotal('masuk');
 
-        $belumKembali = $this->izinModel
-            ->where('status', 'belum kembali')
-            ->countAllResults();
+        foreach ($suratIzinMasuk as &$masuk) {
+            $masuk['pelanggaran'] = $this->suratIzinPelanggaranModel
+                ->select('surat_izin_pelanggaran.id as pivot_id, pelanggaran.jenis_pelanggaran, pelanggaran.poin, pelanggaran.id as pelanggaran_id, surat_izin_pelanggaran.catatan')
+                ->join('pelanggaran', 'pelanggaran.id = surat_izin_pelanggaran.pelanggaran_id', 'left')
+                ->where('surat_izin_pelanggaran.surat_masuk_id', $masuk['id'])
+                ->findAll();
+        }
 
-        $pelanggaranHariIni = $this->pelanggaranModel
-            ->like('created_at', $today)
-            ->countAllResults();
-
-        $izinTerbaru = $this->izinModel
-            ->orderBy('created_at', 'DESC')
-            ->limit(5)
+        // --- Surat Izin Keluar Kemarin ---
+        $suratIzinKemarin = $this->suratIzinModel
+            ->select('surat_izin.*, "keluar" as type')
+            ->where('DATE(created_at)', $kemarin)
             ->findAll();
 
-        return view('pages/piket/piket', [
-            'title' => 'Dashboard Piket',
-            'totalIzinHariIni' => $totalIzinHariIni,
-            'belumKembali' => $belumKembali,
-            'pelanggaranHariIni' => $pelanggaranHariIni,
-            'izinTerbaru' => $izinTerbaru
-        ]);
+        foreach ($suratIzinKemarin as &$izin) {
+            $izin['pelanggaran'] = $this->suratIzinPelanggaranModel
+                ->select('surat_izin_pelanggaran.id as pivot_id, pelanggaran.jenis_pelanggaran, pelanggaran.poin, pelanggaran.id as pelanggaran_id, surat_izin_pelanggaran.catatan')
+                ->join('pelanggaran', 'pelanggaran.id = surat_izin_pelanggaran.pelanggaran_id', 'left')
+                ->where('surat_izin_pelanggaran.surat_izin_id', $izin['id'])
+                ->findAll();
+        }
+
+        // --- Surat Izin Masuk Kemarin ---
+        $suratIzinMasukKemarin = $this->suratIzinMasukModel
+            ->select('surat_izin_masuk.*, "masuk" as type')
+            ->where('DATE(created_at)', $kemarin)
+            ->findAll();
+
+        foreach ($suratIzinMasukKemarin as &$masuk) {
+            $masuk['pelanggaran'] = $this->suratIzinPelanggaranModel
+                ->select('surat_izin_pelanggaran.id as pivot_id, pelanggaran.jenis_pelanggaran, pelanggaran.poin, pelanggaran.id as pelanggaran_id, surat_izin_pelanggaran.catatan')
+                ->join('pelanggaran', 'pelanggaran.id = surat_izin_pelanggaran.pelanggaran_id', 'left')
+                ->where('surat_izin_pelanggaran.surat_masuk_id', $masuk['id'])
+                ->findAll();
+        }
+
+        $data = [
+            'surat_izin'               => $suratIzin,
+            'surat_izin_masuk'         => $suratIzinMasuk,
+            'surat_izin_kemarin'       => $suratIzinKemarin,
+            'surat_izin_masuk_kemarin' => $suratIzinMasukKemarin,
+            'pelanggaranList'          => $this->pelanggaranModel->orderBy('kategori', 'ASC')->findAll(),
+            'pager_keluar'             => $pager_keluar,
+            'pager_masuk'              => $pager_masuk,
+            'total_izin_keluar'        => $total_izin_keluar,
+            'total_izin_masuk'         => $total_izin_masuk,
+        ];
+
+        return view('pages/piket/piket', $data);
     }
 
     // DASHBOARD BP

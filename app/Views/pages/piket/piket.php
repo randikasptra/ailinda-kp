@@ -11,61 +11,43 @@
         <p class="text-gray-600">Ringkasan aktivitas dan informasi terbaru</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <!-- Card 1 -->
-        <div class="bg-gradient-to-br from-[#f0fdf4] to-[#d9f99d] rounded-2xl shadow-lg p-6 border-l-4 border-[#A4DE02] hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-24 h-24 opacity-10">
-                <i class="fas fa-envelope-open-text text-[#1E5631] text-6xl"></i>
-            </div>
-            <div class="flex items-center gap-4">
-                <div class="p-3 rounded-xl bg-white shadow-sm">
-                    <i class="fas fa-envelope-open-text text-[#A4DE02] text-xl"></i>
-                </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-2xl p-6 text-white shadow-lg">
+            <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-lg font-semibold text-[#1E5631]">Surat Izin Hari Ini</h2>
-                    <p class="text-3xl font-bold text-[#14532d]"><?= esc($totalIzinHariIni) ?></p>
+                    <p class="text-emerald-100 text-sm font-medium">Total Izin Keluar</p>
+                    <p class="text-2xl font-bold mt-1"><?= $total_izin_keluar ?></p>
+                    <p class="text-emerald-200 text-xs mt-2">Surat izin keluar hari ini</p>
                 </div>
-            </div>
-            <div class="mt-4 text-xs text-[#1E5631]/70">
-                <i class="fas fa-clock mr-1"></i> Diperbarui secara real-time
+                <div class="p-3 bg-white/20 rounded-xl">
+                    <i class="fas fa-sign-out-alt text-xl"></i>
+                </div>
             </div>
         </div>
-
-        <!-- Card 2 -->
-        <div class="bg-gradient-to-br from-[#f0fdf4] to-[#bbf7d0] rounded-2xl shadow-lg p-6 border-l-4 border-[#1E5631] hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-24 h-24 opacity-10">
-                <i class="fas fa-user-clock text-[#1E5631] text-6xl"></i>
-            </div>
-            <div class="flex items-center gap-4">
-                <div class="p-3 rounded-xl bg-white shadow-sm">
-                    <i class="fas fa-user-clock text-[#1E5631] text-xl"></i>
-                </div>
+        
+        <div class="bg-gradient-to-r from-teal-600 to-teal-700 rounded-2xl p-6 text-white shadow-lg">
+            <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-lg font-semibold text-[#1E5631]">Siswa Belum Kembali</h2>
-                    <p class="text-3xl font-bold text-[#4ade80]"><?= esc($belumKembali) ?></p>
+                    <p class="text-teal-100 text-sm font-medium">Total Izin Masuk</p>
+                    <p class="text-2xl font-bold mt-1"><?= $total_izin_masuk ?></p>
+                    <p class="text-teal-200 text-xs mt-2">Surat izin masuk hari ini</p>
                 </div>
-            </div>
-            <div class="mt-4 text-xs text-[#1E5631]/70">
-                <i class="fas fa-exclamation-circle mr-1"></i> Perlu perhatian
+                <div class="p-3 bg-white/20 rounded-xl">
+                    <i class="fas fa-sign-in-alt text-xl"></i>
+                </div>
             </div>
         </div>
-
-        <!-- Card 3 -->
-        <div class="bg-gradient-to-br from-[#fef2f2] to-[#fecaca] rounded-2xl shadow-lg p-6 border-l-4 border-red-400 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-24 h-24 opacity-10">
-                <i class="fas fa-exclamation-triangle text-red-600 text-6xl"></i>
-            </div>
-            <div class="flex items-center gap-4">
-                <div class="p-3 rounded-xl bg-white shadow-sm">
-                    <i class="fas fa-exclamation-triangle text-red-500 text-xl"></i>
-                </div>
+        
+        <div class="bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] rounded-2xl p-6 text-white shadow-lg">
+            <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-lg font-semibold text-red-700">Pelanggaran Hari Ini</h2>
-                    <p class="text-3xl font-bold text-red-600"><?= esc($pelanggaranHariIni) ?></p>
+                    <p class="text-green-100 text-sm font-medium">Total Keseluruhan</p>
+                    <p class="text-2xl font-bold mt-1"><?= $total_izin_keluar + $total_izin_masuk ?></p>
+                    <p class="text-green-200 text-xs mt-2">Semua surat izin hari ini</p>
                 </div>
-            </div>
-            <div class="mt-4 text-xs text-red-600/70">
-                <i class="fas fa-chart-line mr-1"></i> Dibandingkan kemarin
+                <div class="p-3 bg-white/20 rounded-xl">
+                    <i class="fas fa-file-alt text-xl"></i>
+                </div>
             </div>
         </div>
     </div>
