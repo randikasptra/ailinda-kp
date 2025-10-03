@@ -120,7 +120,6 @@ $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
     $routes->get('pelanggaran', 'PelanggaranController::pelanggaran');
     $routes->post('pelanggaran/tambah', 'PelanggaranController::tambahPelanggaran');
     $routes->get('pelanggaran/edit/(:num)', 'PelanggaranController::editPelanggaran/$1');
-    $routes->post('pelanggaran/update/(:num)', 'PelanggaranController::updatePelanggaran/$1');
     $routes->get('pelanggaran/hapus/(:num)', 'PelanggaranController::hapusPelanggaran/$1');
     
     // User Management
@@ -137,6 +136,9 @@ $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
     $routes->get('laporan', 'LaporanAdminController::index');
 
 });
+
+
+    $routes->post('admin/pelanggaran/updatePelanggaran/(:num)', 'PelanggaranController::updatePelanggaran/$1');
 
 // =======================
 // SURAT IZIN

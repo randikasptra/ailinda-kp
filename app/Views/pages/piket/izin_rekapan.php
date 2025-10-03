@@ -261,14 +261,6 @@
                     </table>
                 </div>
 
-                <!-- Pagination -->
-<?php if ($pager_keluar): ?>
-    <div class="mt-4">
-        <?= $pager_keluar->links('keluar', 'tailwind_pagination') ?>
-        
-    </div>
-<?php endif; ?>
-
             <?php endif; ?>
             
         </div>
@@ -320,6 +312,7 @@
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Siswa</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alasan</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tindak Lanjut</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tindak Lanjut</th>
                                 <!-- <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catatan</th> -->
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pelanggaran</th>
@@ -438,134 +431,10 @@
                     </table>
                 </div>
 
-                <!-- Pagination -->
-<?php if ($pager_masuk): ?>
-    <div class="mt-4">
-        <?= $pager_masuk->links('masuk', 'tailwind_pagination') ?>
-    </div>
-<?php endif; ?>
             <?php endif; ?>
         </div>
     </div>
 
-    <!-- Data Kemarin -->
-    <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <div class="p-2 rounded-lg bg-white/20 mr-3">
-                        <i class="fas fa-history text-white text-lg"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-semibold text-white">Data Rekapan Kemarin</h3>
-                        <p class="text-gray-100 text-sm"><?= count($surat_izin_kemarin) + count($surat_izin_masuk_kemarin) ?> data surat izin</p>
-                    </div>
-                </div>
-                <div class="bg-white/20 rounded-lg px-3 py-1">
-                    <span class="text-white font-medium text-sm">HISTORI</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Content -->
-        <div class="p-6">
-            <?php if (empty($surat_izin_kemarin) && empty($surat_izin_masuk_kemarin)): ?>
-                <div class="text-center py-8">
-                    <div class="mx-auto w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-history text-gray-400 text-xl"></i>
-                    </div>
-                    <h3 class="text-lg font-medium text-gray-800 mb-2">Tidak ada data kemarin</h3>
-                    <p class="text-gray-500 text-sm">Belum ada rekapan dari hari sebelumnya</p>
-                </div>
-            <?php else: ?>
-                <!-- Tabel Gabungan untuk Kemarin -->
-                <div class="overflow-x-auto rounded-lg border border-gray-200">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipe</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Siswa</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Detail</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pelanggaran</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <?php foreach (array_merge($surat_izin_kemarin, $surat_izin_masuk_kemarin) as $data): ?>
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-4 py-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs font-medium rounded-full <?= $data['type'] === 'keluar' ? 'bg-emerald-100 text-emerald-800' : 'bg-teal-100 text-teal-800' ?>">
-                                            <?= $data['type'] === 'keluar' ? 'Keluar' : 'Masuk' ?>
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-8 w-8 <?= $data['type'] === 'keluar' ? 'bg-emerald-100' : 'bg-teal-100' ?> rounded-full flex items-center justify-center">
-                                                <span class="<?= $data['type'] === 'keluar' ? 'text-emerald-600' : 'text-teal-600' ?> font-medium text-xs">
-                                                    <?= strtoupper(substr(esc($data['nama']), 0, 1)) ?>
-                                                </span>
-                                            </div>
-                                            <div class="ml-3">
-                                                <div class="text-sm font-medium text-gray-900"><?= esc($data['nama']) ?></div>
-                                                <div class="text-xs text-gray-500"><?= esc($data['kelas']) ?> • <?= esc($data['nisn']) ?></div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-4">
-                                        <?php if ($data['type'] === 'keluar'): ?>
-                                            <div class="text-sm text-gray-900 space-y-1">
-                                                <div class="flex items-center">
-                                                    <i class="fas fa-sign-out-alt w-3 h-3 mr-2 text-emerald-500"></i>
-                                                    <?= date('H:i', strtotime($data['waktu_keluar'])) ?>
-                                                </div>
-                                                <div class="flex items-center">
-                                                    <i class="fas fa-sign-in-alt w-3 h-3 mr-2 text-green-500"></i>
-                                                    <?= date('H:i', strtotime($data['waktu_kembali'])) ?>
-                                                </div>
-                                            </div>
-                                        <?php else: ?>
-                                            <div class="text-sm text-gray-900 max-w-xs">
-                                                <div class="break-words"><?= esc($data['alasan_terlambat']) ?: 'Tidak ada alasan' ?></div>
-                                                <?php if (isset($data['tindak_lanjut'])): ?>
-                                                    <div class="text-xs text-gray-500 break-words mt-1"><?= esc($data['tindak_lanjut']) ?></div>
-                                                <?php endif; ?>
-                                            </div>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        <?= date('d-m-Y', strtotime($data['created_at'])) ?>
-                                    </td>
-                                    <td class="px-4 py-4">
-                                        <?php if (!empty($data['pelanggaran'])): ?>
-                                            <ul class="list-disc list-inside text-sm text-red-600 space-y-1">
-                                                <?php foreach ($data['pelanggaran'] as $p): ?>
-                                                    <li class="break-words max-w-xs">
-                                                        <?= esc($p['jenis_pelanggaran']) ?> 
-                                                        <span class="text-xs text-gray-500">(<?= $p['poin'] ?> poin)</span>
-                                                    </li>
-                                                <?php endforeach; ?>
-                                            </ul>
-                                        <?php else: ?>
-                                            <span class="text-xs text-gray-500 italic">Tidak ada pelanggaran</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="px-4 py-4 whitespace-nowrap text-right">
-                                        <button type="button"
-                                            class="btn-detail text-xs bg-gray-100 text-gray-700 font-medium px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-200 transition"
-                                            data-izin='<?= json_encode($data) ?>'>
-                                            <i class="fas fa-eye"></i> Detail
-                                        </button>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
 </div>
 
 <!-- Modal Tambah/Edit Pelanggaran -->
@@ -607,7 +476,7 @@
                 <div id="pelanggaranListContainer" 
                      class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-60 overflow-y-auto border border-gray-300 p-3 rounded-md">
                     <?php foreach ($pelanggaranList as $p): ?>
-                        <label class="flex items-center space-x-2 pelanggaran-item p-2 rounded hover:bg-gray-50 transition-colors">
+                        <label class="flex items-center space-x-2 pelanggaran-item p-2 rounded hover:bg-gray-50 transition-colors" data-pelanggaran-id="<?= $p['id'] ?>">
                             <input type="checkbox" name="pelanggaran_ids[]" value="<?= $p['id'] ?>" 
                                    class="form-checkbox h-4 w-4 text-emerald-600 focus:ring-emerald-500">
                             <span class="text-sm">
@@ -787,6 +656,9 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.addEventListener("click", function() {
             let izinId = this.dataset.izinId;
             let type = this.dataset.type;
+            let hasPelanggaran = this.dataset.hasPelanggaran === 'true';
+            let pelanggaranJson = this.dataset.pelanggaranJson ? JSON.parse(this.dataset.pelanggaranJson) : [];
+            let keteranganJson = this.dataset.keteranganJson ? JSON.parse(this.dataset.keteranganJson) : '';
 
             document.getElementById("surat_izin_id_hidden").value = izinId;
             
@@ -800,10 +672,53 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             typeInput.value = type;
 
+            let modeInput = document.getElementById("mode_hidden");
+            modeInput.value = hasPelanggaran ? 'edit' : 'add';
+
             let form = document.getElementById("formTambahPelanggaran");
-            // form.action = `/rekapan/surat-izin-pelanggaran/${izinId}/store`;
             form.action = '/rekapan/store-pelanggaran';
 
+            // Set title modal
+            document.getElementById("modalPelanggaranTitle").textContent = hasPelanggaran ? 'Edit Pelanggaran' : 'Tambah Pelanggaran';
+
+            // Handle edit mode
+            if (hasPelanggaran) {
+                // Show preview section
+                const previewSection = document.querySelector('.preview-section');
+                const previewList = document.getElementById('previewPelanggaranLama');
+                previewList.innerHTML = '';
+                pelanggaranJson.forEach(p => {
+                    const li = document.createElement('li');
+                    li.textContent = `${p.jenis_pelanggaran} (${p.poin} poin)`;
+                    previewList.appendChild(li);
+                });
+                previewSection.classList.remove('hidden');
+
+                // Pre-select checkboxes
+                document.querySelectorAll('#pelanggaranListContainer input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                    const pelId = checkbox.value;
+                    if (pelanggaranJson.some(p => p.pelanggaran_id == pelId)) {
+                        checkbox.checked = true;
+                    }
+                });
+
+                // Set keterangan
+                document.getElementById('keterangan_textarea').value = keteranganJson;
+            } else {
+                // Hide preview, reset checkboxes and keterangan
+                document.querySelector('.preview-section').classList.add('hidden');
+                document.querySelectorAll('#pelanggaranListContainer input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                document.getElementById('keterangan_textarea').value = '';
+            }
+
+            // Reset search
+            document.getElementById('searchPelanggaran').value = '';
+            document.querySelectorAll('#pelanggaranListContainer .pelanggaran-item').forEach(item => {
+                item.style.display = '';
+            });
 
             document.getElementById("modalTambahPelanggaran").classList.remove("hidden");
         });
@@ -826,6 +741,11 @@ function closePelanggaranModal() {
     document.querySelectorAll('#pelanggaranListContainer .pelanggaran-item').forEach(item => {
         item.style.display = '';
     });
+    // Reset preview
+    document.querySelector('.preview-section').classList.add('hidden');
+    document.getElementById('previewPelanggaranLama').innerHTML = '';
+    // Reset title to default
+    document.getElementById("modalPelanggaranTitle").textContent = 'Tambah Pelanggaran';
 }
 
 function openModal(data) {

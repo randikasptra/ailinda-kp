@@ -24,18 +24,15 @@ class SuratIzinRekapanController extends BaseController
     }
     public function index()
     {
-        $page_keluar = $this->request->getGet('page_keluar') ?? 1;
-        $page_masuk  = $this->request->getGet('page_masuk') ?? 1;
-
         $today = date('Y-m-d');
         $kemarin = date('Y-m-d', strtotime('-1 day'));
 
         // --- Surat Izin Keluar Hari Ini ---
         $suratIzin = $this->suratIzinModel
             ->where('DATE(created_at)', $today)
-            ->paginate(5, 'keluar', $page_keluar);
-        $pager_keluar = $this->suratIzinModel->pager;
-        $total_izin_keluar = $this->suratIzinModel->pager->getTotal('keluar');
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
+        $total_izin_keluar = count($suratIzin);
 
         foreach ($suratIzin as &$izin) {
             $izin['pelanggaran'] = $this->suratIzinPelanggaranModel
@@ -48,9 +45,9 @@ class SuratIzinRekapanController extends BaseController
         // --- Surat Izin Masuk Hari Ini ---
         $suratIzinMasuk = $this->suratIzinMasukModel
             ->where('DATE(created_at)', $today)
-            ->paginate(5, 'masuk', $page_masuk);
-        $pager_masuk = $this->suratIzinMasukModel->pager;
-        $total_izin_masuk = $this->suratIzinMasukModel->pager->getTotal('masuk');
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
+        $total_izin_masuk = count($suratIzinMasuk);
 
         foreach ($suratIzinMasuk as &$masuk) {
             $masuk['pelanggaran'] = $this->suratIzinPelanggaranModel
@@ -64,6 +61,7 @@ class SuratIzinRekapanController extends BaseController
         $suratIzinKemarin = $this->suratIzinModel
             ->select('surat_izin.*, "keluar" as type')
             ->where('DATE(created_at)', $kemarin)
+            ->orderBy('created_at', 'DESC')
             ->findAll();
 
         foreach ($suratIzinKemarin as &$izin) {
@@ -78,6 +76,7 @@ class SuratIzinRekapanController extends BaseController
         $suratIzinMasukKemarin = $this->suratIzinMasukModel
             ->select('surat_izin_masuk.*, "masuk" as type')
             ->where('DATE(created_at)', $kemarin)
+            ->orderBy('created_at', 'DESC')
             ->findAll();
 
         foreach ($suratIzinMasukKemarin as &$masuk) {
@@ -94,8 +93,6 @@ class SuratIzinRekapanController extends BaseController
             'surat_izin_kemarin'       => $suratIzinKemarin,
             'surat_izin_masuk_kemarin' => $suratIzinMasukKemarin,
             'pelanggaranList'          => $this->pelanggaranModel->orderBy('kategori', 'ASC')->findAll(),
-            'pager_keluar'             => $pager_keluar,
-            'pager_masuk'              => $pager_masuk,
             'total_izin_keluar'        => $total_izin_keluar,
             'total_izin_masuk'         => $total_izin_masuk,
         ];

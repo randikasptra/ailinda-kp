@@ -254,73 +254,6 @@
         </button>
     </div>
 
-    <!-- MODAL EDIT -->
-<div id="modalEdit" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 hidden">
-    <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md border border-[#1E5631]/20 animate-scaleIn">
-        <div class="flex justify-between items-center mb-5">
-            <h2 class="text-xl font-bold text-[#1E5631] flex items-center">
-                <i class="fas fa-pencil-alt mr-2"></i>
-                Edit Pelanggaran
-            </h2>
-            <button onclick="closeModal('modalEdit')"
-                class="text-gray-400 hover:text-gray-600 transition duration-200 p-1 rounded-full hover:bg-gray-100">
-                <i class="fas fa-times text-lg"></i>
-            </button>
-        </div>
-        <form id="editForm" action="" method="POST" class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Pelanggaran</label>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-exclamation-triangle text-gray-400"></i>
-                    </div>
-                    <input type="text" name="jenis_pelanggaran" id="editJenis"
-                        class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
-                        placeholder="Masukkan jenis pelanggaran" required>
-                </div>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-tag text-gray-400"></i>
-                    </div>
-                    <select name="kategori" id="editKategori"
-                        class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] appearance-none bg-white">
-                        <option value="">Pilih Kategori</option>
-                        <option value="Ringan">Ringan</option>
-                        <option value="Sedang">Sedang</option>
-                        <option value="Berat">Berat</option>
-                    </select>
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                        <i class="fas fa-chevron-down text-gray-400"></i>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Poin</label>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-star text-gray-400"></i>
-                    </div>
-                    <input type="number" name="poin" id="editPoin" min="1"
-                        class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
-                        placeholder="Masukkan poin" required>
-                </div>
-            </div>
-            <div class="flex gap-3 pt-4">
-                <button type="button" onclick="closeModal('modalEdit')"
-                    class="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition duration-200 font-medium">
-                    Batal
-                </button>
-                <button type="submit"
-                    class="flex-1 px-4 py-3 bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white rounded-xl hover:shadow-lg transition duration-200 font-medium shadow-md">
-                    Simpan
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
 
     <!-- MODAL TAMBAH -->
     <div id="modalTambah" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 hidden">
@@ -434,6 +367,78 @@
         </div>
     </div>
 
+
+
+     <!-- MODAL EDIT -->
+    <div id="modalEdit" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 hidden">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md border border-[#1E5631]/20 animate-scaleIn">
+            <div class="flex justify-between items-center mb-5">
+                <h2 class="text-xl font-bold text-[#1E5631] flex items-center">
+                    <i class="fas fa-pencil-alt mr-2"></i>
+                    Edit Pelanggaran
+                </h2>
+                <button onclick="closeModal('modalEdit')"
+                    class="text-gray-400 hover:text-gray-600 transition duration-200 p-1 rounded-full hover:bg-gray-100">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+            <!-- <form id="editForm" action="" method="POST" class="space-y-4"> -->
+                <form id="editForm" action="" method="post">
+    <?= csrf_field() ?>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Pelanggaran</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-exclamation-triangle text-gray-400"></i>
+                        </div>
+                        <input type="text" name="jenis_pelanggaran" id="editJenis"
+                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
+                            placeholder="Masukkan jenis pelanggaran" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-tag text-gray-400"></i>
+                        </div>
+                        <select name="kategori" id="editKategori"
+                            class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] appearance-none bg-white">
+                            <option value="">Pilih Kategori</option>
+                            <option value="Ringan">Ringan</option>
+                            <option value="Sedang">Sedang</option>
+                            <option value="Berat">Berat</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Poin</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-star text-gray-400"></i>
+                        </div>
+                        <input type="number" name="poin" id="editPoin" min="1"
+                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
+                            placeholder="Masukkan poin" required>
+                    </div>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="button" onclick="closeModal('modalEdit')"
+                        class="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition duration-200 font-medium">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="flex-1 px-4 py-3 bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white rounded-xl hover:shadow-lg transition duration-200 font-medium shadow-md">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Include Font Awesome -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
@@ -489,12 +494,19 @@
 
     <script>
         function showEditModal(id, jenis, kategori, poin) {
-    document.getElementById('editForm').action = '/admin/pelanggaran/updatePelanggaran/' + id;
-    document.getElementById('editJenis').value = jenis;
-    document.getElementById('editKategori').value = kategori;
-    document.getElementById('editPoin').value = poin;
-    openModal('modalEdit');
-}
+            let form = document.getElementById('editForm');
+            form.action = "<?= site_url('admin/pelanggaran/updatePelanggaran') ?>/" + id;
+            form.method = "post"; 
+
+            document.getElementById('editJenis').value = jenis;
+            document.getElementById('editKategori').value = kategori;
+            document.getElementById('editPoin').value = poin;
+
+            console.log("Form action =>", form.action); // debug
+            openModal('modalEdit');
+        }
+
+
     </script>
 
     <style>

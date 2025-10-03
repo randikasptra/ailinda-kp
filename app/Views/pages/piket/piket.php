@@ -11,7 +11,8 @@
         <p class="text-gray-600">Ringkasan aktivitas dan informasi terbaru</p>
     </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-2xl p-6 text-white shadow-lg">
             <div class="flex items-center justify-between">
                 <div>
@@ -52,7 +53,30 @@
         </div>
     </div>
 
-    <!-- Tabel Sanksi -->
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Chart Perbandingan Hari Ini vs Kemarin -->
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-chart-bar text-[#1E5631]"></i>
+                Perbandingan Harian
+            </h2>
+            <div class="h-64">
+                <canvas id="dailyComparisonChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Chart Trend 7 Hari Terakhir -->
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-chart-line text-[#A4DE02]"></i>
+                Trend 7 Hari Terakhir
+            </h2>
+            <div class="h-64">
+                <canvas id="weeklyTrendChart"></canvas>
+            </div>
+        </div>
+    </div>
 
     <!-- Quick Actions -->
     <div class="bg-white rounded-2xl shadow-lg p-6">
@@ -91,5 +115,143 @@
         </div>
     </div>
 </div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Data untuk chart (dari controller)
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    // Format tanggal
+    const formatDate = (date) => {
+        return date.toLocaleDateString('id-ID', { 
+            day: 'numeric', 
+            month: 'short' 
+        });
+    };
+
+    // Chart Perbandingan Harian
+    const dailyComparisonCtx = document.getElementById('dailyComparisonChart').getContext('2d');
+    const dailyComparisonChart = new Chart(dailyComparisonCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Izin Keluar', 'Izin Masuk'],
+            datasets: [
+                {
+                    label: `Kemarin (${formatDate(yesterday)})`,
+                    data: [
+                        <?= count($surat_izin_kemarin ?? []) ?>,
+                        <?= count($surat_izin_masuk_kemarin ?? []) ?>
+                    ],
+                    backgroundColor: 'rgba(148, 163, 184, 0.8)',
+                    borderColor: 'rgba(148, 163, 184, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: `Hari Ini (${formatDate(today)})`,
+                    data: [
+                        <?= $total_izin_keluar ?>,
+                        <?= $total_izin_masuk ?>
+                    ],
+                    backgroundColor: 'rgba(30, 86, 49, 0.8)',
+                    borderColor: 'rgba(30, 86, 49, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.1)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                }
+            }
+        }
+    });
+
+    // Chart Trend 7 Hari Terakhir (data dinamis dari database)
+    <?php
+    $formatted_labels = [];
+    foreach ($last_7_days_labels as $date) {
+        $formatted_labels[] = date('d M', strtotime($date));
+    }
+    ?>
+    const weeklyTrendCtx = document.getElementById('weeklyTrendChart').getContext('2d');
+    const weeklyTrendChart = new Chart(weeklyTrendCtx, {
+        type: 'line',
+        data: {
+            labels: <?= json_encode($formatted_labels) ?>,
+            datasets: [
+                {
+                    label: 'Izin Keluar',
+                    data: <?= json_encode($weekly_data_keluar) ?>,
+                    borderColor: 'rgba(30, 86, 49, 1)',
+                    backgroundColor: 'rgba(30, 86, 49, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                },
+                {
+                    label: 'Izin Masuk',
+                    data: <?= json_encode($weekly_data_masuk) ?>,
+                    borderColor: 'rgba(164, 222, 2, 1)',
+                    backgroundColor: 'rgba(164, 222, 2, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.1)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                }
+            }
+        }
+    });
+});
+</script>
 
 <?= $this->endSection() ?>

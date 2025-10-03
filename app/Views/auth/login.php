@@ -221,9 +221,9 @@
                             class="h-4 w-4 text-[#1E5631] focus:ring-[#A4DE02] border-gray-300 rounded">
                         <label for="remember-me" class="ml-2 block text-sm text-gray-600">Ingat saya</label>
                     </div>
-                    <a href="#" class="text-sm font-medium text-[#1E5631] hover:text-[#4C9A2B] transition-colors">
+                    <!-- <a href="#" class="text-sm font-medium text-[#1E5631] hover:text-[#4C9A2B] transition-colors">
                         Lupa password?
-                    </a>
+                    </a> -->
                 </div>
 
                 <button type="submit"

@@ -114,86 +114,113 @@ class Dashboard extends BaseController
     //         'izinTerbaru' => $izinTerbaru
     //     ]);
     // }
-        public function piket()
-    {
-        $page_keluar = $this->request->getGet('page_keluar') ?? 1;
-        $page_masuk  = $this->request->getGet('page_masuk') ?? 1;
+public function piket()
+{
+    $page_keluar = $this->request->getGet('page_keluar') ?? 1;
+    $page_masuk  = $this->request->getGet('page_masuk') ?? 1;
 
-        $today = date('Y-m-d');
-        $kemarin = date('Y-m-d', strtotime('-1 day'));
+    $today = date('Y-m-d');
+    $kemarin = date('Y-m-d', strtotime('-1 day'));
 
-        // --- Surat Izin Keluar Hari Ini ---
-        $suratIzin = $this->suratIzinModel
-            ->where('DATE(created_at)', $today)
-            ->paginate(5, 'keluar', $page_keluar);
-        $pager_keluar = $this->suratIzinModel->pager;
-        $total_izin_keluar = $this->suratIzinModel->pager->getTotal('keluar');
+    // --- Surat Izin Keluar Hari Ini ---
+    $suratIzin = $this->suratIzinModel
+        ->where('DATE(created_at)', $today)
+        ->paginate(5, 'keluar', $page_keluar);
+    $pager_keluar = $this->suratIzinModel->pager;
+    $total_izin_keluar = $this->suratIzinModel->pager->getTotal('keluar');
 
-        foreach ($suratIzin as &$izin) {
-            $izin['pelanggaran'] = $this->suratIzinPelanggaranModel
-                ->select('surat_izin_pelanggaran.id as pivot_id, pelanggaran.jenis_pelanggaran, pelanggaran.poin, pelanggaran.id as pelanggaran_id, surat_izin_pelanggaran.catatan')
-                ->join('pelanggaran', 'pelanggaran.id = surat_izin_pelanggaran.pelanggaran_id', 'left')
-                ->where('surat_izin_pelanggaran.surat_izin_id', $izin['id'])
-                ->findAll();
-        }
-
-        // --- Surat Izin Masuk Hari Ini ---
-        $suratIzinMasuk = $this->suratIzinMasukModel
-            ->where('DATE(created_at)', $today)
-            ->paginate(5, 'masuk', $page_masuk);
-        $pager_masuk = $this->suratIzinMasukModel->pager;
-        $total_izin_masuk = $this->suratIzinMasukModel->pager->getTotal('masuk');
-
-        foreach ($suratIzinMasuk as &$masuk) {
-            $masuk['pelanggaran'] = $this->suratIzinPelanggaranModel
-                ->select('surat_izin_pelanggaran.id as pivot_id, pelanggaran.jenis_pelanggaran, pelanggaran.poin, pelanggaran.id as pelanggaran_id, surat_izin_pelanggaran.catatan')
-                ->join('pelanggaran', 'pelanggaran.id = surat_izin_pelanggaran.pelanggaran_id', 'left')
-                ->where('surat_izin_pelanggaran.surat_masuk_id', $masuk['id'])
-                ->findAll();
-        }
-
-        // --- Surat Izin Keluar Kemarin ---
-        $suratIzinKemarin = $this->suratIzinModel
-            ->select('surat_izin.*, "keluar" as type')
-            ->where('DATE(created_at)', $kemarin)
+    foreach ($suratIzin as &$izin) {
+        $izin['pelanggaran'] = $this->suratIzinPelanggaranModel
+            ->select('surat_izin_pelanggaran.id as pivot_id, pelanggaran.jenis_pelanggaran, pelanggaran.poin, pelanggaran.id as pelanggaran_id, surat_izin_pelanggaran.catatan')
+            ->join('pelanggaran', 'pelanggaran.id = surat_izin_pelanggaran.pelanggaran_id', 'left')
+            ->where('surat_izin_pelanggaran.surat_izin_id', $izin['id'])
             ->findAll();
-
-        foreach ($suratIzinKemarin as &$izin) {
-            $izin['pelanggaran'] = $this->suratIzinPelanggaranModel
-                ->select('surat_izin_pelanggaran.id as pivot_id, pelanggaran.jenis_pelanggaran, pelanggaran.poin, pelanggaran.id as pelanggaran_id, surat_izin_pelanggaran.catatan')
-                ->join('pelanggaran', 'pelanggaran.id = surat_izin_pelanggaran.pelanggaran_id', 'left')
-                ->where('surat_izin_pelanggaran.surat_izin_id', $izin['id'])
-                ->findAll();
-        }
-
-        // --- Surat Izin Masuk Kemarin ---
-        $suratIzinMasukKemarin = $this->suratIzinMasukModel
-            ->select('surat_izin_masuk.*, "masuk" as type')
-            ->where('DATE(created_at)', $kemarin)
-            ->findAll();
-
-        foreach ($suratIzinMasukKemarin as &$masuk) {
-            $masuk['pelanggaran'] = $this->suratIzinPelanggaranModel
-                ->select('surat_izin_pelanggaran.id as pivot_id, pelanggaran.jenis_pelanggaran, pelanggaran.poin, pelanggaran.id as pelanggaran_id, surat_izin_pelanggaran.catatan')
-                ->join('pelanggaran', 'pelanggaran.id = surat_izin_pelanggaran.pelanggaran_id', 'left')
-                ->where('surat_izin_pelanggaran.surat_masuk_id', $masuk['id'])
-                ->findAll();
-        }
-
-        $data = [
-            'surat_izin'               => $suratIzin,
-            'surat_izin_masuk'         => $suratIzinMasuk,
-            'surat_izin_kemarin'       => $suratIzinKemarin,
-            'surat_izin_masuk_kemarin' => $suratIzinMasukKemarin,
-            'pelanggaranList'          => $this->pelanggaranModel->orderBy('kategori', 'ASC')->findAll(),
-            'pager_keluar'             => $pager_keluar,
-            'pager_masuk'              => $pager_masuk,
-            'total_izin_keluar'        => $total_izin_keluar,
-            'total_izin_masuk'         => $total_izin_masuk,
-        ];
-
-        return view('pages/piket/piket', $data);
     }
+
+    // --- Surat Izin Masuk Hari Ini ---
+    $suratIzinMasuk = $this->suratIzinMasukModel
+        ->where('DATE(created_at)', $today)
+        ->paginate(5, 'masuk', $page_masuk);
+    $pager_masuk = $this->suratIzinMasukModel->pager;
+    $total_izin_masuk = $this->suratIzinMasukModel->pager->getTotal('masuk');
+
+    foreach ($suratIzinMasuk as &$masuk) {
+        $masuk['pelanggaran'] = $this->suratIzinPelanggaranModel
+            ->select('surat_izin_pelanggaran.id as pivot_id, pelanggaran.jenis_pelanggaran, pelanggaran.poin, pelanggaran.id as pelanggaran_id, surat_izin_pelanggaran.catatan')
+            ->join('pelanggaran', 'pelanggaran.id = surat_izin_pelanggaran.pelanggaran_id', 'left')
+            ->where('surat_izin_pelanggaran.surat_masuk_id', $masuk['id'])
+            ->findAll();
+    }
+
+    // --- Surat Izin Keluar Kemarin ---
+    $suratIzinKemarin = $this->suratIzinModel
+        ->select('surat_izin.*, "keluar" as type')
+        ->where('DATE(created_at)', $kemarin)
+        ->findAll();
+
+    foreach ($suratIzinKemarin as &$izin) {
+        $izin['pelanggaran'] = $this->suratIzinPelanggaranModel
+            ->select('surat_izin_pelanggaran.id as pivot_id, pelanggaran.jenis_pelanggaran, pelanggaran.poin, pelanggaran.id as pelanggaran_id, surat_izin_pelanggaran.catatan')
+            ->join('pelanggaran', 'pelanggaran.id = surat_izin_pelanggaran.pelanggaran_id', 'left')
+            ->where('surat_izin_pelanggaran.surat_izin_id', $izin['id'])
+            ->findAll();
+    }
+
+    // --- Surat Izin Masuk Kemarin ---
+    $suratIzinMasukKemarin = $this->suratIzinMasukModel
+        ->select('surat_izin_masuk.*, "masuk" as type')
+        ->where('DATE(created_at)', $kemarin)
+        ->findAll();
+
+    foreach ($suratIzinMasukKemarin as &$masuk) {
+        $masuk['pelanggaran'] = $this->suratIzinPelanggaranModel
+            ->select('surat_izin_pelanggaran.id as pivot_id, pelanggaran.jenis_pelanggaran, pelanggaran.poin, pelanggaran.id as pelanggaran_id, surat_izin_pelanggaran.catatan')
+            ->join('pelanggaran', 'pelanggaran.id = surat_izin_pelanggaran.pelanggaran_id', 'left')
+            ->where('surat_izin_pelanggaran.surat_masuk_id', $masuk['id'])
+            ->findAll();
+    }
+
+    // --- Data 7 Hari Terakhir untuk Chart ---
+    $last7Days = [];
+    for ($i = 6; $i >= 0; $i--) {
+        $date = date('Y-m-d', strtotime("-$i days"));
+        $last7Days[] = $date;
+    }
+
+    $weeklyDataKeluar = [];
+    $weeklyDataMasuk = [];
+
+    foreach ($last7Days as $date) {
+        // Data izin keluar per hari
+        $izinKeluarHariIni = $this->suratIzinModel
+            ->where('DATE(created_at)', $date)
+            ->countAllResults();
+        $weeklyDataKeluar[] = $izinKeluarHariIni;
+
+        // Data izin masuk per hari
+        $izinMasukHariIni = $this->suratIzinMasukModel
+            ->where('DATE(created_at)', $date)
+            ->countAllResults();
+        $weeklyDataMasuk[] = $izinMasukHariIni;
+    }
+
+    $data = [
+        'surat_izin'               => $suratIzin,
+        'surat_izin_masuk'         => $suratIzinMasuk,
+        'surat_izin_kemarin'       => $suratIzinKemarin,
+        'surat_izin_masuk_kemarin' => $suratIzinMasukKemarin,
+        'pelanggaranList'          => $this->pelanggaranModel->orderBy('kategori', 'ASC')->findAll(),
+        'pager_keluar'             => $pager_keluar,
+        'pager_masuk'              => $pager_masuk,
+        'total_izin_keluar'        => $total_izin_keluar,
+        'total_izin_masuk'         => $total_izin_masuk,
+        'weekly_data_keluar'       => $weeklyDataKeluar,
+        'weekly_data_masuk'        => $weeklyDataMasuk,
+        'last_7_days_labels'       => $last7Days,
+    ];
+
+    return view('pages/piket/piket', $data);
+}
 
     // DASHBOARD BP
     public function bp()

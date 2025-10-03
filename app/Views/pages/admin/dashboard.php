@@ -120,7 +120,7 @@
                 <span class="font-medium text-[#1E5631]">Kelola Pelanggaran</span>
             </a>
             
-            <a href="/admin/reports" class="p-4 bg-gradient-to-br from-[#faf5ff] to-[#e9d5ff] rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col items-center justify-center text-center group">
+            <a href="/admin/laporan" class="p-4 bg-gradient-to-br from-[#faf5ff] to-[#e9d5ff] rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col items-center justify-center text-center group">
                 <div class="p-3 rounded-xl bg-white shadow-sm mb-3 group-hover:scale-110 transition-transform">
                     <i class="fas fa-chart-bar text-purple-500 text-xl"></i>
                 </div>
