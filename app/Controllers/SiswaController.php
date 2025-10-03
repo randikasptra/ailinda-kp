@@ -21,6 +21,7 @@ class SiswaController extends BaseController
         $filters = [
             'keyword'  => $this->request->getGet('keyword') ?? '',
             'kelas'    => $this->request->getGet('kelas') ?? '',
+            'jurusan'  => $this->request->getGet('jurusan') ?? '',
             'jk'       => $this->request->getGet('jk') ?? '',
             'tahun'    => $this->request->getGet('tahun') ?? '',
             'poin'     => $this->request->getGet('poin') ?? '',
