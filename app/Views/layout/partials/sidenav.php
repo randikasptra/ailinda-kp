@@ -59,7 +59,7 @@
                 <div class="p-2 rounded-xl bg-[#A4DE02]/10 group-hover:bg-[#A4DE02]/20 shadow-sm">
                     <i class="fas fa-home w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
                 </div>
-                <span class="font-medium">Dashboard Piket</span>
+                <span class="font-medium">Dashboard</span>
                 <i class="fas fa-chevron-right ml-auto text-xs text-gray-400 group-hover:text-[#A4DE02] transition-transform duration-300 group-hover:translate-x-1"></i>
             </a>
 

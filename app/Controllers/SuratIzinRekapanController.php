@@ -95,6 +95,7 @@ class SuratIzinRekapanController extends BaseController
             'pelanggaranList'          => $this->pelanggaranModel->orderBy('kategori', 'ASC')->findAll(),
             'total_izin_keluar'        => $total_izin_keluar,
             'total_izin_masuk'         => $total_izin_masuk,
+            'title'   => 'Tambah Pelanggaran',
         ];
 
         return view('pages/piket/izin_rekapan', $data);

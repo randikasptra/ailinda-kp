@@ -128,6 +128,7 @@ class LaporanAdminController extends BaseController
             'izinMasuk'    => $izinMasuk,
             'pelanggaran'  => $pelanggaran,
             'jenis'        => $jenis,
+            'title'   => 'Rekap Surat Izin',
         ];
 
         if ($export) {
