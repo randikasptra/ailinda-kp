@@ -92,6 +92,12 @@
                         </div>
                         <span class="text-sm">Laporan Izin Masuk</span>
                     </a>
+                    <a href="/admin/laporan/sanksi_siswa" class="dropdown-item nav-item flex items-center gap-4 p-4 pl-12 hover:bg-white/10 transition-all duration-300 group hover:shadow-lg <?= current_url(true) == base_url('/admin/laporan/masuk') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Laporan Izin Masuk">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <i data-lucide="file-text" class="w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
+                        </div>
+                        <span class="text-sm">Laporan Sanksi Siswa</span>
+                    </a>
                 </div>
             </div>
 

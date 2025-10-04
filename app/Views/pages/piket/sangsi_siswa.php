@@ -35,186 +35,163 @@
         </div>
     <?php endif; ?>
 
-    <!-- Form Sanksi Siswa -->
+    <!-- FORM PENCARIAN SISWA -->
+    <div class="mb-6 bg-gray-50 p-5 rounded-xl border border-gray-100">
+        <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center">
+            <i class="fas fa-search mr-2 text-[#1E5631]"></i>
+            Pencarian Siswa
+        </h3>
+        <form method="get" action="<?= base_url('piket/sanksi-siswa') ?>" class="flex flex-col md:flex-row gap-3">
+            <div class="relative flex-grow">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-gray-400"></i>
+                </div>
+                <input type="text" name="keyword" value="<?= esc($keyword ?? '') ?>" placeholder="Cari berdasarkan NIS atau Nama..."
+                       class="pl-10 w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all duration-200" />
+            </div>
+            <button type="submit" class="bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-200 flex items-center justify-center shadow-md hover:shadow-lg">
+                <i class="fas fa-search text-white mr-2"></i>
+                Cari
+            </button>
+        </form>
+    </div>
+
+    <!-- DROPDOWN PILIHAN SISWA (JIKA DUPLIKAT NAMA) -->
+    <?php if (!empty($siswaList) && count($siswaList) > 1): ?>
+        <div class="bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded-xl">
+            <p class="font-medium mb-2">Beberapa siswa ditemukan. Pilih salah satu:</p>
+            <ul class="list-disc pl-6 space-y-2">
+                <?php foreach ($siswaList as $s): ?>
+                    <li>
+                        <a href="<?= base_url('piket/sanksi-siswa?nis=' . $s['nis']) ?>"
+                           class="text-[#1E5631] hover:underline font-semibold">
+                            <?= esc($s['nama']) ?> (<?= esc($s['nis']) ?>) - <?= esc($s['kelas']) ?> 
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
+    <!-- FORM INPUT SANKSI (SELALU ADA) -->
     <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
         <div class="px-6 py-4 bg-gradient-to-r from-[#1E5631] to-[#4C9A2B]">
             <h2 class="text-lg font-semibold text-white flex items-center">
-                <i class="fas fa-plus-circle mr-2"></i>
-                Form Input Sanksi Siswa
+                <i class="fas fa-plus-circle mr-2"></i> Form Input Sanksi Siswa
             </h2>
         </div>
+
         <div class="p-6">
-            <form action="<?= base_url('piket/store-sanksi-siswa') ?>" method="POST" class="space-y-6">
+            <form action="<?= base_url('piket/sanksi-siswa/store') ?>" method="POST" class="space-y-6">
                 <?= csrf_field() ?>
 
-                <!-- Data Siswa Section -->
+                <!-- Data Siswa (Auto-filled dan disable jika $siswa ada) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">NIS <span class="text-red-500">*</span></label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-id-card text-gray-400"></i>
-                            </div>
-                            <input type="text" name="nis" value="<?= old('nis') ?>" required
-                                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
-                                   placeholder="Masukkan NIS siswa">
-                            <?php if ($errors['nis'] ?? false): ?>
-                                <p class="mt-1 text-sm text-red-600"><?= esc($errors['nis']) ?></p>
-                            <?php endif; ?>
-                        </div>
+                        <input type="text" name="nis" value="<?= esc($siswa['nis'] ?? old('nis')) ?>" <?= isset($siswa) ? 'readonly' : '' ?>
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all <?= isset($siswa) ? 'bg-gray-100' : '' ?>"
+                               placeholder="Masukkan NIS siswa">
+                        <?php if (isset($errors['nis'])): ?>
+                            <p class="mt-1 text-sm text-red-600"><?= esc($errors['nis']) ?></p>
+                        <?php endif; ?>
                     </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">NIS M (Opsional)</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-id-badge text-gray-400"></i>
-                            </div>
-                            <input type="text" name="nism" value="<?= old('nism') ?>"
-                                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
-                                   placeholder="Masukkan NIS M siswa">
-                        </div>
-                    </div>
-
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap <span class="text-red-500">*</span></label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-user text-gray-400"></i>
-                            </div>
-                            <input type="text" name="nama" value="<?= old('nama') ?>" required
-                                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
-                                   placeholder="Masukkan nama lengkap siswa">
-                            <?php if ($errors['nama'] ?? false): ?>
-                                <p class="mt-1 text-sm text-red-600"><?= esc($errors['nama']) ?></p>
-                            <?php endif; ?>
-                        </div>
+                        <input type="text" name="nama" value="<?= esc($siswa['nama'] ?? old('nama')) ?>" <?= isset($siswa) ? 'readonly' : '' ?>
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all <?= isset($siswa) ? 'bg-gray-100' : '' ?>"
+                               placeholder="Masukkan nama lengkap siswa">
+                        <?php if (isset($errors['nama'])): ?>
+                            <p class="mt-1 text-sm text-red-600"><?= esc($errors['nama']) ?></p>
+                        <?php endif; ?>
                     </div>
-
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-graduation-cap text-gray-400"></i>
-                            </div>
-                            <input type="text" name="kelas" value="<?= old('kelas') ?>"
-                                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
-                                   placeholder="Contoh: 10.01">
-                        </div>
+                        <input type="text" name="kelas" value="<?= esc($siswa['kelas'] ?? old('kelas')) ?>" <?= isset($siswa) ? 'readonly' : '' ?>
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all <?= isset($siswa) ? 'bg-gray-100' : '' ?>"
+                               placeholder="Contoh: 10.01">
                     </div>
-
+                    <!-- <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Jurusan</label>
+                        <select name="jurusan" <?= isset($siswa) ? 'disabled' : '' ?> class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] appearance-none <?= isset($siswa) ? 'bg-gray-100' : '' ?>">
+                            <option value="">Pilih Jurusan</option>
+                            <option value="SOSHUM" <?= ($siswa['jurusan'] ?? old('jurusan')) === 'SOSHUM' ? 'selected' : '' ?>>SOS HUM</option>
+                            <option value="SAINTEK" <?= ($siswa['jurusan'] ?? old('jurusan')) === 'SAINTEK' ? 'selected' : '' ?>>SAIN TEK</option>
+                            <option value="BAHASA" <?= ($siswa['jurusan'] ?? old('jurusan')) === 'BAHASA' ? 'selected' : '' ?>>BAHASA</option>
+                        </select>
+                    </div> -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">No. Absen</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-hashtag text-gray-400"></i>
-                            </div>
-                            <input type="number" name="no_absen" value="<?= old('no_absen') ?>"
-                                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
-                                   placeholder="Masukkan nomor absen">
-                        </div>
+                        <input type="number" name="no_absen" value="<?= esc($siswa['no_absen'] ?? old('no_absen')) ?>" <?= isset($siswa) ? 'readonly' : '' ?>
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all <?= isset($siswa) ? 'bg-gray-100' : '' ?>"
+                               placeholder="Masukkan nomor absen">
                     </div>
-
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Kelamin</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-venus-mars text-gray-400"></i>
-                            </div>
-                            <select name="jk" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] appearance-none bg-white">
-                                <option value="">Pilih Jenis Kelamin</option>
-                                <option value="L" <?= old('jk') === 'L' ? 'selected' : '' ?>>Laki-laki</option>
-                                <option value="P" <?= old('jk') === 'P' ? 'selected' : '' ?>>Perempuan</option>
-                            </select>
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                <i class="fas fa-chevron-down text-gray-400"></i>
-                            </div>
-                        </div>
+                        <select name="jk" <?= isset($siswa) ? 'disabled' : '' ?> class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] appearance-none <?= isset($siswa) ? 'bg-gray-100' : '' ?>">
+                            <option value="">Pilih Jenis Kelamin</option>
+                            <option value="L" <?= ($siswa['jk'] ?? old('jk')) === 'L' ? 'selected' : '' ?>>Laki-laki</option>
+                            <option value="P" <?= ($siswa['jk'] ?? old('jk')) === 'P' ? 'selected' : '' ?>>Perempuan</option>
+                        </select>
                     </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Jurusan</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-book text-gray-400"></i>
-                            </div>
-                            <select name="jurusan" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] appearance-none bg-white">
-                                <option value="">Pilih Jurusan</option>
-                                <option value="SOSHUM" <?= old('jurusan') === 'SOSHUM' ? 'selected' : '' ?>>SOS HUM</option>
-                                <option value="SAINTEK" <?= old('jurusan') === 'SAINTEK' ? 'selected' : '' ?>>SAIN TEK</option>
-                                <option value="BAHASA" <?= old('jurusan') === 'BAHASA' ? 'selected' : '' ?>>BAHASA</option>
-                            </select>
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                <i class="fas fa-chevron-down text-gray-400"></i>
-                            </div>
-                        </div>
-                    </div>
-
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Tahun Ajaran</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-calendar-alt text-gray-400"></i>
-                            </div>
-                            <input type="text" name="tahun_ajaran" value="<?= old('tahun_ajaran') ?>"
-                                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
-                                   placeholder="Contoh: 2024/2025">
-                        </div>
+                        <input type="text" name="tahun_ajaran" value="<?= esc($siswa['tahun_ajaran'] ?? old('tahun_ajaran')) ?>" <?= isset($siswa) ? 'readonly' : '' ?>
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all <?= isset($siswa) ? 'bg-gray-100' : '' ?>"
+                               placeholder="Contoh: 2024/2025">
                     </div>
-
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Poin Sanksi (Default: 0)</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-star text-gray-400"></i>
-                            </div>
-                            <input type="number" name="poin" value="<?= old('poin', 0) ?>" min="0"
-                                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
-                                   placeholder="Masukkan total poin sanksi">
-                        </div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Poin Saat Ini</label>
+                        <input type="number" value="<?= esc($siswa['poin'] ?? old('poin', 0)) ?>" readonly
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl bg-gray-100">
                     </div>
                 </div>
 
-                <!-- Pelanggaran Section -->
+                <!-- Pilihan Pelanggaran -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-3">Jenis Pelanggaran</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Jenis Pelanggaran <span class="text-red-500">*</span></label>
                     <div class="relative mb-3">
                         <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                        <input type="text" id="searchPelanggaranSanksi" 
-                               placeholder="Cari jenis pelanggaran..." 
-                               class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
+                        <input type="text" id="searchPelanggaranSanksi" placeholder="Cari pelanggaran..."
+                               class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50">
                     </div>
-                    <div id="pelanggaranListContainerSanksi" 
+                    <div id="pelanggaranListContainerSanksi"
                          class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-48 overflow-y-auto border border-gray-300 p-3 rounded-xl">
-                        <?php if (isset($pelanggaranList) && !empty($pelanggaranList)): ?>
-                            <?php foreach ($pelanggaranList as $p): ?>
-                                <label class="flex items-center space-x-2 pelanggaran-item-sanksi p-2 rounded hover:bg-gray-50 transition-colors cursor-pointer" data-pelanggaran-id="<?= $p['id'] ?>">
-                                    <input type="checkbox" name="pelanggaran_ids[]" value="<?= $p['id'] ?>" 
-                                           class="form-checkbox h-4 w-4 text-[#1E5631] focus:ring-[#1E5631]">
-                                    <span class="text-sm">
-                                        <?= esc($p['jenis_pelanggaran']) ?> 
-                                        <small class="text-gray-500 block"><?= esc($p['kategori']) ?> • <?= $p['poin'] ?> poin</small>
-                                    </span>
-                                </label>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <p class="col-span-full text-center text-gray-500">Tidak ada data pelanggaran tersedia.</p>
-                        <?php endif; ?>
+                        <?php foreach ($pelanggaranList as $p): ?>
+                            <label class="flex items-center space-x-2 pelanggaran-item-sanksi p-2 rounded hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" name="pelanggaran_ids[]" value="<?= $p['id'] ?>"
+                                       class="form-checkbox h-4 w-4 text-[#1E5631] focus:ring-[#1E5631]">
+                                <span class="text-sm">
+                                    <?= esc($p['jenis_pelanggaran']) ?>
+                                    <small class="text-gray-500 block"><?= esc($p['kategori']) ?> • <?= esc($p['poin']) ?> poin</small>
+                                </span>
+                            </label>
+                        <?php endforeach; ?>
                     </div>
                     <p class="mt-2 text-xs text-gray-500">Pilih satu atau lebih pelanggaran. Total poin akan dihitung otomatis.</p>
+                    <?php if (isset($errors['pelanggaran_ids'])): ?>
+                        <p class="mt-1 text-sm text-red-600"><?= esc($errors['pelanggaran_ids']) ?></p>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Keterangan -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Keterangan (Opsional)</label>
+                    <textarea name="keterangan" rows="3" class="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-[#1E5631]/50"><?= old('keterangan') ?></textarea>
+                </div>
+
+                <!-- Total Poin -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Total Poin Sanksi</label>
+                    <input type="number" name="poin" readonly value="0"
+                           class="w-full bg-gray-100 px-4 py-3 rounded-xl border border-gray-300">
                 </div>
 
                 <!-- Buttons -->
                 <div class="flex gap-3 pt-4">
-                    <a href="<?= base_url('piket/sanksi-siswa') ?>" 
-                       class="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition duration-200 font-medium text-center flex items-center justify-center gap-2">
-                        <i class="fas fa-arrow-left"></i>
-                        Kembali
-                    </a>
                     <button type="submit"
-                            class="flex-1 px-4 py-3 bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white rounded-xl hover:shadow-lg transition duration-200 font-medium shadow-md flex items-center justify-center gap-2">
-                        <i class="fas fa-save"></i>
-                        Simpan Sanksi
+                            class="flex-1 px-4 py-3 bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white rounded-xl font-medium shadow-md hover:shadow-lg">
+                        <i class="fas fa-save mr-2"></i> Simpan Sanksi
                     </button>
                 </div>
             </form>
@@ -222,63 +199,38 @@
     </div>
 </div>
 
-<!-- Font Awesome for Icons -->
+<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-<style>
-/* Custom scrollbar for pelanggaran list */
-#pelanggaranListContainerSanksi::-webkit-scrollbar {
-    width: 6px;
-}
-
-#pelanggaranListContainerSanksi::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
-}
-
-#pelanggaranListContainerSanksi::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 3px;
-}
-
-#pelanggaranListContainerSanksi::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-}
-</style>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    // Search functionality for pelanggaran
-    const searchPelanggaranSanksi = document.getElementById('searchPelanggaranSanksi');
-    const pelanggaranItemsSanksi = document.querySelectorAll('.pelanggaran-item-sanksi');
-    
-    searchPelanggaranSanksi.addEventListener('keyup', function() {
-        let keyword = this.value.toLowerCase();
-        pelanggaranItemsSanksi.forEach(item => {
-            let text = item.innerText.toLowerCase();
-            item.style.display = text.includes(keyword) ? '' : 'none';
-        });
-    });
-
-    // Auto-calculate poin on checkbox change
-    const checkboxes = document.querySelectorAll('input[name="pelanggaran_ids[]"]');
+    // Filter pelanggaran
+    const search = document.getElementById('searchPelanggaranSanksi');
+    const items = document.querySelectorAll('.pelanggaran-item-sanksi');
     const poinInput = document.querySelector('input[name="poin"]');
-    
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            let totalPoin = 0;
-            checkboxes.forEach(cb => {
-                if (cb.checked) {
-                    const label = cb.closest('.pelanggaran-item-sanksi');
-                    const poinText = label.querySelector('small').textContent.match(/(\d+) poin/);
-                    if (poinText) {
-                        totalPoin += parseInt(poinText[1]);
-                    }
-                }
+
+    if (search) {
+        search.addEventListener('input', () => {
+            const keyword = search.value.toLowerCase();
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(keyword) ? '' : 'none';
             });
-            poinInput.value = totalPoin;
         });
-    });
+    }
+
+    // Hitung total poin otomatis
+    const checkboxes = document.querySelectorAll('input[name="pelanggaran_ids[]"]');
+    checkboxes.forEach(cb => cb.addEventListener('change', () => {
+        let total = 0;
+        checkboxes.forEach(c => {
+            if (c.checked) {
+                const poin = c.closest('label').querySelector('small').textContent.match(/(\d+)\s*poin/);
+                if (poin) total += parseInt(poin[1]);
+            }
+        });
+        poinInput.value = total;
+    }));
 });
 </script>
 

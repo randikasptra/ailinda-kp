@@ -3,70 +3,92 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\SiswaModel;
 use App\Models\PelanggaranModel;
 use App\Models\SanksiSiswaModel;
 
 class SanksiController extends BaseController
 {
+    protected $siswaModel;
     protected $pelanggaranModel;
     protected $sanksiModel;
 
     public function __construct()
     {
+        $this->siswaModel = new SiswaModel();
         $this->pelanggaranModel = new PelanggaranModel();
-        // $this->sanksiModel = new SanksiSiswaModel();
+        $this->sanksiModel = new SanksiSiswaModel();
     }
 
+    // =======================
+    // HALAMAN INPUT SANKSI
+    // =======================
     public function index()
     {
+        $keyword = $this->request->getGet('keyword');
+        $nis = $this->request->getGet('nis');
+        $siswa = null;
+        $siswaList = [];
+
         $data['pelanggaranList'] = $this->pelanggaranModel->findAll();
 
-        return view('Pages/Piket/sangsi_siswa', $data);
+        if ($keyword) {
+            $siswaList = $this->siswaModel
+                ->like('nama', $keyword)
+                ->orLike('nis', $keyword)
+                ->findAll();
+        }
+
+        if ($nis) {
+            $siswa = $this->siswaModel->where('nis', $nis)->first();
+        } elseif (count($siswaList) === 1) {
+            $siswa = $siswaList[0];
+        }
+
+        return view('Pages/Piket/sangsi_siswa', [
+            'keyword'   => $keyword,
+            'siswaList' => $siswaList,
+            'siswa'     => $siswa,
+            'pelanggaranList' => $data['pelanggaranList']
+        ]);
     }
 
+    // =======================
+    // SIMPAN DATA SANKSI SISWA
+    // =======================
     public function store()
     {
-        // Validasi input
         if (!$this->validate([
-            'nis' => 'required|min_length[5]',
-            'nama' => 'required|min_length[3]',
-            // Tambahkan validasi lain jika diperlukan
+            'nis' => 'required',
+            'pelanggaran_ids' => 'required'
         ])) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
-
-        $postData = $this->request->getPost();
-
-        // Data untuk tabel sanksi_siswa
-        $sanksiData = [
-            'nis' => $postData['nis'],
-            'nism' => $postData['nism'] ?? null,
-            'nama' => $postData['nama'],
-            'kelas' => $postData['kelas'] ?? null,
-            'no_absen' => $postData['no_absen'] ?? null,
-            'jk' => $postData['jk'] ?? null,
-            'jurusan' => $postData['jurusan'] ?? null,
-            'tahun_ajaran' => $postData['tahun_ajaran'] ?? null,
-            'poin' => $postData['poin'] ?? 0,
-        ];
-
-        // Simpan data sanksi_siswa
-        $sanksiId = $this->sanksiModel->insert($sanksiData);
-
-        if ($sanksiId) {
-            // Simpan relasi pelanggaran (asumsikan ada method addPelanggaran di model)
-            $pelanggaranIds = $postData['pelanggaran_ids'] ?? [];
-            foreach ($pelanggaranIds as $pelId) {
-                // Contoh: insert ke tabel pivot sanksi_pelanggaran
-                $this->sanksiModel->addPelanggaran($sanksiId, $pelId);
-            }
-
-            // Log aktivitas jika diperlukan
-            // $this->activityLogModel->save([...]);
-
-            return redirect()->to('/sanksi/siswa')->with('success', 'Sanksi siswa berhasil ditambahkan!');
+        $post = $this->request->getPost();
+        // Ambil data siswa berdasarkan NIS
+        $siswa = $this->siswaModel->where('nis', $post['nis'])->first();
+        if (!$siswa) {
+            return redirect()->back()->with('error', 'Data siswa tidak ditemukan.');
         }
-
-        return redirect()->back()->withInput()->with('error', 'Gagal menambahkan sanksi siswa.');
+        $pelanggaranIds = $post['pelanggaran_ids'] ?? [];
+        $totalPoin = 0;
+        foreach ($pelanggaranIds as $pelId) {
+            $pel = $this->pelanggaranModel->find($pelId);
+            if (!$pel) continue;
+            // Simpan ke tabel sanksi_siswa
+            $this->sanksiModel->insert([
+                'siswa_id' => $siswa['id'],
+                'pelanggaran_id' => $pel['id'],
+                'tanggal_pelanggaran' => date('Y-m-d'),
+                'poin_didapat' => $pel['poin'],
+                'keterangan' => $post['keterangan'] ?? null,
+            ]);
+            $totalPoin += $pel['poin'];
+        }
+        // Update poin total siswa
+        $this->siswaModel->update($siswa['id'], [
+            'poin' => $siswa['poin'] + $totalPoin,
+        ]);
+        return redirect()->to('/piket/sangsi_siswa')->with('success', 'Sanksi siswa berhasil ditambahkan!');
     }
 }

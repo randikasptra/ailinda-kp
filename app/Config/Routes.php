@@ -63,6 +63,10 @@ $routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
     
     $routes->post('sangsi_siswa', 'SanksiController::index');
     $routes->get('sangsi_siswa', 'SanksiController::index');
+    $routes->get('search-siswa', 'SanksiController::searchSiswa');
+    $routes->post('sanksi-siswa/store', 'SanksiController::store');
+    $routes->get('sanksi-siswa', 'SanksiController::index');
+
 
     // History Konfirmasi
     $routes->get('history_konfirmasi', 'HistoryKonfirmasi::history');
@@ -72,6 +76,10 @@ $routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
     $routes->post('history_konfirmasi/hapus_hari_ini', 'HistoryKonfirmasi::hapusHariIni');
 });
 
+
+$routes->post('sanksi/delete/(:num)', 'SanksiAdminController::delete/$1');
+$routes->post('sanksi/delete', 'SanksiAdminController::delete');
+$routes->post('sanksi/update-pelanggaran', 'SanksiAdminController::updatePelanggaran');
 // =======================
 // REKAPAN
 // =======================
@@ -137,6 +145,7 @@ $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
 
     $routes->get('laporan/keluar', 'LaporanAdminController::keluar');
     $routes->get('laporan/masuk', 'LaporanAdminController::masuk');
+    $routes->get('laporan/sanksi_siswa', 'SanksiAdminController::index');
     
     // Laporan
     $routes->get('laporan', 'LaporanAdminController::index');
