@@ -27,6 +27,12 @@
                     </div>
                 </div>
             </div>
+            <!-- Tombol Tambah Jenis Pelanggaran -->
+            <button onclick="openModalTambahJenis()" 
+                    class="bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all font-medium flex items-center gap-2">
+                <i class="fas fa-plus"></i>
+                Tambah Jenis Pelanggaran
+            </button>
         </div>
     </div>
 
@@ -497,6 +503,75 @@
     </div>
 </div>
 
+<!-- Modal Tambah Jenis Pelanggaran -->
+<div id="modalTambahJenis" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 hidden">
+    <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md border border-[#1E5631]/20 animate-scaleIn">
+        <div class="flex justify-between items-center mb-5">
+            <h2 class="text-xl font-bold text-[#1E5631] flex items-center">
+                <i class="fas fa-plus-circle mr-2"></i>
+                Tambah Pelanggaran
+            </h2>
+            <button onclick="closeModal('modalTambahJenis')"
+                class="text-gray-400 hover:text-gray-600 transition duration-200 p-1 rounded-full hover:bg-gray-100">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+        </div>
+        <form action="<?= base_url('rekapan/tambahPelanggaran') ?>" method="POST" class="space-y-4">
+            <?= csrf_field() ?>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Pelanggaran</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-exclamation-triangle text-gray-400"></i>
+                    </div>
+                    <input type="text" name="jenis_pelanggaran"
+                        class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
+                        placeholder="Masukkan jenis pelanggaran" required>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-tag text-gray-400"></i>
+                    </div>
+                    <select name="kategori"
+                        class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] appearance-none bg-white">
+                        <option value="">Pilih Kategori</option>
+                        <option value="Ringan">Ringan</option>
+                        <option value="Sedang">Sedang</option>
+                        <option value="Berat">Berat</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <i class="fas fa-chevron-down text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Poin</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-star text-gray-400"></i>
+                    </div>
+                    <input type="number" name="poin" min="1"
+                        class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
+                        placeholder="Masukkan poin" required>
+                </div>
+            </div>
+            <div class="flex gap-3 pt-4">
+                <button type="button" onclick="closeModal('modalTambahJenis')"
+                    class="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition duration-200 font-medium">
+                    Batal
+                </button>
+                <button type="submit"
+                    class="flex-1 px-4 py-3 bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white rounded-xl hover:shadow-lg transition duration-200 font-medium shadow-md">
+                    Simpan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Modal Detail -->
 <div id="modalDetail" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden">
@@ -569,6 +644,21 @@
     opacity: 1;
     transform: scale(1);
     transition: opacity 200ms ease-out, transform 200ms ease-out;
+}
+
+.animate-scaleIn {
+    animation: scaleIn 0.2s ease-out;
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 /* Improved table styling */
@@ -746,6 +836,14 @@ function closePelanggaranModal() {
     document.getElementById('previewPelanggaranLama').innerHTML = '';
     // Reset title to default
     document.getElementById("modalPelanggaranTitle").textContent = 'Tambah Pelanggaran';
+}
+
+function openModalTambahJenis() {
+    document.getElementById('modalTambahJenis').classList.remove('hidden');
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
 }
 
 function openModal(data) {

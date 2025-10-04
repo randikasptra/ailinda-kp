@@ -60,7 +60,9 @@ $routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
     
     $routes->get('rekap-pelanggaran/create/(:num)', 'RekapPelanggaranController::create/$1');
     $routes->post('siswa-pelanggaran/store', 'RekapPelanggaranController::store');
-
+    
+    $routes->post('sangsi_siswa', 'SanksiController::index');
+    $routes->get('sangsi_siswa', 'SanksiController::index');
 
     // History Konfirmasi
     $routes->get('history_konfirmasi', 'HistoryKonfirmasi::history');
@@ -80,6 +82,7 @@ $routes->group('rekapan', ['filter' => 'role:piket'], function($routes) {
     // Store Pelanggaran (POST /rekapan/store-pelanggaran)
     $routes->post('store-pelanggaran', 'SuratIzinRekapanController::storePelanggaran');
     
+    $routes->post('tambahPelanggaran', 'SuratIzinRekapanController::PelanggaranController::tambahPelanggaran');
     // Delete Izin Keluar (POST /rekapan/delete-izin/{id})
     $routes->post('delete-izin/(:num)', 'SuratIzinRekapanController::deleteIzin/$1');
     

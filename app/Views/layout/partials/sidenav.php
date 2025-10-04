@@ -91,6 +91,13 @@
                 <span class="font-medium">Tambah Pelanggaran</span>
                 <i class="fas fa-chevron-right w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-all text-[#A4DE02] group-hover:translate-x-1"></i>
             </a>
+            <a href="/piket/sangsi_siswa" class="nav-item flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/piket/surat_izin_rekapan') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Tambah Pelanggaran">
+                <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
+                    <i class="fas fa-exclamation-triangle w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
+                </div>
+                <span class="font-medium">Tambah Sanksi</span>
+                <i class="fas fa-chevron-right w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-all text-[#A4DE02] group-hover:translate-x-1"></i>
+            </a>
 
             <a href="/piket/data_siswa" class="nav-item flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/piket/data_siswa') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Data Siswa">
                 <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
