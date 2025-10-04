@@ -147,7 +147,7 @@ class SanksiAdminController extends BaseController
         );
     }
 
-    public function exportExcel()
+   public function exportExcel()
 {
     $keyword   = $this->request->getGet('keyword');
     $startDate = $this->request->getGet('start_date') ?: date('Y-m-d', strtotime('-30 days'));
@@ -172,22 +172,28 @@ class SanksiAdminController extends BaseController
         ->orderBy('sanksi_siswa.tanggal_pelanggaran', 'DESC')
         ->findAll();
 
-    // Group data
+    // Group data (berdasarkan siswa + tanggal)
     $groupedData = [];
     foreach ($rawData as $row) {
-        $key = $row['siswa_id'] . '-' . $row['tanggal_pelanggaran'];
+        // kalau mau group per hari saja (jam diabaikan):
+        $key = $row['siswa_id'] . '-' . date('Y-m-d', strtotime($row['tanggal_pelanggaran']));
+        // kalau mau per entri (jam juga beda) pakai ini:
+        // $key = $row['siswa_id'] . '-' . $row['tanggal_pelanggaran'];
+
         if (!isset($groupedData[$key])) {
-            $groupedData[$key] = [
-                'Nama' => $row['nama'],
-                'NIS' => $row['nis'],
-                'Kelas' => $row['kelas'],
-                'Tanggal Pelanggaran' => $row['tanggal_pelanggaran'],
-                'Jenis Pelanggaran' => [],
-                'Kategori' => [],
-                'Total Poin' => 0,
-                'Keterangan' => $row['keterangan'] ?? 'Tidak ada',
-            ];
-        }
+    $groupedData[$key] = [
+        'Nama' => $row['nama'],
+        'NIS' => $row['nis'],
+        'Kelas' => $row['kelas'],
+        'Tanggal Pelanggaran' => date('d/m/Y H:i:s', strtotime($row['tanggal_pelanggaran'])),
+        'Jenis Pelanggaran' => [],
+        'Kategori' => [],
+        'Total Poin' => 0,
+        'Keterangan' => $row['keterangan'] ?? 'Tidak ada',
+        'Updated At' => $row['updated_at'], // ✅ tambahin ini
+    ];
+}
+
 
         $groupedData[$key]['Jenis Pelanggaran'][] = $row['jenis_pelanggaran'];
         $groupedData[$key]['Kategori'][] = $row['kategori'];
@@ -198,15 +204,21 @@ class SanksiAdminController extends BaseController
     $exportData = [];
     foreach ($groupedData as $data) {
         $exportData[] = [
-            'Nama' => $data['Nama'],
-            'NIS' => $data['NIS'],
-            'Kelas' => $data['Kelas'],
-            'Tanggal Pelanggaran' => $data['Tanggal Pelanggaran'],
-            'Jenis Pelanggaran' => implode(', ', $data['Jenis Pelanggaran']),
-            'Kategori' => implode(', ', array_unique($data['Kategori'])),
-            'Total Poin' => $data['Total Poin'],
-            'Keterangan' => $data['Keterangan'],
-        ];
+    'Nama' => $data['Nama'],
+    'NIS' => $data['NIS'],
+    'Kelas' => $data['Kelas'],
+    'Tanggal Pelanggaran' => ($data['Updated At']) 
+        ? date('d/m/Y H:i:s', strtotime($data['Updated At'])) 
+        : '-', // ✅ tampilkan update_at
+    'Jenis Pelanggaran' => implode(', ', $data['Jenis Pelanggaran']),
+    'Kategori' => implode(', ', array_unique($data['Kategori'])),
+    'Total Poin' => $data['Total Poin'],
+    'Keterangan' => $data['Keterangan'],
+    // 'Diupdate Terakhir' => !empty($data['Updated At']) 
+    //     ? date('d/m/Y H:i:s', strtotime($data['Updated At'])) 
+    //     : '-', // ✅ tampilkan update_at
+];
+
     }
 
     // 🧾 Buat file Excel
@@ -218,6 +230,8 @@ class SanksiAdminController extends BaseController
     $col = 'A';
     foreach ($headers as $header) {
         $sheet->setCellValue($col . '1', $header);
+        $sheet->getStyle($col . '1')->getFont()->setBold(true);
+        $sheet->getColumnDimension($col)->setAutoSize(true);
         $col++;
     }
 
@@ -232,7 +246,7 @@ class SanksiAdminController extends BaseController
         $rowIndex++;
     }
 
-    // Download response
+    // Download
     $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
     $filename = 'Data_Sanksi_Siswa_' . date('Ymd_His') . '.xlsx';
 
@@ -243,6 +257,7 @@ class SanksiAdminController extends BaseController
     $writer->save('php://output');
     exit();
 }
+
 
 
 public function updatePelanggaran()
