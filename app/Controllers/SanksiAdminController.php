@@ -145,6 +145,104 @@ class SanksiAdminController extends BaseController
         );
     }
 
+    public function exportExcel()
+{
+    $keyword   = $this->request->getGet('keyword');
+    $startDate = $this->request->getGet('start_date') ?: date('Y-m-d', strtotime('-30 days'));
+    $endDate   = $this->request->getGet('end_date') ?: date('Y-m-d');
+
+    $builder = $this->sanksiModel
+        ->select('sanksi_siswa.*, sanksi_siswa.id as sanksi_id, siswa.id as siswa_id, siswa.nama, siswa.nis, siswa.kelas, pelanggaran.jenis_pelanggaran, pelanggaran.kategori, pelanggaran.poin')
+        ->join('siswa', 'siswa.id = sanksi_siswa.siswa_id')
+        ->join('pelanggaran', 'pelanggaran.id = sanksi_siswa.pelanggaran_id')
+        ->where('sanksi_siswa.tanggal_pelanggaran >=', $startDate)
+        ->where('sanksi_siswa.tanggal_pelanggaran <=', $endDate);
+
+    if ($keyword) {
+        $builder->groupStart()
+            ->like('siswa.nama', $keyword)
+            ->orLike('siswa.nis', $keyword)
+            ->orLike('pelanggaran.jenis_pelanggaran', $keyword)
+        ->groupEnd();
+    }
+
+    $rawData = $builder
+        ->orderBy('sanksi_siswa.tanggal_pelanggaran', 'DESC')
+        ->findAll();
+
+    // Group data
+    $groupedData = [];
+    foreach ($rawData as $row) {
+        $key = $row['siswa_id'] . '-' . $row['tanggal_pelanggaran'];
+        if (!isset($groupedData[$key])) {
+            $groupedData[$key] = [
+                'Nama' => $row['nama'],
+                'NIS' => $row['nis'],
+                'Kelas' => $row['kelas'],
+                'Tanggal Pelanggaran' => $row['tanggal_pelanggaran'],
+                'Jenis Pelanggaran' => [],
+                'Kategori' => [],
+                'Total Poin' => 0,
+                'Keterangan' => $row['keterangan'] ?? 'Tidak ada',
+            ];
+        }
+
+        $groupedData[$key]['Jenis Pelanggaran'][] = $row['jenis_pelanggaran'];
+        $groupedData[$key]['Kategori'][] = $row['kategori'];
+        $groupedData[$key]['Total Poin'] += (int)$row['poin'];
+    }
+
+    // Format final
+    $exportData = [];
+    foreach ($groupedData as $data) {
+        $exportData[] = [
+            'Nama' => $data['Nama'],
+            'NIS' => $data['NIS'],
+            'Kelas' => $data['Kelas'],
+            'Tanggal Pelanggaran' => $data['Tanggal Pelanggaran'],
+            'Jenis Pelanggaran' => implode(', ', $data['Jenis Pelanggaran']),
+            'Kategori' => implode(', ', array_unique($data['Kategori'])),
+            'Total Poin' => $data['Total Poin'],
+            'Keterangan' => $data['Keterangan'],
+        ];
+    }
+
+    // 🧾 Buat file Excel
+    $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+
+    // Header
+    $headers = array_keys($exportData[0] ?? []);
+    $col = 'A';
+    foreach ($headers as $header) {
+        $sheet->setCellValue($col . '1', $header);
+        $col++;
+    }
+
+    // Data
+    $rowIndex = 2;
+    foreach ($exportData as $row) {
+        $col = 'A';
+        foreach ($row as $value) {
+            $sheet->setCellValue($col . $rowIndex, $value);
+            $col++;
+        }
+        $rowIndex++;
+    }
+
+    // Download response
+    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+    $filename = 'Data_Sanksi_Siswa_' . date('Ymd_His') . '.xlsx';
+
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment;filename="' . $filename . '"');
+    header('Cache-Control: max-age=0');
+
+    $writer->save('php://output');
+    exit();
+}
+
+
 public function updatePelanggaran()
 {
     $siswaId     = $this->request->getPost('siswa_id');

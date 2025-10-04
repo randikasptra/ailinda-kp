@@ -80,6 +80,8 @@ $routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
 $routes->post('sanksi/delete/(:num)', 'SanksiAdminController::delete/$1');
 $routes->post('sanksi/delete', 'SanksiAdminController::delete');
 $routes->post('sanksi/update-pelanggaran', 'SanksiAdminController::updatePelanggaran');
+$routes->get('sanksi/export-excel', 'SanksiAdminController::exportExcel');
+
 // =======================
 // REKAPAN
 // =======================
