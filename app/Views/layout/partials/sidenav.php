@@ -12,11 +12,13 @@
             <!-- Active Navigation Indicator -->
             <div class="flex items-center space-x-2 bg-gray-100/80 px-4 py-2 rounded-xl shadow-sm mb-6">
                 <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                <span class="text-sm font-medium text-gray-700">Aktif di: 
+                <span class="text-sm font-medium text-gray-700">
+                    Aktif di: 
                     <span class="font-semibold text-[#1E5631]" id="activeNavIndicator">
-                        <?= esc($title) ?>
+                        <?= !empty($title) ? esc($title) : '-' ?>
                     </span>
                 </span>
+
             </div>
 
             <div class="w-10 h-10 rounded-full bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] flex items-center justify-center text-white font-semibold shadow-md">
@@ -87,22 +89,22 @@
             </div>
 
             <!-- Menu Pelanggaran Surat -->
-<a href="/piket/surat_izin_rekapan" class="nav-item flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/piket/surat_izin_rekapan') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Pelanggaran Surat">
-    <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
-        <i class="fas fa-file-contract w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
-    </div>
-    <span class="font-medium">Pelanggaran Surat</span>
-    <i class="fas fa-chevron-right w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-all text-[#A4DE02] group-hover:translate-x-1"></i>
-</a>
+            <a href="/piket/surat_izin_rekapan" class="nav-item flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/piket/surat_izin_rekapan') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Pelanggaran Surat">
+                <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
+                    <i class="fas fa-file-contract w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
+                </div>
+                <span class="font-medium">Pelanggaran Surat</span>
+                <i class="fas fa-chevron-right w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-all text-[#A4DE02] group-hover:translate-x-1"></i>
+            </a>
 
-<!-- Menu Sanksi Siswa -->
-<a href="/piket/sangsi_siswa" class="nav-item flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/piket/sangsi_siswa') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Sanksi Siswa">
-    <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
-        <i class="fas fa-user-slash w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
-    </div>
-    <span class="font-medium">Sanksi Siswa</span>
-    <i class="fas fa-chevron-right w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-all text-[#A4DE02] group-hover:translate-x-1"></i>
-</a>
+            <!-- Menu Sanksi Siswa -->
+            <a href="/piket/sangsi_siswa" class="nav-item flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/piket/sangsi_siswa') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Sanksi Siswa">
+                <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
+                    <i class="fas fa-user-slash w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
+                </div>
+                <span class="font-medium">Input Pelanggaran Siswa</span>
+                <i class="fas fa-chevron-right w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-all text-[#A4DE02] group-hover:translate-x-1"></i>
+            </a>
 
             <a href="/piket/data_siswa" class="nav-item flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/piket/data_siswa') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Data Siswa">
                 <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">

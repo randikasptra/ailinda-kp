@@ -28,11 +28,11 @@
                 </div>
             </div>
             <!-- Tombol Tambah Jenis Pelanggaran -->
-            <button onclick="openModalTambahJenis()" 
+            <!-- <button onclick="openModalTambahJenis()" 
                     class="bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white px-4 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all font-medium flex items-center gap-2">
                 <i class="fas fa-plus"></i>
                 Tambah Jenis Pelanggaran
-            </button>
+            </button> -->
         </div>
     </div>
 
@@ -319,7 +319,7 @@
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alasan</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tindak Lanjut</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tindak Lanjut</th>
+                                <!-- <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tindak Lanjut</th> -->
                                 <!-- <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catatan</th> -->
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pelanggaran</th>
                                 <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
@@ -940,9 +940,9 @@ function openModal(data) {
     document.getElementById("modalDetail").classList.remove("hidden");
 }
 
-function closeModal() {
-    document.getElementById("modalDetail").classList.add("hidden");
-}
+// function closeModal() {
+//     document.getElementById("modalDetail").classList.add("hidden");
+// }
 </script>
 
 <?= $this->endSection() ?>

@@ -102,7 +102,7 @@ class SuratIzinRekapanController extends BaseController
     }
 
 
-        public function tambahPelanggaran()
+     public function tambahPelanggaranPiket()
     {
         $data = $this->request->getPost();
 
@@ -110,12 +110,12 @@ class SuratIzinRekapanController extends BaseController
             $this->pelanggaranModel->save($data);
 
             // Log aktivitas
-            $this->activityLogModel->save([
-                'type' => 'pelanggaran',
-                'description' => 'Pelanggaran baru ditambahkan: ' . esc($data['jenis_pelanggaran']),
-                'created_at' => date('Y-m-d H:i:s'),
-                'created_by' => session()->get('user_id')
-            ]);
+            // $this->activityLogModel->save([
+            //     'type' => 'pelanggaran',
+            //     'description' => 'Pelanggaran baru ditambahkan: ' . esc($data['jenis_pelanggaran']),
+            //     'created_at' => date('Y-m-d H:i:s'),
+            //     'created_by' => session()->get('user_id')
+            // ]);
 
             return redirect()->to('piket/surat_izin_rekapan')->with('success', 'Pelanggaran berhasil ditambahkan!');
         }

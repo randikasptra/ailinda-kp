@@ -98,6 +98,7 @@ $routes->group('rekapan', ['filter' => 'role:piket'], function($routes) {
     // Delete Izin Keluar (POST /rekapan/delete-izin/{id})
     $routes->post('delete-izin/(:num)', 'SuratIzinRekapanController::deleteIzin/$1');
     
+    $routes->post('tambahPelanggaran', 'SuratIzinRekapanController::tambahPelanggaranPiket');
     // Delete Izin Masuk (POST /rekapan/delete-izin-masuk/{id})
     $routes->post('delete-izin-masuk/(:num)', 'SuratIzinRekapanController::deleteIzinMasuk/$1');
     
