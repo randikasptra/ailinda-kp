@@ -27,9 +27,19 @@ class SanksiAdminController extends BaseController
         $endDate   = $this->request->getGet('end_date') ?: date('Y-m-d');
 
         $builder = $this->sanksiModel
-            ->select('sanksi_siswa.*, sanksi_siswa.id as sanksi_id, siswa.id as siswa_id, siswa.nama, siswa.nis, siswa.kelas, pelanggaran.jenis_pelanggaran, pelanggaran.kategori, pelanggaran.poin')
+            ->select('
+                sanksi_siswa.*, 
+                sanksi_siswa.id as sanksi_id, 
+                siswa.id as siswa_id, 
+                siswa.nama, 
+                siswa.nis, 
+                siswa.kelas, 
+                pelanggaran.jenis_pelanggaran, 
+                pelanggaran.kategori, 
+                IFNULL(pelanggaran.poin,0) as poin
+            ')
             ->join('siswa', 'siswa.id = sanksi_siswa.siswa_id')
-            ->join('pelanggaran', 'pelanggaran.id = sanksi_siswa.pelanggaran_id')
+            ->join('pelanggaran', 'pelanggaran.id = sanksi_siswa.pelanggaran_id', 'left')
             ->where('sanksi_siswa.tanggal_pelanggaran >=', $startDate)
             ->where('sanksi_siswa.tanggal_pelanggaran <=', $endDate);
 
@@ -91,10 +101,116 @@ class SanksiAdminController extends BaseController
             'keyword'     => $keyword,
             'startDate'   => $startDate,
             'endDate'     => $endDate,
-            'pelanggaran' => $pelanggaran, // ✅ ini dikirim ke view
-            'title' => 'Laporan Sanksi Siswa',
-
+            'pelanggaran' => $pelanggaran,
+            'title'       => 'Laporan Sanksi Siswa',
         ]);
+    }
+
+    public function exportExcel()
+    {
+        $keyword   = $this->request->getGet('keyword');
+        $startDate = $this->request->getGet('start_date') ?: date('Y-m-d', strtotime('-30 days'));
+        $endDate   = $this->request->getGet('end_date') ?: date('Y-m-d');
+
+        $builder = $this->sanksiModel
+            ->select('
+                sanksi_siswa.*, 
+                sanksi_siswa.id as sanksi_id, 
+                siswa.id as siswa_id, 
+                siswa.nama, 
+                siswa.nis, 
+                siswa.kelas, 
+                pelanggaran.jenis_pelanggaran, 
+                IFNULL(pelanggaran.poin,0) as poin
+            ')
+            ->join('siswa', 'siswa.id = sanksi_siswa.siswa_id')
+            ->join('pelanggaran', 'pelanggaran.id = sanksi_siswa.pelanggaran_id', 'left')
+            ->where('sanksi_siswa.tanggal_pelanggaran >=', $startDate)
+            ->where('sanksi_siswa.tanggal_pelanggaran <=', $endDate);
+
+        if ($keyword) {
+            $builder->groupStart()
+                ->like('siswa.nama', $keyword)
+                ->orLike('siswa.nis', $keyword)
+                ->orLike('pelanggaran.jenis_pelanggaran', $keyword)
+            ->groupEnd();
+        }
+
+        $rawData = $builder
+            ->orderBy('sanksi_siswa.updated_at', 'DESC')
+            ->findAll();
+
+        // Group data (per siswa + per updated_at)
+        $groupedData = [];
+        foreach ($rawData as $row) {
+            $key = $row['siswa_id'] . '-' . $row['updated_at'];
+
+            if (!isset($groupedData[$key])) {
+                $groupedData[$key] = [
+                    'Nama'                => $row['nama'],
+                    'NIS'                 => $row['nis'],
+                    'Kelas'               => $row['kelas'],
+                    'Tanggal Pelanggaran' => !empty($row['updated_at'])
+                        ? date('d/m/Y H:i:s', strtotime($row['updated_at']))
+                        : '-',
+                    'Jenis Pelanggaran'   => [],
+                    'Total Poin'          => 0,
+                    'Keterangan'          => $row['keterangan'] ?? 'Tidak ada',
+                ];
+            }
+
+            $groupedData[$key]['Jenis Pelanggaran'][] = $row['jenis_pelanggaran'];
+            $groupedData[$key]['Total Poin']         += (int)$row['poin'];
+        }
+
+        // Format final export
+        $exportData = [];
+        foreach ($groupedData as $data) {
+            $exportData[] = [
+                'Nama'                => $data['Nama'],
+                'NIS'                 => $data['NIS'],
+                'Kelas'               => $data['Kelas'],
+                'Tanggal Pelanggaran' => $data['Tanggal Pelanggaran'],
+                'Jenis Pelanggaran'   => implode(', ', $data['Jenis Pelanggaran']),
+                'Total Poin'          => $data['Total Poin'],
+                'Keterangan'          => $data['Keterangan'],
+            ];
+        }
+
+        // Generate Excel
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Header
+        $headers = array_keys($exportData[0] ?? []);
+        $col = 'A';
+        foreach ($headers as $header) {
+            $sheet->setCellValue($col . '1', $header);
+            $sheet->getStyle($col . '1')->getFont()->setBold(true);
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+            $col++;
+        }
+
+        // Rows
+        $rowIndex = 2;
+        foreach ($exportData as $row) {
+            $col = 'A';
+            foreach ($row as $value) {
+                $sheet->setCellValue($col . $rowIndex, $value);
+                $col++;
+            }
+            $rowIndex++;
+        }
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $filename = 'Laporan_Sanksi_Siswa_' . date('Ymd_His') . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+        exit();
     }
 
 
@@ -147,113 +263,113 @@ class SanksiAdminController extends BaseController
         );
     }
 
- public function exportExcel()
-{
-    $keyword   = $this->request->getGet('keyword');
-    $startDate = $this->request->getGet('start_date') ?: date('Y-m-d', strtotime('-30 days'));
-    $endDate   = $this->request->getGet('end_date') ?: date('Y-m-d');
+//  public function exportExcel()
+// {
+//     $keyword   = $this->request->getGet('keyword');
+//     $startDate = $this->request->getGet('start_date') ?: date('Y-m-d', strtotime('-30 days'));
+//     $endDate   = $this->request->getGet('end_date') ?: date('Y-m-d');
 
-    $builder = $this->sanksiModel
-        ->select('
-            sanksi_siswa.*, 
-            sanksi_siswa.id as sanksi_id, 
-            siswa.id as siswa_id, 
-            siswa.nama, 
-            siswa.nis, 
-            siswa.kelas, 
-            pelanggaran.jenis_pelanggaran, 
-            pelanggaran.poin
-        ')
-        ->join('siswa', 'siswa.id = sanksi_siswa.siswa_id')
-        ->join('pelanggaran', 'pelanggaran.id = sanksi_siswa.pelanggaran_id')
-        ->where('sanksi_siswa.tanggal_pelanggaran >=', $startDate)
-        ->where('sanksi_siswa.tanggal_pelanggaran <=', $endDate);
+//     $builder = $this->sanksiModel
+//         ->select('
+//             sanksi_siswa.*, 
+//             sanksi_siswa.id as sanksi_id, 
+//             siswa.id as siswa_id, 
+//             siswa.nama, 
+//             siswa.nis, 
+//             siswa.kelas, 
+//             pelanggaran.jenis_pelanggaran, 
+//             pelanggaran.poin
+//         ')
+//         ->join('siswa', 'siswa.id = sanksi_siswa.siswa_id')
+//         ->join('pelanggaran', 'pelanggaran.id = sanksi_siswa.pelanggaran_id')
+//         ->where('sanksi_siswa.tanggal_pelanggaran >=', $startDate)
+//         ->where('sanksi_siswa.tanggal_pelanggaran <=', $endDate);
 
-    if ($keyword) {
-        $builder->groupStart()
-            ->like('siswa.nama', $keyword)
-            ->orLike('siswa.nis', $keyword)
-            ->orLike('pelanggaran.jenis_pelanggaran', $keyword)
-        ->groupEnd();
-    }
+//     if ($keyword) {
+//         $builder->groupStart()
+//             ->like('siswa.nama', $keyword)
+//             ->orLike('siswa.nis', $keyword)
+//             ->orLike('pelanggaran.jenis_pelanggaran', $keyword)
+//         ->groupEnd();
+//     }
 
-    $rawData = $builder
-        ->orderBy('sanksi_siswa.updated_at', 'DESC')
-        ->findAll();
+//     $rawData = $builder
+//         ->orderBy('sanksi_siswa.updated_at', 'DESC')
+//         ->findAll();
 
-    // 🧩 Group data (per siswa + per tanggal updated_at)
-    $groupedData = [];
-    foreach ($rawData as $row) {
-        $key = $row['siswa_id'] . '-' . $row['updated_at'];
+//     // 🧩 Group data (per siswa + per tanggal updated_at)
+//     $groupedData = [];
+//     foreach ($rawData as $row) {
+//         $key = $row['siswa_id'] . '-' . $row['updated_at'];
 
-        if (!isset($groupedData[$key])) {
-            $groupedData[$key] = [
-                'Nama'                => $row['nama'],
-                'NIS'                 => $row['nis'],
-                'Kelas'               => $row['kelas'],
-                'Tanggal Pelanggaran' => !empty($row['updated_at'])
-                    ? date('d/m/Y H:i:s', strtotime($row['updated_at']))
-                    : '-',
-                'Jenis Pelanggaran'   => [],
-                'Total Poin'          => 0,
-                'Keterangan'          => $row['keterangan'] ?? 'Tidak ada',
-            ];
-        }
+//         if (!isset($groupedData[$key])) {
+//             $groupedData[$key] = [
+//                 'Nama'                => $row['nama'],
+//                 'NIS'                 => $row['nis'],
+//                 'Kelas'               => $row['kelas'],
+//                 'Tanggal Pelanggaran' => !empty($row['updated_at'])
+//                     ? date('d/m/Y H:i:s', strtotime($row['updated_at']))
+//                     : '-',
+//                 'Jenis Pelanggaran'   => [],
+//                 'Total Poin'          => 0,
+//                 'Keterangan'          => $row['keterangan'] ?? 'Tidak ada',
+//             ];
+//         }
 
-        $groupedData[$key]['Jenis Pelanggaran'][] = $row['jenis_pelanggaran'];
-        $groupedData[$key]['Total Poin'] += (int)$row['poin'];
-    }
+//         $groupedData[$key]['Jenis Pelanggaran'][] = $row['jenis_pelanggaran'];
+//         $groupedData[$key]['Total Poin'] += (int)$row['poin'];
+//     }
 
-    // 🗂️ Format final untuk export
-    $exportData = [];
-    foreach ($groupedData as $data) {
-        $exportData[] = [
-            'Nama'                => $data['Nama'],
-            'NIS'                 => $data['NIS'],
-            'Kelas'               => $data['Kelas'],
-            'Tanggal Pelanggaran' => $data['Tanggal Pelanggaran'],
-            'Jenis Pelanggaran'   => implode(', ', $data['Jenis Pelanggaran']),
-            'Total Poin'          => $data['Total Poin'],
-            'Keterangan'          => $data['Keterangan'],
-        ];
-    }
+//     // 🗂️ Format final untuk export
+//     $exportData = [];
+//     foreach ($groupedData as $data) {
+//         $exportData[] = [
+//             'Nama'                => $data['Nama'],
+//             'NIS'                 => $data['NIS'],
+//             'Kelas'               => $data['Kelas'],
+//             'Tanggal Pelanggaran' => $data['Tanggal Pelanggaran'],
+//             'Jenis Pelanggaran'   => implode(', ', $data['Jenis Pelanggaran']),
+//             'Total Poin'          => $data['Total Poin'],
+//             'Keterangan'          => $data['Keterangan'],
+//         ];
+//     }
 
-    // 🧾 Generate Excel
-    $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-    $sheet = $spreadsheet->getActiveSheet();
+//     // 🧾 Generate Excel
+//     $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+//     $sheet = $spreadsheet->getActiveSheet();
 
-    // Header
-    $headers = array_keys($exportData[0] ?? []);
-    $col = 'A';
-    foreach ($headers as $header) {
-        $sheet->setCellValue($col . '1', $header);
-        $sheet->getStyle($col . '1')->getFont()->setBold(true);
-        $sheet->getColumnDimension($col)->setAutoSize(true);
-        $col++;
-    }
+//     // Header
+//     $headers = array_keys($exportData[0] ?? []);
+//     $col = 'A';
+//     foreach ($headers as $header) {
+//         $sheet->setCellValue($col . '1', $header);
+//         $sheet->getStyle($col . '1')->getFont()->setBold(true);
+//         $sheet->getColumnDimension($col)->setAutoSize(true);
+//         $col++;
+//     }
 
-    // Data rows
-    $rowIndex = 2;
-    foreach ($exportData as $row) {
-        $col = 'A';
-        foreach ($row as $value) {
-            $sheet->setCellValue($col . $rowIndex, $value);
-            $col++;
-        }
-        $rowIndex++;
-    }
+//     // Data rows
+//     $rowIndex = 2;
+//     foreach ($exportData as $row) {
+//         $col = 'A';
+//         foreach ($row as $value) {
+//             $sheet->setCellValue($col . $rowIndex, $value);
+//             $col++;
+//         }
+//         $rowIndex++;
+//     }
 
-    // 💾 Output file
-    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-    $filename = 'Laporan_Sanksi_Siswa_' . date('Ymd_His') . '.xlsx';
+//     // 💾 Output file
+//     $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+//     $filename = 'Laporan_Sanksi_Siswa_' . date('Ymd_His') . '.xlsx';
 
-    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    header('Content-Disposition: attachment;filename="' . $filename . '"');
-    header('Cache-Control: max-age=0');
+//     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+//     header('Content-Disposition: attachment;filename="' . $filename . '"');
+//     header('Cache-Control: max-age=0');
 
-    $writer->save('php://output');
-    exit();
-}
+//     $writer->save('php://output');
+//     exit();
+// }
 
 
 
