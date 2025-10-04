@@ -179,7 +179,7 @@
                                class="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50">
                     </div>
                     <div id="pelanggaranListContainerSanksi"
-                         class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-48 overflow-y-auto border border-gray-300 p-3 rounded-xl">
+                         class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-96 overflow-y-auto border border-gray-300 p-3 rounded-xl">
                         <?php foreach ($pelanggaranList as $p): ?>
                             <label class="flex items-center space-x-2 pelanggaran-item-sanksi p-2 rounded hover:bg-gray-50 cursor-pointer">
                                 <input type="checkbox" name="pelanggaran_ids[]" value="<?= $p['id'] ?>"

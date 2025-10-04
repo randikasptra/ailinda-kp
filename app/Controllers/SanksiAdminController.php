@@ -86,7 +86,7 @@ class SanksiAdminController extends BaseController
         $sanksiData  = array_values($groupedData);
         $pelanggaran = $this->pelanggaranModel->findAll();
 
-        return view('Pages/Admin/sanksi_siswa', [
+        return view('pages/admin/sanksi_siswa', [
             'sanksiData'  => $sanksiData,
             'keyword'     => $keyword,
             'startDate'   => $startDate,
