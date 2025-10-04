@@ -49,7 +49,9 @@ class SanksiController extends BaseController
             'keyword'   => $keyword,
             'siswaList' => $siswaList,
             'siswa'     => $siswa,
-            'pelanggaranList' => $data['pelanggaranList']
+            'pelanggaranList' => $data['pelanggaranList'],
+            'title' => 'Laporan Sanksi Siswa',
+
         ]);
     }
 

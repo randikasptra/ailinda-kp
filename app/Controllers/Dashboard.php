@@ -217,6 +217,7 @@ public function piket()
         'weekly_data_keluar'       => $weeklyDataKeluar,
         'weekly_data_masuk'        => $weeklyDataMasuk,
         'last_7_days_labels'       => $last7Days,
+            'title'            => 'Dashboard Piket',
     ];
 
     return view('pages/piket/piket', $data);

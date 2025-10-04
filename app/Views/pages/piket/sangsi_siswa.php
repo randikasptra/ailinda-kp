@@ -14,10 +14,11 @@
             </div>
         </div>
 
-                <button type="button" onclick="openModal('addSiswaModal')"
-                class="bg-white text-[#1E5631] font-semibold px-4 py-2 rounded-lg text-sm hover:bg-gray-100 transition">
-            <i class="fas fa-user-plus mr-1"></i> Tambah Siswa Baru
-        </button>
+        <button type="button" onclick="openModal('addSiswaModal')"
+        class="bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white font-semibold px-6 py-3 rounded-xl text-base hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 flex items-center space-x-2 shadow-md animate-pulse hover:animate-none">
+    <i class="fas fa-user-plus"></i>
+    <span>Tambah Siswa Baru</span>
+</button>
     </div>
 
     <!-- Flash Message -->

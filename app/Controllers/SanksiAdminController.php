@@ -92,6 +92,8 @@ class SanksiAdminController extends BaseController
             'startDate'   => $startDate,
             'endDate'     => $endDate,
             'pelanggaran' => $pelanggaran, // ✅ ini dikirim ke view
+            'title' => 'Laporan Sanksi Siswa',
+
         ]);
     }
 

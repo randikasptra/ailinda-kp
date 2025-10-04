@@ -336,18 +336,13 @@
                 </div>
                 <div>
                     <label for="kelas" class="block text-sm font-medium text-gray-700">Kelas</label>
-                    <select name="kelas" id="kelas" required
+                    <input type="text" name="kelas" id="kelas" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
-                        <option value="">Pilih Kelas</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                    </select>
                 </div>
                 <div>
                     <label for="no_absen" class="block text-sm font-medium text-gray-700">No Absen</label>
                     <input type="number" name="no_absen" id="no_absen" required
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
                 </div>
                 
                 <div>
