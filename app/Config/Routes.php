@@ -66,6 +66,8 @@ $routes->group('piket', ['filter' => 'role:piket'], function ($routes) {
     $routes->get('search-siswa', 'SanksiController::searchSiswa');
     $routes->post('sanksi-siswa/store', 'SanksiController::store');
     $routes->get('sanksi-siswa', 'SanksiController::index');
+    $routes->post('siswa/store', 'SanksiController::storeSiswa');
+
 
 
     // History Konfirmasi

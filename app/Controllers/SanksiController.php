@@ -53,6 +53,41 @@ class SanksiController extends BaseController
         ]);
     }
 
+    public function storeSiswa()
+    {
+        $data = $this->request->getPost();
+        $siswaModel = new SiswaModel();
+
+        // Validasi sederhana
+        if (!$this->validate([
+            'nis'          => 'required|is_unique[siswa.nis]',
+            'nama'         => 'required',
+            'kelas'        => 'required',
+            'no_absen'     => 'required|integer',
+            'jk'           => 'required|in_list[L,P]',
+            'tahun_ajaran' => 'required'
+        ])) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        // Simpan data siswa baru
+        $siswaModel->insert([
+            'nis'          => $data['nis'],
+            'nama'         => $data['nama'],
+            'kelas'        => $data['kelas'],
+            'no_absen'     => $data['no_absen'],
+            'jk'           => $data['jk'],
+            'tahun_ajaran' => $data['tahun_ajaran'],
+            'poin'         => 0, // default
+            'created_at'   => date('Y-m-d H:i:s'),
+        ]);
+
+        // Log aktivitas
+       
+
+        return redirect()->back()->with('success', 'Siswa baru berhasil ditambahkan!');
+    }
+
     // =======================
     // SIMPAN DATA SANKSI SISWA
     // =======================

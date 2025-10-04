@@ -13,6 +13,11 @@
                 <p class="text-gray-600 mt-1 text-sm md:text-base">Input data siswa yang menerima sanksi pelanggaran</p>
             </div>
         </div>
+
+                <button type="button" onclick="openModal('addSiswaModal')"
+                class="bg-white text-[#1E5631] font-semibold px-4 py-2 rounded-lg text-sm hover:bg-gray-100 transition">
+            <i class="fas fa-user-plus mr-1"></i> Tambah Siswa Baru
+        </button>
     </div>
 
     <!-- Flash Message -->
@@ -80,6 +85,7 @@
                 <i class="fas fa-plus-circle mr-2"></i> Form Input Sanksi Siswa
             </h2>
         </div>
+        
 
         <div class="p-6">
             <form action="<?= base_url('piket/sanksi-siswa/store') ?>" method="POST" class="space-y-6">
@@ -87,64 +93,80 @@
 
                 <!-- Data Siswa (Auto-filled dan disable jika $siswa ada) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">NIS <span class="text-red-500">*</span></label>
-                        <input type="text" name="nis" value="<?= esc($siswa['nis'] ?? old('nis')) ?>" <?= isset($siswa) ? 'readonly' : '' ?>
-                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all <?= isset($siswa) ? 'bg-gray-100' : '' ?>"
-                               placeholder="Masukkan NIS siswa">
-                        <?php if (isset($errors['nis'])): ?>
-                            <p class="mt-1 text-sm text-red-600"><?= esc($errors['nis']) ?></p>
-                        <?php endif; ?>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap <span class="text-red-500">*</span></label>
-                        <input type="text" name="nama" value="<?= esc($siswa['nama'] ?? old('nama')) ?>" <?= isset($siswa) ? 'readonly' : '' ?>
-                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all <?= isset($siswa) ? 'bg-gray-100' : '' ?>"
-                               placeholder="Masukkan nama lengkap siswa">
-                        <?php if (isset($errors['nama'])): ?>
-                            <p class="mt-1 text-sm text-red-600"><?= esc($errors['nama']) ?></p>
-                        <?php endif; ?>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label>
-                        <input type="text" name="kelas" value="<?= esc($siswa['kelas'] ?? old('kelas')) ?>" <?= isset($siswa) ? 'readonly' : '' ?>
-                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all <?= isset($siswa) ? 'bg-gray-100' : '' ?>"
-                               placeholder="Contoh: 10.01">
-                    </div>
-                    <!-- <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Jurusan</label>
-                        <select name="jurusan" <?= isset($siswa) ? 'disabled' : '' ?> class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] appearance-none <?= isset($siswa) ? 'bg-gray-100' : '' ?>">
-                            <option value="">Pilih Jurusan</option>
-                            <option value="SOSHUM" <?= ($siswa['jurusan'] ?? old('jurusan')) === 'SOSHUM' ? 'selected' : '' ?>>SOS HUM</option>
-                            <option value="SAINTEK" <?= ($siswa['jurusan'] ?? old('jurusan')) === 'SAINTEK' ? 'selected' : '' ?>>SAIN TEK</option>
-                            <option value="BAHASA" <?= ($siswa['jurusan'] ?? old('jurusan')) === 'BAHASA' ? 'selected' : '' ?>>BAHASA</option>
-                        </select>
-                    </div> -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">No. Absen</label>
-                        <input type="number" name="no_absen" value="<?= esc($siswa['no_absen'] ?? old('no_absen')) ?>" <?= isset($siswa) ? 'readonly' : '' ?>
-                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all <?= isset($siswa) ? 'bg-gray-100' : '' ?>"
-                               placeholder="Masukkan nomor absen">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Kelamin</label>
-                        <select name="jk" <?= isset($siswa) ? 'disabled' : '' ?> class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] appearance-none <?= isset($siswa) ? 'bg-gray-100' : '' ?>">
-                            <option value="">Pilih Jenis Kelamin</option>
-                            <option value="L" <?= ($siswa['jk'] ?? old('jk')) === 'L' ? 'selected' : '' ?>>Laki-laki</option>
-                            <option value="P" <?= ($siswa['jk'] ?? old('jk')) === 'P' ? 'selected' : '' ?>>Perempuan</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Tahun Ajaran</label>
-                        <input type="text" name="tahun_ajaran" value="<?= esc($siswa['tahun_ajaran'] ?? old('tahun_ajaran')) ?>" <?= isset($siswa) ? 'readonly' : '' ?>
-                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all <?= isset($siswa) ? 'bg-gray-100' : '' ?>"
-                               placeholder="Contoh: 2024/2025">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Poin Saat Ini</label>
-                        <input type="number" value="<?= esc($siswa['poin'] ?? old('poin', 0)) ?>" readonly
-                               class="w-full px-4 py-3 border border-gray-300 rounded-xl bg-gray-100">
-                    </div>
+                <?php
+                    $isDisabled = !isset($siswa); // kalau belum ada hasil pencarian
+                    $readOnly = isset($siswa);    // kalau hasil pencarian ditemukan
+                ?>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        NIS <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="nis" 
+                        value="<?= esc($siswa['nis'] ?? old('nis')) ?>"
+                        <?= $isDisabled ? 'disabled' : '' ?> <?= $readOnly ? 'readonly' : '' ?>
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl <?= $readOnly ? 'bg-gray-100' : '' ?> focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]"
+                        placeholder="Masukkan NIS siswa">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Nama Lengkap <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="nama" 
+                        value="<?= esc($siswa['nama'] ?? old('nama')) ?>"
+                        <?= $isDisabled ? 'disabled' : '' ?> <?= $readOnly ? 'readonly' : '' ?>
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl <?= $readOnly ? 'bg-gray-100' : '' ?> focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]"
+                        placeholder="Masukkan nama lengkap siswa">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Kelas</label>
+                    <input type="text" name="kelas" 
+                        value="<?= esc($siswa['kelas'] ?? old('kelas')) ?>"
+                        <?= $isDisabled ? 'disabled' : '' ?> <?= $readOnly ? 'readonly' : '' ?>
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl <?= $readOnly ? 'bg-gray-100' : '' ?> focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]"
+                        placeholder="Contoh: 10.01">
+                </div>
+                <!-- <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Jurusan</label>
+                    <select name="jurusan" <?= $readOnly ? 'disabled' : '' ?> class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] appearance-none <?= $readOnly ? 'bg-gray-100' : '' ?>">
+                        <option value="">Pilih Jurusan</option>
+                        <option value="SOSHUM" <?= ($siswa['jurusan'] ?? old('jurusan')) === 'SOSHUM' ? 'selected' : '' ?>>SOS HUM</option>
+                        <option value="SAINTEK" <?= ($siswa['jurusan'] ?? old('jurusan')) === 'SAINTEK' ? 'selected' : '' ?>>SAIN TEK</option>
+                        <option value="BAHASA" <?= ($siswa['jurusan'] ?? old('jurusan')) === 'BAHASA' ? 'selected' : '' ?>>BAHASA</option>
+                    </select>
+                </div> -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">No. Absen</label>
+                    <input type="number" name="no_absen" 
+                        value="<?= esc($siswa['no_absen'] ?? old('no_absen')) ?>"
+                        <?= $isDisabled ? 'disabled' : '' ?> <?= $readOnly ? 'readonly' : '' ?>
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl <?= $readOnly ? 'bg-gray-100' : '' ?> focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]"
+                        placeholder="Masukkan nomor absen">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Kelamin</label>
+                    <select name="jk" <?= $isDisabled ? 'disabled' : '' ?> <?= $readOnly ? 'disabled' : '' ?> class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] appearance-none <?= $readOnly ? 'bg-gray-100' : '' ?>">
+                        <option value="">Pilih Jenis Kelamin</option>
+                        <option value="L" <?= ($siswa['jk'] ?? old('jk')) === 'L' ? 'selected' : '' ?>>Laki-laki</option>
+                        <option value="P" <?= ($siswa['jk'] ?? old('jk')) === 'P' ? 'selected' : '' ?>>Perempuan</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tahun Ajaran</label>
+                    <input type="text" name="tahun_ajaran" 
+                        value="<?= esc($siswa['tahun_ajaran'] ?? old('tahun_ajaran')) ?>"
+                        <?= $isDisabled ? 'disabled' : '' ?> <?= $readOnly ? 'readonly' : '' ?>
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl <?= $readOnly ? 'bg-gray-100' : '' ?> focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]"
+                        placeholder="Contoh: 2024/2025">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Poin Saat Ini</label>
+                    <input type="number" 
+                        value="<?= esc($siswa['poin'] ?? old('poin', 0)) ?>"
+                        <?= $isDisabled ? 'disabled' : '' ?> <?= $readOnly ? 'readonly' : '' ?>
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl <?= $readOnly ? 'bg-gray-100' : '' ?>">
+                </div>
                 </div>
 
                 <!-- Pilihan Pelanggaran -->
@@ -198,6 +220,64 @@
         </div>
     </div>
 </div>
+
+
+<!-- MODAL TAMBAH SISWA BARU -->
+<div id="addSiswaModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white rounded-2xl w-11/12 md:w-1/2 p-6 shadow-lg">
+        <h2 class="text-lg font-semibold mb-4 flex items-center text-[#1E5631]">
+            <i class="fas fa-user-plus mr-2"></i> Tambah Siswa Baru
+        </h2>
+
+        <form id="addSiswaForm" method="post" action="<?= base_url('piket/siswa/store') ?>" class="space-y-4">
+            <?= csrf_field() ?>
+            <div>
+                <label class="text-sm font-medium text-gray-700">NIS</label>
+                <input type="text" name="nis" class="w-full border rounded-xl p-3" required>
+            </div>
+            <div>
+                <label class="text-sm font-medium text-gray-700">Nama Lengkap</label>
+                <input type="text" name="nama" class="w-full border rounded-xl p-3" required>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Kelas</label>
+                    <input type="text" name="kelas" class="w-full border rounded-xl p-3" required>
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700">No. Absen</label>
+                    <input type="number" name="no_absen" class="w-full border rounded-xl p-3" required>
+                </div>
+            </div>
+            <div>
+                <label class="text-sm font-medium text-gray-700">Jenis Kelamin</label>
+                <select name="jk" class="w-full border rounded-xl p-3" required>
+                    <option value="">Pilih</option>
+                    <option value="L">Laki-laki</option>
+                    <option value="P">Perempuan</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-sm font-medium text-gray-700">Tahun Ajaran</label>
+                <input type="text" name="tahun_ajaran" class="w-full border rounded-xl p-3" value="2024/2025" required>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-4">
+                <button type="button" onclick="closeModal('addSiswaModal')" class="px-4 py-2 bg-gray-500 text-white rounded-xl hover:bg-gray-600">Batal</button>
+                <button type="submit" class="px-4 py-2 bg-[#1E5631] text-white rounded-xl hover:bg-[#4C9A2B]">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openModal(id) {
+    document.getElementById(id).classList.remove('hidden');
+}
+function closeModal(id) {
+    document.getElementById(id).classList.add('hidden');
+}
+</script>
 
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
