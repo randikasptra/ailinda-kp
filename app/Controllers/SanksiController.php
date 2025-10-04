@@ -45,7 +45,7 @@ class SanksiController extends BaseController
             $siswa = $siswaList[0];
         }
 
-        return view('Pages/Piket/sangsi_siswa', [
+        return view('pages/piket/sangsi_siswa', [
             'keyword'   => $keyword,
             'siswaList' => $siswaList,
             'siswa'     => $siswa,
