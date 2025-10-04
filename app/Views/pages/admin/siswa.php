@@ -307,62 +307,134 @@
     </button>
 
     <!-- Tambah Modal -->
-    <div id="tambahModal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center px-4 modal animate-scaleIn">
-        <div @click.away="closeModal('tambahModal')" class="bg-white rounded-xl shadow-xl p-6 w-full max-w-md">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-semibold text-[#1E5631]">Tambah Siswa Baru</h2>
-                <button @click="closeModal('tambahModal')" class="text-gray-400 hover:text-red-500 text-xl">&times;</button>
+    <div id="tambahModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
+            <!-- Modal Header -->
+            <div class="relative p-6 border-b border-gray-100 bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] rounded-t-2xl">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center shadow-lg">
+                            <i class="fas fa-user-plus text-white text-lg"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-white">Tambah Siswa Baru</h2>
+                            <p class="text-white/80 text-sm mt-1">Isi informasi siswa dengan lengkap</p>
+                        </div>
+                    </div>
+                    <button onclick="closeModal('tambahModal')" 
+                            class="w-8 h-8 flex items-center justify-center bg-white/20 hover:bg-white/30 text-white hover:text-gray-100 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md border border-white/20">
+                        <i class="fas fa-times text-sm"></i>
+                    </button>
+                </div>
             </div>
-            <form action="<?= base_url('admin/siswa/tambah') ?>" method="post" class="space-y-4">
-                <?= csrf_field() ?>
-                <div>
-                    <label for="nis" class="block text-sm font-medium text-gray-700">NIS</label>
-                    <input type="text" name="nis" id="nis" required
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
+
+            <!-- Modal Body -->
+            <div class="p-6 max-h-[60vh] overflow-y-auto">
+                <form action="<?= base_url('admin/siswa/tambah') ?>" method="post" class="space-y-6">
+                    <?= csrf_field() ?>
+                    
+                    <!-- Data Siswa Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="nis" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                <i class="fas fa-id-card mr-2 text-[#1E5631]"></i>
+                                NIS <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="nis" id="nis" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
+                                placeholder="Masukkan NIS siswa">
+                        </div>
+
+                        <div>
+                            <label for="nama" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                <i class="fas fa-user mr-2 text-[#1E5631]"></i>
+                                Nama Lengkap <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="nama" id="nama" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
+                                placeholder="Masukkan nama lengkap siswa">
+                        </div>
+
+                        <div>
+                            <label for="jk" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                <i class="fas fa-venus-mars mr-2 text-[#1E5631]"></i>
+                                Jenis Kelamin <span class="text-red-500">*</span>
+                            </label>
+                            <select name="jk" id="jk" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] appearance-none transition-all bg-white">
+                                <option value="">Pilih Jenis Kelamin</option>
+                                <option value="L">Laki-laki</option>
+                                <option value="P">Perempuan</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="kelas" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                <i class="fas fa-chalkboard-teacher mr-2 text-[#1E5631]"></i>
+                                Kelas <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="kelas" id="kelas" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
+                                placeholder="Contoh: 10.01">
+                        </div>
+
+                        <div>
+                            <label for="no_absen" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                <i class="fas fa-hashtag mr-2 text-[#1E5631]"></i>
+                                No. Absen <span class="text-red-500">*</span>
+                            </label>
+                            <input type="number" name="no_absen" id="no_absen" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
+                                placeholder="Masukkan nomor absen">
+                        </div>
+
+                        <div>
+                            <label for="tahun_ajaran" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                <i class="fas fa-calendar-alt mr-2 text-[#1E5631]"></i>
+                                Tahun Ajaran <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="tahun_ajaran" id="tahun_ajaran" required
+                                placeholder="Contoh: 2025/2026"
+                                value="<?= date('Y') . '/' . (date('Y') + 1) ?>" 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all"
+                                pattern="\d{4}/\d{4}" title="Masukkan tahun ajaran dalam format YYYY/YYYY (contoh: 2025/2026)">
+                        </div>
+                    </div>
+
+                    <!-- Poin Section -->
+                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                        <label for="poin" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                            <i class="fas fa-star text-[#A4DE02] mr-2"></i>
+                            Poin Awal
+                        </label>
+                        <input type="number" name="poin" id="poin" value="0" min="0" required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631] transition-all bg-white">
+                        <p class="text-xs text-gray-500 mt-1">Poin awal siswa, default 0</p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2 text-sm text-gray-500">
+                        <i class="fas fa-info-circle text-[#1E5631]"></i>
+                        <span>Isi semua field yang wajib ditandai *</span>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button type="button" onclick="closeModal('tambahModal')" 
+                                class="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium flex items-center space-x-2 shadow-sm hover:shadow">
+                            <i class="fas fa-times mr-2"></i>
+                            <span>Batal</span>
+                        </button>
+                        <button type="submit" form="tambahForm" 
+                                class="px-6 py-2.5 bg-gradient-to-r from-[#1E5631] to-[#4C9A2B] text-white rounded-xl hover:shadow-lg transition-all duration-200 font-medium flex items-center space-x-2 shadow-sm hover:shadow">
+                            <i class="fas fa-save mr-2"></i>
+                            <span>Simpan Siswa</span>
+                        </button>
+                    </div>
                 </div>
-                <div>
-                    <label for="nama" class="block text-sm font-medium text-gray-700">Nama</label>
-                    <input type="text" name="nama" id="nama" required
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
-                </div>
-                <div>
-                    <label for="jk" class="block text-sm font-medium text-gray-700">Jenis Kelamin</label>
-                    <select name="jk" id="jk" required
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
-                        <option value="">Pilih Jenis Kelamin</option>
-                        <option value="L">Laki-laki</option>
-                        <option value="P">Perempuan</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="kelas" class="block text-sm font-medium text-gray-700">Kelas</label>
-                    <input type="text" name="kelas" id="kelas" required
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
-                </div>
-                <div>
-                    <label for="no_absen" class="block text-sm font-medium text-gray-700">No Absen</label>
-                    <input type="number" name="no_absen" id="no_absen" required
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
-                </div>
-                
-                <div>
-                    <label for="tahun_ajaran" class="block text-sm font-medium text-gray-700">Tahun Ajaran</label>
-                    <input type="text" name="tahun_ajaran" id="tahun_ajaran" required
-                        placeholder="Contoh: 2025/2026"
-                        value="<?= date('Y') . '/' . (date('Y') + 1) ?>" 
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]"
-                        pattern="\d{4}/\d{4}" title="Masukkan tahun ajaran dalam format YYYY/YYYY (contoh: 2025/2026)">
-                </div>
-                <div>
-                    <label for="poin" class="block text-sm font-medium text-gray-700">Poin</label>
-                    <input type="number" name="poin" id="poin" value="0" required
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1E5631]/50 focus:border-[#1E5631]">
-                </div>
-                <div class="flex justify-end gap-3">
-                    <button type="button" @click="closeModal('tambahModal')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-[#1E5631] text-white rounded-lg hover:bg-[#174726] transition">Simpan</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
@@ -385,13 +457,25 @@
     });
 
     function openModal(id) {
-        document.getElementById(id).classList.remove('hidden');
+        const modal = document.getElementById(id);
+        const modalContent = document.getElementById('modalContent');
+        modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
+        setTimeout(() => {
+            modalContent.classList.remove('scale-95', 'opacity-0');
+            modalContent.classList.add('scale-100', 'opacity-100');
+        }, 50);
     }
 
     function closeModal(id) {
-        document.getElementById(id).classList.add('hidden');
-        document.body.style.overflow = 'auto';
+        const modal = document.getElementById(id);
+        const modalContent = document.getElementById('modalContent');
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }, 300);
     }
 
     document.querySelectorAll('.modal').forEach(modal => {
@@ -439,6 +523,25 @@
     
     .modal {
         backdrop-filter: blur(4px);
+    }
+
+    /* Custom scrollbar for modal body */
+    .max-h-\[60vh\]::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .max-h-\[60vh\]::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 3px;
+    }
+
+    .max-h-\[60vh\]::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 3px;
+    }
+
+    .max-h-\[60vh\]::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
     }
 </style>
 
