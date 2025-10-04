@@ -147,14 +147,23 @@ class SanksiAdminController extends BaseController
         );
     }
 
-   public function exportExcel()
+ public function exportExcel()
 {
     $keyword   = $this->request->getGet('keyword');
     $startDate = $this->request->getGet('start_date') ?: date('Y-m-d', strtotime('-30 days'));
     $endDate   = $this->request->getGet('end_date') ?: date('Y-m-d');
 
     $builder = $this->sanksiModel
-        ->select('sanksi_siswa.*, sanksi_siswa.id as sanksi_id, siswa.id as siswa_id, siswa.nama, siswa.nis, siswa.kelas, pelanggaran.jenis_pelanggaran, pelanggaran.kategori, pelanggaran.poin')
+        ->select('
+            sanksi_siswa.*, 
+            sanksi_siswa.id as sanksi_id, 
+            siswa.id as siswa_id, 
+            siswa.nama, 
+            siswa.nis, 
+            siswa.kelas, 
+            pelanggaran.jenis_pelanggaran, 
+            pelanggaran.poin
+        ')
         ->join('siswa', 'siswa.id = sanksi_siswa.siswa_id')
         ->join('pelanggaran', 'pelanggaran.id = sanksi_siswa.pelanggaran_id')
         ->where('sanksi_siswa.tanggal_pelanggaran >=', $startDate)
@@ -169,59 +178,47 @@ class SanksiAdminController extends BaseController
     }
 
     $rawData = $builder
-        ->orderBy('sanksi_siswa.tanggal_pelanggaran', 'DESC')
+        ->orderBy('sanksi_siswa.updated_at', 'DESC')
         ->findAll();
 
-    // Group data (berdasarkan siswa + tanggal)
+    // 🧩 Group data (per siswa + per tanggal updated_at)
     $groupedData = [];
     foreach ($rawData as $row) {
-        // kalau mau group per hari saja (jam diabaikan):
-        $key = $row['siswa_id'] . '-' . date('Y-m-d', strtotime($row['tanggal_pelanggaran']));
-        // kalau mau per entri (jam juga beda) pakai ini:
-        // $key = $row['siswa_id'] . '-' . $row['tanggal_pelanggaran'];
+        $key = $row['siswa_id'] . '-' . $row['updated_at'];
 
         if (!isset($groupedData[$key])) {
-    $groupedData[$key] = [
-        'Nama' => $row['nama'],
-        'NIS' => $row['nis'],
-        'Kelas' => $row['kelas'],
-        'Tanggal Pelanggaran' => date('d/m/Y H:i:s', strtotime($row['tanggal_pelanggaran'])),
-        'Jenis Pelanggaran' => [],
-        'Kategori' => [],
-        'Total Poin' => 0,
-        'Keterangan' => $row['keterangan'] ?? 'Tidak ada',
-        'Updated At' => $row['updated_at'], // ✅ tambahin ini
-    ];
-}
-
+            $groupedData[$key] = [
+                'Nama'                => $row['nama'],
+                'NIS'                 => $row['nis'],
+                'Kelas'               => $row['kelas'],
+                'Tanggal Pelanggaran' => !empty($row['updated_at'])
+                    ? date('d/m/Y H:i:s', strtotime($row['updated_at']))
+                    : '-',
+                'Jenis Pelanggaran'   => [],
+                'Total Poin'          => 0,
+                'Keterangan'          => $row['keterangan'] ?? 'Tidak ada',
+            ];
+        }
 
         $groupedData[$key]['Jenis Pelanggaran'][] = $row['jenis_pelanggaran'];
-        $groupedData[$key]['Kategori'][] = $row['kategori'];
         $groupedData[$key]['Total Poin'] += (int)$row['poin'];
     }
 
-    // Format final
+    // 🗂️ Format final untuk export
     $exportData = [];
     foreach ($groupedData as $data) {
         $exportData[] = [
-    'Nama' => $data['Nama'],
-    'NIS' => $data['NIS'],
-    'Kelas' => $data['Kelas'],
-    'Tanggal Pelanggaran' => ($data['Updated At']) 
-        ? date('d/m/Y H:i:s', strtotime($data['Updated At'])) 
-        : '-', // ✅ tampilkan update_at
-    'Jenis Pelanggaran' => implode(', ', $data['Jenis Pelanggaran']),
-    'Kategori' => implode(', ', array_unique($data['Kategori'])),
-    'Total Poin' => $data['Total Poin'],
-    'Keterangan' => $data['Keterangan'],
-    // 'Diupdate Terakhir' => !empty($data['Updated At']) 
-    //     ? date('d/m/Y H:i:s', strtotime($data['Updated At'])) 
-    //     : '-', // ✅ tampilkan update_at
-];
-
+            'Nama'                => $data['Nama'],
+            'NIS'                 => $data['NIS'],
+            'Kelas'               => $data['Kelas'],
+            'Tanggal Pelanggaran' => $data['Tanggal Pelanggaran'],
+            'Jenis Pelanggaran'   => implode(', ', $data['Jenis Pelanggaran']),
+            'Total Poin'          => $data['Total Poin'],
+            'Keterangan'          => $data['Keterangan'],
+        ];
     }
 
-    // 🧾 Buat file Excel
+    // 🧾 Generate Excel
     $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
 
@@ -235,7 +232,7 @@ class SanksiAdminController extends BaseController
         $col++;
     }
 
-    // Data
+    // Data rows
     $rowIndex = 2;
     foreach ($exportData as $row) {
         $col = 'A';
@@ -246,9 +243,9 @@ class SanksiAdminController extends BaseController
         $rowIndex++;
     }
 
-    // Download
+    // 💾 Output file
     $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-    $filename = 'Data_Sanksi_Siswa_' . date('Ymd_His') . '.xlsx';
+    $filename = 'Laporan_Sanksi_Siswa_' . date('Ymd_His') . '.xlsx';
 
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     header('Content-Disposition: attachment;filename="' . $filename . '"');
