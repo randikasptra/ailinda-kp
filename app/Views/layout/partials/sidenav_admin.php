@@ -52,69 +52,76 @@
     
     <!-- Navigation -->
     <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-        <?php if (session()->get('role') == 'admin'): ?>
-            <a href="/dashboard/admin" class="nav-item flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/dashboard/admin') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Dashboard">
-                <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
-                </div>
-                <span class="font-medium">Dashboard</span>
-                <i data-lucide="chevron-right" class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-all text-[#A4DE02] group-hover:translate-x-1"></i>
-            </a>
-            
-            <a href="/admin/users" class="nav-item flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/admin/users') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Kelola Users">
-                <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
-                    <i data-lucide="user-cog" class="w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
-                </div>
-                <span class="font-medium">Kelola Users</span>
-                <i data-lucide="chevron-right" class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-all text-[#A4DE02] group-hover:translate-x-1"></i>
-            </a>
-                        
-            <div class="dropdown <?= (current_url(true) == base_url('/admin/laporan/keluar') || current_url(true) == base_url('/admin/laporan/masuk') || current_url(true) == base_url('/admin/laporan/sanksi_siswa')) ? 'open' : '' ?>">
-    <div class="dropdown-toggle nav-item flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= (current_url(true) == base_url('/admin/laporan/keluar') || current_url(true) == base_url('/admin/laporan/masuk') || current_url(true) == base_url('/admin/laporan/sanksi_siswa')) ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Laporan">
-        <div class="flex items-center gap-4 flex-1">
+    <?php if (session()->get('role') == 'admin'): ?>
+        <a href="/dashboard/admin" class="nav-item flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/dashboard/admin') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Dashboard">
             <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
-                <i data-lucide="file-text" class="w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
+                <i data-lucide="layout-dashboard" class="w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
             </div>
-            <span class="font-medium">Laporan</span>
-        </div>
-        <i data-lucide="chevron-down" class="dropdown-icon w-4 h-4 ml-auto transition-all duration-300 text-[#A4DE02] transform group-hover:scale-110"></i>
-    </div>
-
-    <div class="dropdown-menu mt-2 min-w-[220px] <?= (current_url(true) == base_url('/admin/laporan/keluar') || current_url(true) == base_url('/admin/laporan/masuk') || current_url(true) == base_url('/admin/laporan/sanksi_siswa')) ? 'open' : '' ?>">
-        <a href="/admin/laporan/keluar" class="dropdown-item nav-item flex items-center gap-4 p-4 pl-12 hover:bg-white/10 transition-all duration-300 group hover:shadow-lg <?= current_url(true) == base_url('/admin/laporan/keluar') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Laporan Izin Keluar">
-            <div class="w-6 h-6 flex items-center justify-center">
-                <i data-lucide="log-out" class="w-4 h-4 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
-            </div>
-            <span class="text-sm">Laporan Izin Keluar</span>
+            <span class="font-medium">Dashboard</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-all text-[#A4DE02] group-hover:translate-x-1"></i>
         </a>
-
-        <a href="/admin/laporan/masuk" class="dropdown-item nav-item flex items-center gap-4 p-4 pl-12 hover:bg-white/10 transition-all duration-300 group hover:shadow-lg <?= current_url(true) == base_url('/admin/laporan/masuk') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Laporan Izin Masuk">
-            <div class="w-6 h-6 flex items-center justify-center">
-                <i data-lucide="log-in" class="w-4 h-4 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
+        
+        <a href="/admin/users" class="nav-item flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/admin/users') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Kelola Users">
+            <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
+                <i data-lucide="user-cog" class="w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
             </div>
-            <span class="text-sm">Laporan Izin Masuk</span>
+            <span class="font-medium">Kelola Users</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-all text-[#A4DE02] group-hover:translate-x-1"></i>
         </a>
-
-        <a href="/admin/laporan/sanksi_siswa" class="dropdown-item nav-item flex items-center gap-4 p-4 pl-12 hover:bg-white/10 transition-all duration-300 group hover:shadow-lg <?= current_url(true) == base_url('/admin/laporan/sanksi_siswa') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Laporan Sanksi Siswa">
-            <div class="w-6 h-6 flex items-center justify-center">
-                <i data-lucide="file-text" class="w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
+                    
+        <a href="/admin/pelanggaran" class="nav-item flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/admin/pelanggaran') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Kelola Pelanggaran">
+            <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
+                <i data-lucide="shield-alert" class="w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
             </div>
-            <span class="text-sm">Laporan Sanksi Siswa</span>
+            <span class="font-medium">Kelola Pelanggaran</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-all text-[#A4DE02] group-hover:translate-x-1"></i>
         </a>
-    </div>
-</div>
-
-
-            <a href="/admin/siswa" class="nav-item flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/admin/siswa') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Kelola Siswa">
-                <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
-                    <i data-lucide="graduation-cap" class="w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
+                    
+        <div class="dropdown <?= (current_url(true) == base_url('/admin/laporan/keluar') || current_url(true) == base_url('/admin/laporan/masuk') || current_url(true) == base_url('/admin/laporan/sanksi_siswa')) ? 'open' : '' ?>">
+            <div class="dropdown-toggle nav-item flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= (current_url(true) == base_url('/admin/laporan/keluar') || current_url(true) == base_url('/admin/laporan/masuk') || current_url(true) == base_url('/admin/laporan/sanksi_siswa')) ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Laporan">
+                <div class="flex items-center gap-4 flex-1">
+                    <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
+                        <i data-lucide="file-text" class="w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <span class="font-medium">Laporan</span>
                 </div>
-                <span class="font-medium">Kelola Siswa</span>
-                <i data-lucide="chevron-right" class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-all text-[#A4DE02] group-hover:translate-x-1"></i>
-            </a>
+                <i data-lucide="chevron-down" class="dropdown-icon w-4 h-4 ml-auto transition-all duration-300 text-[#A4DE02] transform group-hover:scale-110"></i>
+            </div>
 
-        <?php endif; ?>
-    </nav>
+            <div class="dropdown-menu mt-2 min-w-[220px] <?= (current_url(true) == base_url('/admin/laporan/keluar') || current_url(true) == base_url('/admin/laporan/masuk') || current_url(true) == base_url('/admin/laporan/sanksi_siswa')) ? 'open' : '' ?>">
+                <a href="/admin/laporan/keluar" class="dropdown-item nav-item flex items-center gap-4 p-4 pl-12 hover:bg-white/10 transition-all duration-300 group hover:shadow-lg <?= current_url(true) == base_url('/admin/laporan/keluar') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Laporan Izin Keluar">
+                    <div class="w-6 h-6 flex items-center justify-center">
+                        <i data-lucide="log-out" class="w-4 h-4 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <span class="text-sm">Laporan Izin Keluar</span>
+                </a>
+
+                <a href="/admin/laporan/masuk" class="dropdown-item nav-item flex items-center gap-4 p-4 pl-12 hover:bg-white/10 transition-all duration-300 group hover:shadow-lg <?= current_url(true) == base_url('/admin/laporan/masuk') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Laporan Izin Masuk">
+                    <div class="w-6 h-6 flex items-center justify-center">
+                        <i data-lucide="log-in" class="w-4 h-4 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <span class="text-sm">Laporan Izin Masuk</span>
+                </a>
+
+                <a href="/admin/laporan/sanksi_siswa" class="dropdown-item nav-item flex items-center gap-4 p-4 pl-12 hover:bg-white/10 transition-all duration-300 group hover:shadow-lg <?= current_url(true) == base_url('/admin/laporan/sanksi_siswa') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Laporan Sanksi Siswa">
+                    <div class="w-6 h-6 flex items-center justify-center">
+                        <i data-lucide="file-warning" class="w-4 h-4 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <span class="text-sm">Laporan Sanksi Siswa</span>
+                </a>
+            </div>
+        </div>
+
+        <a href="/admin/siswa" class="nav-item flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all duration-300 group hover:shadow-lg transform hover:-translate-y-0.5 <?= current_url(true) == base_url('/admin/siswa') ? 'active bg-white/10 shadow-lg' : '' ?>" data-nav-name="Kelola Siswa">
+            <div class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl group-hover:bg-[#A4DE02]/20 shadow-sm">
+                <i data-lucide="graduation-cap" class="w-5 h-5 text-[#A4DE02] group-hover:scale-110 transition-transform"></i>
+            </div>
+            <span class="font-medium">Kelola Siswa</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-all text-[#A4DE02] group-hover:translate-x-1"></i>
+        </a>
+
+    <?php endif; ?>
+</nav>
 
     <!-- Logout -->
     <div class="p-6 border-t border-white/10">
